@@ -1,0 +1,233 @@
+{
+  "nav": {
+    "collection": "Collection",
+    "heritage": "Heritage",
+    "apothecary": "The Apothecary",
+    "search": "Search",
+    "cart": "Cart"
+  },
+  "footer": {
+    "blurb": "Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.",
+    "explore": "Explore",
+    "exploreItems": ["Collection", "The Red Book", "Heritage", "Journal"],
+    "company": "Company",
+    "companyItems": ["Our story", "Stockists", "Corporate & gifting", "Contact"],
+    "connect": "Connect",
+    "connectItems": ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"],
+    "copy": "© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.",
+    "privacy": "Privacy · Terms"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Heritage Thai Apothecary · Est. 1870s",
+      "h1_1": "150 Years of Wisdom.",
+      "h1_2": "Reimagined for Your",
+      "h1_3": "Modern Rituals.",
+      "sub": "Step into the world of APB—where ancient Thai wisdom meets modern artistic expression. Artisan essentials born from a heritage archive, crafted for your daily well-being.",
+      "discover": "Discover the Collection",
+      "story": "Our Story",
+      "scroll": "Scroll"
+    },
+    "prestige": {
+      "line": "Honored to be the heritage gift of choice for Embassies, Consulates, and Life's Meaningful Ceremonies."
+    },
+    "pillars": {
+      "legacy": {
+        "title": "Authentic Legacy",
+        "desc": "Directly descended from the archives of Khun Apiban Bo Plup (APB) during the era of King Rama V."
+      },
+      "magic": {
+        "title": "Modern Magic",
+        "desc": "Traditional Thai botanicals transformed into stylish, portable essentials for the fast-paced urban life."
+      },
+      "craft": {
+        "title": "Collective Craft",
+        "desc": "A collaborative revival by the Songkhla family, uniting generations to preserve artisanal heritage."
+      }
+    },
+    "redbook": {
+      "eyebrow": "The Secret",
+      "title_1": "Ancient Roots,",
+      "title_2": "Modern Balance.",
+      "body": "We offer a 150-year-old dialogue between nature and the senses. Our formulas use the exact high-quality Thai botanicals recorded in the legendary Red Book, optimized to restore your balance today. From the old streets of Songkhla to your pocket.",
+      "button": "Uncover the Red Book"
+    },
+    "apothecary": {
+      "tagline_thep": "The Awakener",
+      "title_thep": "THEPPRASIT",
+      "body_thep": "A bold, citrusy symphony of cloves and Thai bergamot. Designed to clear the mind and uplift your spirit during demanding hours.",
+      "tagline_phet": "The Restorer",
+      "title_phet": "PHETMONGKOL",
+      "body_phet": "Delicate Jasmine and Ylang-Ylang. A floral embrace that soothes the senses and brings inner calm after a long day.",
+      "button": "Explore the Rituals"
+    },
+    "gallery": {
+      "eyebrow": "The Gallery",
+      "title": "Where Heritage Meets the World.",
+      "desc": "From embassy gifting suites to craft fairs in Old Songkhla — a look at APB out in the world, one occasion at a time.",
+      "items": {
+        "g1": "Flagship Pop-up — Bangkok",
+        "g2": "Corporate Gifting — Embassy of Thailand",
+        "g3": "Craft Exhibition — Songkhla Heritage Fair",
+        "g4": "Retail Activation — ICONSIAM",
+        "g5": "Wedding Favors — Private Ceremony",
+        "g6": "Trade Show — Thailand Beauty Expo",
+        "g7": "Hotel Amenity Partnership — Luxury Resort",
+        "g8": "Workshop — The Red Book Archive Tour"
+      }
+    },
+    "continuum": {
+      "title": "Begin Your Ritual.",
+      "desc": "Bring the Songkhla legacy into your daily life, or share the authentic Thai wellness experience with the world.",
+      "button_shop": "Shop the Collection",
+      "button_gift": "Corporate & Gifting Inquiries"
+    }
+  },
+  "heritage": {
+    "kicker": "The Heritage",
+    "h1_1": "Chronicles of the",
+    "h1_2": "Red Book",
+    "sub": "A quiet museum of one family's 150-year dialogue with nature — scroll to walk through it.",
+    "c1": {
+      "kicker": "The Discovery",
+      "headline": "150 Years in the Shadows.",
+      "body": "It began with a single, crimson-bound volume. A 19th-century medical journal belonging to Khun Apiban Bo Plup (APB), a sanitation officer during the transformative reign of King Rama V. Within its weathered pages lay a forgotten dialogue between nature and the human spirit—a collection of botanical rituals used to maintain the balance of life."
+    },
+    "c2": {
+      "kicker": "The Guardian",
+      "headline": "The Visionary of Old Songkhla.",
+      "body": "Khun Apiban Bo Plup was more than a practitioner; he was a guardian of wellness in an era of change. As a public health pioneer in Old Town Songkhla, he understood that true restoration comes from the harmony of the senses. His “Red Book” was not just a record of herbs, but a map to self-healing—a practice where one takes the power of well-being into their own hands."
+    },
+    "c3": {
+      "kicker": "Philosophy",
+      "headline": "Ancient Wisdom for the Modern Soul.",
+      "body": "In the 19th century, self-care was an intuitive ritual. Today, we bring that intuition back. We believe that the modern fast-paced world needs the slow, deliberate magic of ancestral Thai botanicals. Our philosophy is simple: Modern Rituals rooted in Ancient Truths. We provide the tools; you perform the ritual."
+    },
+    "c4": {
+      "kicker": "The Collective",
+      "headline": "A Legacy Reborn Through Family.",
+      "body": "APB is not a solo journey. It is a collaborative revival by the descendants of the Songkhla family. Uniting multiple households, we have come together to breathe life into our ancestor's archives. Each bottle is a testament to our family's shared commitment to preserving our artisanal heritage and sharing it with a global generation."
+    },
+    "finale": {
+      "title_1": "From the Archive",
+      "title_2": "to Your Pocket.",
+      "button": "Explore the Apothecary Collection"
+    }
+  },
+  "apothecary": {
+    "h1_1": "Ancient Wisdom,",
+    "h1_2": "Modern Rituals.",
+    "sub": "Discover our artisanal collection. Rooted in the 150-year-old archive of Khun Apiban Bo Plup, each formula is crafted to bring balance to your daily life. Choose your ritual.",
+    "thep": {
+      "tagline": "The Awakener",
+      "vibe": "For days that demand clarity. A bold citrus symphony designed to refresh the mind and awaken your senses.",
+      "notes": ["Thai Bergamot", "Clove", "Warm"]
+    },
+    "phet": {
+      "tagline": "The Restorer",
+      "vibe": "For moments of exhaustion. A delicate floral embrace crafted to soothe the spirit and bring inner calm.",
+      "notes": ["Jasmine", "Ylang-Ylang", "Water Jasmine"]
+    },
+    "app": {
+      "inhale": {
+        "title": "Inhale",
+        "desc": "Keep it close. Perfect for your pocket, workspace, or bedside."
+      },
+      "apply": {
+        "title": "Apply",
+        "desc": "Roll the Workday Oil on pulse points or temples for instant serenity."
+      }
+    },
+    "crossroads": {
+      "personal": {
+        "eyebrow": "Personal Rituals",
+        "title": "Bring the Wisdom Home.",
+        "desc": "Elevate your daily routine with the APB collection.",
+        "button1": "Shop on Shopee",
+        "button2": "Find us in Stores"
+      },
+      "b2b": {
+        "eyebrow": "The Artifact of Choice",
+        "title": "Share the Legacy.",
+        "desc": "Trusted by embassies, consulates, and premium corporate clients. Our collection is the perfect meaningful gift for global distribution, hospitality amenities, weddings, and life's significant milestones.",
+        "button": "Corporate & Gifting Inquiries"
+      }
+    }
+  },
+  "shop": {
+    "back": "← Back to shop",
+    "hero": {
+      "title_1": "Ancient remedies,",
+      "title_2": "gently reimagined.",
+      "sub": "Wisdom once written in a family's red book — now blended into refined self-care rituals for modern living.",
+      "button_shop": "Shop the ritual",
+      "button_story": "Read our story"
+    },
+    "h2": "Four rituals, one lineage",
+    "strip": {
+      "eyebrow": "Est. from a 150-year heritage",
+      "title": "The red-bound manuscript",
+      "desc1": "Over a century and a half ago, our ancestor Khun Apiban recorded his healing knowledge in a red-bound manuscript — a quiet testament to Thailand's botanical wisdom.",
+      "desc2": "Today we revive that heritage for a new generation, transforming ancient remedies into rituals that invite you to slow down and reconnect.",
+      "button": "Discover the lineage"
+    },
+    "news": {
+      "title": "Join the ritual",
+      "desc": "Seasonal blends, botanical notes, and quiet moments — to your inbox.",
+      "placeholder": "Your email",
+      "button": "Subscribe"
+    },
+    "detail": {
+      "save": "Save",
+      "use_title": "How to use",
+      "use_body": "Warm a few drops between the palms, breathe in, and massage gently into temples, neck or shoulders. Reapply through the day as a grounding pause.",
+      "ing_title": "Ingredients",
+      "ing_body": "Oryza sativa bran oil, caprylic/capric triglyceride, native Thai herbal extracts, menthol, essential oils. Made in small batches in Songkhla, Thailand."
+    },
+    "story": {
+      "eyebrow": "Our Story",
+      "title": "อภัยบ่อพลับ",
+      "tagline": "\"Wisdom once written in a family's red book, now reimagined for the world.\"",
+      "p1": "Over a century and a half ago, our ancestor Khun Apiban recorded his healing knowledge in a red-bound manuscript — a quiet testament to Thailand's botanical wisdom and spiritual balance.",
+      "p2": "Today, Apiban Bo Plup revives that heritage for a new generation, transforming ancient Thai remedies into refined self-care rituals. Rooted in nature, guided by tradition, and crafted for modern living — each creation invites you to slow down, breathe deeply, and reconnect with the serenity that endures across time.",
+      "made_title": "Made in Songkhla",
+      "made_body": "Every blend is prepared in small batches from native Thai botanicals, honouring the recipes and the patience of those who came before."
+    },
+    "footer": {
+      "shop": "Shop",
+      "shopItems": ["Cooling Thai Oil", "Herbal Inhaler", "Massage Oils", "Gift sets"],
+      "company": "Company",
+      "companyItems": ["Our story", "Journal", "Stockists", "Contact"]
+    },
+    "products": {
+      "cooling": {
+        "name": "Cooling Thai Oil",
+        "th": "ยาหม่องน้ำ",
+        "tagline": "Inspired by Khun Apiban's herbal recipe",
+        "desc": "Cool your senses, relax deeply, and find relief from office syndrome — all in one soothing herbal oil.",
+        "tags": ["Herbal", "Cooling"]
+      },
+      "inhaler": {
+        "name": "Herbal Inhaler",
+        "th": "ยาดม",
+        "tagline": "A breath of the forest, anywhere",
+        "desc": "A bright, camphor-forward inhalant blended from native Thai herbs to clear the mind and settle the breath.",
+        "tags": ["Herbal", "Uplifting"]
+      },
+      "floral": {
+        "name": "Floral Massage Oil",
+        "th": "น้ำมันนวดดอกไม้",
+        "tagline": "Petals pressed into calm",
+        "desc": "A warming massage oil carrying jasmine and ylang, drawn from the family's floral traditions.",
+        "tags": ["Massage", "Floral"]
+      },
+      "kaffir": {
+        "name": "Kaffir Massage Oil",
+        "th": "น้ำมันนวดมะกรูด",
+        "tagline": "Green, citrus, grounding",
+        "desc": "Kaffir lime and lemongrass in a nourishing base oil — a bright, grounding ritual for tired muscles.",
+        "tags": ["Massage", "Citrus"]
+      }
+    }
+  }
+}

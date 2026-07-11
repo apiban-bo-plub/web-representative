@@ -2,15 +2,18 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
 import ImageSlot from '@/components/ImageSlot';
+import LanguageSelector from '@/components/LanguageSelector';
 
 /* ---- Nav (identical to Portal Page) -------------------------------- */
 function PortalNav({ go }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const L = (id, t, extra) => (
+  const L = (id, tKey, extra) => (
     <a
       onClick={() => {
         go(id);
@@ -19,33 +22,35 @@ function PortalNav({ go }) {
       className={"pn__link " + (extra || "")}
       style={{ cursor: 'pointer' }}
     >
-      {t}
+      {t(tKey)}
     </a>
   );
   return (
     <header className="pn">
       <nav className="pn__side">
-        {L("collection", "Collection")}
-        {L("story", "Heritage")}
-        {L("apothecary", "The Apothecary")}
+        {L("collection", "nav.collection")}
+        {L("story", "nav.heritage")}
+        {L("apothecary", "nav.apothecary")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
       </a>
-      <div className="pn__side pn__side--right">
-        <span className="pn__link" style={{ cursor: 'pointer' }}>Search</span>
+      <div className="pn__side pn__side--right" style={{ gap: '16px' }}>
+        <span className="pn__link" style={{ cursor: 'pointer' }}>{t("nav.search")}</span>
+        <LanguageSelector />
       </div>
       <button className="pn__burger" aria-label="Menu" onClick={() => setOpen(v => !v)}>
         <span></span><span></span><span></span>
       </button>
       {open && (
         <div className="pn__drawer">
-          {L("collection", "Collection", "pn__drawerLink")}
-          {L("story", "Heritage", "pn__drawerLink")}
-          {L("apothecary", "The Apothecary", "pn__drawerLink")}
-          <a className="pn__link pn__drawerLink" onClick={() => setOpen(false)} style={{ cursor: 'pointer' }}>
-            Search
-          </a>
+          {L("collection", "nav.collection", "pn__drawerLink")}
+          {L("story", "nav.heritage", "pn__drawerLink")}
+          {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <span>{t("nav.search")}</span>
+            <LanguageSelector />
+          </div>
         </div>
       )}
     </header>
@@ -54,6 +59,7 @@ function PortalNav({ go }) {
 
 /* ---- Footer (identical to Portal Page) ------------------------------ */
 function PortalFooter() {
+  const { t } = useLanguage();
   const col = (h, items) => (
     <div key={h}>
       <div className="pf__h">{h}</div>
@@ -65,15 +71,15 @@ function PortalFooter() {
       <div className="pf__grid">
         <div>
           <Logo width={170} color="#f0ebe2" />
-          <p className="pf__blurb">Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.</p>
+          <p className="pf__blurb">{t("footer.blurb")}</p>
         </div>
-        {col("Explore", ["Collection", "The Red Book", "Heritage", "Journal"])}
-        {col("Company", ["Our story", "Stockists", "Corporate & gifting", "Contact"])}
-        {col("Connect", ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"])}
+        {col(t("footer.explore"), [t("nav.collection"), t("home.redbook.button"), t("nav.heritage"), "Journal"])}
+        {col(t("footer.company"), [t("shop.story.eyebrow"), "Stockists", "Corporate & gifting", "Contact"])}
+        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
       </div>
       <div className="pf__base">
-        <span>© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.</span>
-        <span>Privacy · Terms</span>
+        <span>{t("footer.copy")}</span>
+        <span>{t("footer.privacy")}</span>
       </div>
     </footer>
   );
@@ -105,17 +111,22 @@ function Chapter({ id, index, kicker, headline, body, slotId, ph, cta, reverse }
 
 /* ---- Museum intro band --------------------------------------------- */
 function HeritageIntro() {
+  const { t } = useLanguage();
   return (
     <section className="hintro" id="top-heritage">
-      <div className="apb-eyebrow hintro__eyebrow">The Heritage</div>
-      <h1 className="hintro__h1">Chronicles of the<br/>Red Book</h1>
-      <p className="hintro__sub">A quiet museum of one family's 150-year dialogue with nature — scroll to walk through it.</p>
+      <div className="apb-eyebrow hintro__eyebrow">{t("heritage.kicker")}</div>
+      <h1 className="hintro__h1">
+        {t("heritage.h1_1")}<br/>
+        {t("heritage.h1_2")}
+      </h1>
+      <p className="hintro__sub">{t("heritage.sub")}</p>
     </section>
   );
 }
 
 /* ---- Final CTA ------------------------------------------------------ */
 function HeritageFinale({ go }) {
+  const { t } = useLanguage();
   return (
     <section className="hfin">
       <div className="hfin__media">
@@ -129,8 +140,11 @@ function HeritageFinale({ go }) {
       </div>
       <div className="hfin__panel">
         <img className="hfin__mark" src="/images/motif.svg" alt="" />
-        <h2 className="hfin__h">From the Archive<br/>to Your Pocket.</h2>
-        <Button size="lg" onClick={() => go("apothecary")}>Explore the Apothecary Collection</Button>
+        <h2 className="hfin__h">
+          {t("heritage.finale.title_1")}<br/>
+          {t("heritage.finale.title_2")}
+        </h2>
+        <Button size="lg" onClick={() => go("apothecary")}>{t("heritage.finale.button")}</Button>
       </div>
     </section>
   );
@@ -139,6 +153,7 @@ function HeritageFinale({ go }) {
 /* ---- Main Page Component ------------------------------------------ */
 export default function App() {
   const router = useRouter();
+  const { t } = useLanguage();
   const go = (id) => {
     if (id === "top") {
       router.push("/");
@@ -166,42 +181,42 @@ export default function App() {
       <Chapter
         id="discovery"
         index="01"
-        kicker="The Discovery"
+        kicker={t("heritage.c1.kicker")}
         slotId="heritage-discovery"
         ph="Macro shot — The Red Book, antique paper texture"
-        headline="150 Years in the Shadows."
-        body="It began with a single, crimson-bound volume. A 19th-century medical journal belonging to Khun Apiban Bo Plup (APB), a sanitation officer during the transformative reign of King Rama V. Within its weathered pages lay a forgotten dialogue between nature and the human spirit—a collection of botanical rituals used to maintain the balance of life."
+        headline={t("heritage.c1.headline")}
+        body={t("heritage.c1.body")}
         reverse={false}
       />
       <Chapter
         id="guardian"
         index="02"
-        kicker="The Guardian"
+        kicker={t("heritage.c2.kicker")}
         slotId="heritage-guardian"
         reverse={true}
         ph="Historical portrait or Old Songkhla city view"
-        headline="The Visionary of Old Songkhla."
-        body="Khun Apiban Bo Plup was more than a practitioner; he was a guardian of wellness in an era of change. As a public health pioneer in Old Town Songkhla, he understood that true restoration comes from the harmony of the senses. His “Red Book” was not just a record of herbs, but a map to self-healing—a practice where one takes the power of well-being into their own hands."
+        headline={t("heritage.c2.headline")}
+        body={t("heritage.c2.body")}
       />
       <Chapter
         id="philosophy"
         index="03"
-        kicker="Philosophy"
+        kicker={t("heritage.c3.kicker")}
         slotId="heritage-philosophy"
         ph="Raw Thai herbs, dramatic lighting"
-        headline="Ancient Wisdom for the Modern Soul."
-        body="In the 19th century, self-care was an intuitive ritual. Today, we bring that intuition back. We believe that the modern fast-paced world needs the slow, deliberate magic of ancestral Thai botanicals. Our philosophy is simple: Modern Rituals rooted in Ancient Truths. We provide the tools; you perform the ritual."
+        headline={t("heritage.c3.headline")}
+        body={t("heritage.c3.body")}
         reverse={false}
       />
       <Chapter
         id="collective"
         index="04"
-        kicker="The Collective"
+        kicker={t("heritage.c4.kicker")}
         slotId="heritage-collective"
         reverse={true}
         ph="Songkhla family portraits / behind-the-scenes"
-        headline="A Legacy Reborn Through Family."
-        body="APB is not a solo journey. It is a collaborative revival by the descendants of the Songkhla family. Uniting multiple households, we have come together to breathe life into our ancestor's archives. Each bottle is a testament to our family's shared commitment to preserving our artisanal heritage and sharing it with a global generation."
+        headline={t("heritage.c4.headline")}
+        body={t("heritage.c4.body")}
       />
       <HeritageFinale go={go} />
       <PortalFooter />

@@ -2,16 +2,19 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
 import Tag from '@/components/core/Tag';
 import ImageSlot from '@/components/ImageSlot';
+import LanguageSelector from '@/components/LanguageSelector';
 
 /* ---- Nav (identical to Portal Page) -------------------------------- */
 function PortalNav({ go }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const L = (id, t, extra) => (
+  const L = (id, tKey, extra) => (
     <a
       onClick={() => {
         go(id);
@@ -20,33 +23,35 @@ function PortalNav({ go }) {
       className={"pn__link " + (extra || "")}
       style={{ cursor: 'pointer' }}
     >
-      {t}
+      {t(tKey)}
     </a>
   );
   return (
     <header className="pn">
       <nav className="pn__side">
-        {L("collection", "Collection")}
-        {L("story", "Heritage")}
-        {L("apothecary", "The Apothecary")}
+        {L("collection", "nav.collection")}
+        {L("story", "nav.heritage")}
+        {L("apothecary", "nav.apothecary")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
       </a>
-      <div className="pn__side pn__side--right">
-        <span className="pn__link" style={{ cursor: 'pointer' }}>Search</span>
+      <div className="pn__side pn__side--right" style={{ gap: '16px' }}>
+        <span className="pn__link" style={{ cursor: 'pointer' }}>{t("nav.search")}</span>
+        <LanguageSelector />
       </div>
       <button className="pn__burger" aria-label="Menu" onClick={() => setOpen(v => !v)}>
         <span></span><span></span><span></span>
       </button>
       {open && (
         <div className="pn__drawer">
-          {L("collection", "Collection", "pn__drawerLink")}
-          {L("story", "Heritage", "pn__drawerLink")}
-          {L("apothecary", "The Apothecary", "pn__drawerLink")}
-          <a className="pn__link pn__drawerLink" onClick={() => setOpen(false)} style={{ cursor: 'pointer' }}>
-            Search
-          </a>
+          {L("collection", "nav.collection", "pn__drawerLink")}
+          {L("story", "nav.heritage", "pn__drawerLink")}
+          {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <span>{t("nav.search")}</span>
+            <LanguageSelector />
+          </div>
         </div>
       )}
     </header>
@@ -55,6 +60,7 @@ function PortalNav({ go }) {
 
 /* ---- Footer (identical to Portal Page) ------------------------------ */
 function PortalFooter() {
+  const { t } = useLanguage();
   const col = (h, items) => (
     <div key={h}>
       <div className="pf__h">{h}</div>
@@ -66,15 +72,15 @@ function PortalFooter() {
       <div className="pf__grid">
         <div>
           <Logo width={170} color="#f0ebe2" />
-          <p className="pf__blurb">Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.</p>
+          <p className="pf__blurb">{t("footer.blurb")}</p>
         </div>
-        {col("Explore", ["Collection", "The Red Book", "Heritage", "Journal"])}
-        {col("Company", ["Our story", "Stockists", "Corporate & gifting", "Contact"])}
-        {col("Connect", ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"])}
+        {col(t("footer.explore"), [t("nav.collection"), t("home.redbook.button"), t("nav.heritage"), "Journal"])}
+        {col(t("footer.company"), [t("shop.story.eyebrow"), "Stockists", "Corporate & gifting", "Contact"])}
+        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
       </div>
       <div className="pf__base">
-        <span>© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.</span>
-        <span>Privacy · Terms</span>
+        <span>{t("footer.copy")}</span>
+        <span>{t("footer.privacy")}</span>
       </div>
     </footer>
   );
@@ -82,6 +88,7 @@ function PortalFooter() {
 
 /* ---- S1 Grand Exhibition ------------------------------------------- */
 function Exhibition() {
+  const { t } = useLanguage();
   return (
     <section className="exh" id="collection">
       <div className="exh__media">
@@ -94,9 +101,9 @@ function Exhibition() {
         <div className="exh__scrim" />
       </div>
       <div className="exh__inner">
-        <div className="apb-eyebrow exh__eyebrow">The Grand Apothecary</div>
-        <h1 className="exh__h1">Ancient Wisdom,<br/>Modern Rituals.</h1>
-        <p className="exh__sub">Discover our artisanal collection. Rooted in the 150-year-old archive of Khun Apiban Bo Plup, each formula is crafted to bring balance to your daily life. Choose your ritual.</p>
+        <div className="apb-eyebrow exh__eyebrow">{t("apothecary.h1_1")}</div>
+        <h1 className="exh__h1">{t("apothecary.h1_2")}</h1>
+        <p className="exh__sub">{t("apothecary.sub")}</p>
       </div>
     </section>
   );
@@ -141,6 +148,9 @@ function Profile({ reverse, tone, slotA, slotB, phA, phB, tagline, title, notes,
 }
 
 function Profiles() {
+  const { t } = useLanguage();
+  const thepNotes = t("apothecary.thep.notes");
+  const phetNotes = t("apothecary.phet.notes");
   return (
     <section className="profiles" id="apothecary">
       <Profile
@@ -149,10 +159,10 @@ function Profiles() {
         slotB="apo-thep-oil"
         phA="Thepprasit inhaler — warm light"
         phB="Thepprasit oil bottle"
-        tagline="The Awakener"
-        title="THEPPRASIT"
-        notes={["Thai Bergamot", "Clove", "Warm"]}
-        vibe="For days that demand clarity. A bold citrus symphony designed to refresh the mind and awaken your senses."
+        tagline={t("apothecary.thep.tagline")}
+        title={t("home.apothecary.title_thep")}
+        notes={Array.isArray(thepNotes) ? thepNotes : []}
+        vibe={t("apothecary.thep.vibe")}
         reverse={false}
       />
       <Profile
@@ -162,10 +172,10 @@ function Profiles() {
         slotB="apo-phet-oil"
         phA="Phetmongkol inhaler — cool dusk light"
         phB="Phetmongkol oil bottle"
-        tagline="The Restorer"
-        title="PHETMONGKOL"
-        notes={["Jasmine", "Ylang-Ylang", "Water Jasmine"]}
-        vibe="For moments of exhaustion. A delicate floral embrace crafted to soothe the spirit and bring inner calm."
+        tagline={t("apothecary.phet.tagline")}
+        title={t("home.apothecary.title_phet")}
+        notes={Array.isArray(phetNotes) ? phetNotes : []}
+        vibe={t("apothecary.phet.vibe")}
       />
     </section>
   );
@@ -173,6 +183,7 @@ function Profiles() {
 
 /* ---- S3 Art of Application ------------------------------------------ */
 function Application() {
+  const { t } = useLanguage();
   return (
     <section className="app-sec">
       <div className="app-sec__grid">
@@ -184,8 +195,8 @@ function Application() {
             placeholder="Editorial macro — hand holding the inhaler in a modern workspace"
           />
           <div className="app-card__cap">
-            <div className="apb-eyebrow">Inhale</div>
-            <p>Keep it close. Perfect for your pocket, workspace, or bedside.</p>
+            <div className="apb-eyebrow">{t("apothecary.app.inhale.title")}</div>
+            <p>{t("apothecary.app.inhale.desc")}</p>
           </div>
         </div>
         <div className="app-card">
@@ -196,8 +207,8 @@ function Application() {
             placeholder="Editorial macro — applying the Workday Oil to pulse points"
           />
           <div className="app-card__cap">
-            <div className="apb-eyebrow">Apply</div>
-            <p>Roll the Workday Oil on pulse points or temples for instant serenity.</p>
+            <div className="apb-eyebrow">{t("apothecary.app.apply.title")}</div>
+            <p>{t("apothecary.app.apply.desc")}</p>
           </div>
         </div>
       </div>
@@ -207,24 +218,25 @@ function Application() {
 
 /* ---- S4 Strategic Crossroads ----------------------------------------- */
 function Crossroads() {
+  const { t } = useLanguage();
   return (
     <section className="cross">
       <div className="cross__grid">
         <div className="cross__card cross__card--b2c">
-          <div className="apb-eyebrow" style={{ color: "var(--brand-gold)" }}>Personal Rituals</div>
-          <h3 className="cross__h">Bring the Wisdom Home.</h3>
-          <p className="cross__b">Elevate your daily routine with the APB collection.</p>
+          <div className="apb-eyebrow" style={{ color: "var(--brand-gold)" }}>{t("apothecary.crossroads.personal.eyebrow")}</div>
+          <h3 className="cross__h">{t("apothecary.crossroads.personal.title")}</h3>
+          <p className="cross__b">{t("apothecary.crossroads.personal.desc")}</p>
           <div className="cross__cta">
-            <Button size="lg">Shop on Shopee</Button>
-            <Button size="lg" variant="secondary">Find us in Stores</Button>
+            <Button size="lg">{t("apothecary.crossroads.personal.button1")}</Button>
+            <Button size="lg" variant="secondary">{t("apothecary.crossroads.personal.button2")}</Button>
           </div>
         </div>
         <div className="cross__card cross__card--b2b">
-          <div className="apb-eyebrow" style={{ color: "var(--spring-wood-300)" }}>The Artifact of Choice</div>
-          <h3 className="cross__h cross__h--light">Share the Legacy.</h3>
-          <p className="cross__b cross__b--light">Trusted by embassies, consulates, and premium corporate clients. Our collection is the perfect meaningful gift for global distribution, hospitality amenities, weddings, and life's significant milestones.</p>
+          <div className="apb-eyebrow" style={{ color: "var(--spring-wood-300)" }}>{t("apothecary.crossroads.b2b.eyebrow")}</div>
+          <h3 className="cross__h cross__h--light">{t("apothecary.crossroads.b2b.title")}</h3>
+          <p className="cross__b cross__b--light">{t("apothecary.crossroads.b2b.desc")}</p>
           <div className="cross__cta">
-            <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>Corporate &amp; Gifting Inquiries</Button>
+            <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("apothecary.crossroads.b2b.button")}</Button>
           </div>
         </div>
       </div>

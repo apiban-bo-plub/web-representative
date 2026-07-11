@@ -2,58 +2,20 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
 import Tag from '@/components/core/Tag';
 import Divisions from '@/components/brand/Divisions';
+import LanguageSelector from '@/components/LanguageSelector';
 
 /* ---- Data ---------------------------------------------------------- */
 const PRODUCTS = [
-  {
-    id: "cooling",
-    name: "Cooling Thai Oil",
-    th: "ยาหม่องน้ำ",
-    tone: "green",
-    tagline: "Inspired by Khun Apiban's herbal recipe",
-    desc: "Cool your senses, relax deeply, and find relief from office syndrome — all in one soothing herbal oil.",
-    price: 320,
-    vol: "20 ml",
-    tags: ["Herbal", "Cooling"]
-  },
-  {
-    id: "inhaler",
-    name: "Herbal Inhaler",
-    th: "ยาดม",
-    tone: "sand",
-    tagline: "A breath of the forest, anywhere",
-    desc: "A bright, camphor-forward inhalant blended from native Thai herbs to clear the mind and settle the breath.",
-    price: 180,
-    vol: "2 ml",
-    tags: ["Herbal", "Uplifting"]
-  },
-  {
-    id: "floral",
-    name: "Floral Massage Oil",
-    th: "น้ำมันนวดดอกไม้",
-    tone: "gold",
-    tagline: "Petals pressed into calm",
-    desc: "A warming massage oil carrying jasmine and ylang, drawn from the family's floral traditions.",
-    price: 480,
-    vol: "100 ml",
-    tags: ["Massage", "Floral"]
-  },
-  {
-    id: "kaffir",
-    name: "Kaffir Massage Oil",
-    th: "น้ำมันนวดมะกรูด",
-    tone: "green",
-    tagline: "Green, citrus, grounding",
-    desc: "Kaffir lime and lemongrass in a nourishing base oil — a bright, grounding ritual for tired muscles.",
-    price: 480,
-    vol: "100 ml",
-    tags: ["Massage", "Citrus"]
-  }
+  { id: "cooling", tone: "green", price: 320, vol: "20 ml" },
+  { id: "inhaler", tone: "sand", price: 180, vol: "2 ml" },
+  { id: "floral", tone: "gold", price: 480, vol: "100 ml" },
+  { id: "kaffir", tone: "green", price: 480, vol: "100 ml" }
 ];
 
 const toneBg = {
@@ -72,8 +34,13 @@ const baht = n => "฿" + n;
 
 /* ---- Packaging visual (CSS label mock) ----------------------------- */
 function ProductVisual({ p, size = "md" }) {
+  const { t } = useLanguage();
   const h = size === "lg" ? 460 : 300;
   const cream = p.tone !== "sand";
+  
+  const pName = t("shop.products." + p.id + ".name");
+  const pTh = t("shop.products." + p.id + ".th");
+
   return (
     <div
       style={{
@@ -131,7 +98,7 @@ function ProductVisual({ p, size = "md" }) {
             marginBottom: 6
           }}
         >
-          {p.th}
+          {pTh}
         </div>
         <div
           style={{
@@ -143,7 +110,7 @@ function ProductVisual({ p, size = "md" }) {
             lineHeight: 1.1
           }}
         >
-          {p.name}
+          {pName}
         </div>
         <div
           style={{
@@ -171,7 +138,8 @@ function ProductVisual({ p, size = "md" }) {
 
 /* ---- Nav ------------------------------------------------------------ */
 function Nav({ route, go, cart }) {
-  const link = (id, label) => (
+  const { t } = useLanguage();
+  const link = (id, labelKey) => (
     <a
       onClick={() => go(id)}
       style={{
@@ -184,7 +152,7 @@ function Nav({ route, go, cart }) {
         color: route === id ? "var(--basil-green-800)" : "var(--text-body)"
       }}
     >
-      {label}
+      {t(labelKey)}
     </a>
   );
   return (
@@ -208,9 +176,9 @@ function Nav({ route, go, cart }) {
           justifyContent: "space-between"
         }}
       >
-        <nav style={{ display: "flex", gap: 28, flex: 1 }}>
-          {link("home", "Shop")}
-          {link("story", "Our Story")}
+        <nav style={{ display: "flex", gap: 28, flex: 1, alignItems: 'center' }}>
+          {link("home", "nav.collection")}
+          {link("story", "shop.story.eyebrow")}
         </nav>
         <a onClick={() => go("home")} style={{ cursor: "pointer" }}>
           <Logo width={150} />
@@ -234,7 +202,7 @@ function Nav({ route, go, cart }) {
               cursor: "pointer"
             }}
           >
-            Search
+            {t("nav.search")}
           </span>
           <span
             style={{
@@ -246,8 +214,9 @@ function Nav({ route, go, cart }) {
               fontWeight: 600
             }}
           >
-            Cart ({cart})
+            {t("nav.cart")} ({cart})
           </span>
+          <LanguageSelector />
         </div>
       </div>
     </header>
@@ -256,6 +225,7 @@ function Nav({ route, go, cart }) {
 
 /* ---- Hero ----------------------------------------------------------- */
 function Hero({ go }) {
+  const { t } = useLanguage();
   return (
     <section
       style={{
@@ -274,9 +244,10 @@ function Hero({ go }) {
           maxWidth: 620
         }}
       >
-        <div className="apb-eyebrow" style={{ marginBottom: 20 }}>Heritage Thai Apothecary</div>
+        <div className="apb-eyebrow" style={{ marginBottom: 20 }}>{t("home.hero.eyebrow")}</div>
         <h1 style={{ fontSize: 68, lineHeight: 1.04, margin: "0 0 24px" }}>
-          Ancient remedies,<br/>gently reimagined.
+          {t("shop.hero.title_1")}<br/>
+          {t("shop.hero.title_2")}
         </h1>
         <p
           style={{
@@ -286,11 +257,11 @@ function Hero({ go }) {
             marginBottom: 32
           }}
         >
-          Wisdom once written in a family's red book — now blended into refined self-care rituals for modern living.
+          {t("shop.hero.sub")}
         </p>
         <div style={{ display: "flex", gap: 14 }}>
-          <Button onClick={() => go("home")}>Shop the ritual</Button>
-          <Button variant="secondary" onClick={() => go("story")}>Read our story</Button>
+          <Button onClick={() => go("home")}>{t("shop.hero.button_shop")}</Button>
+          <Button variant="secondary" onClick={() => go("story")}>{t("shop.hero.button_story")}</Button>
         </div>
       </div>
       <div
@@ -313,6 +284,10 @@ function Hero({ go }) {
 
 /* ---- Product grid --------------------------------------------------- */
 function ProductCard({ p, go }) {
+  const { t } = useLanguage();
+  const pName = t("shop.products." + p.id + ".name");
+  const pTagline = t("shop.products." + p.id + ".tagline");
+
   return (
     <div
       onClick={() => go("product:" + p.id)}
@@ -322,13 +297,13 @@ function ProductCard({ p, go }) {
       <ProductVisual p={p} />
       <div style={{ padding: "18px 4px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-          <h3 style={{ fontSize: 22, margin: 0 }}>{p.name}</h3>
+          <h3 style={{ fontSize: 22, margin: 0 }}>{pName}</h3>
           <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, color: "var(--text-body)" }}>
             {baht(p.price)}
           </span>
         </div>
         <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 15, color: "var(--text-muted)", margin: "6px 0 0" }}>
-          {p.tagline}
+          {pTagline}
         </p>
       </div>
     </div>
@@ -336,13 +311,14 @@ function ProductCard({ p, go }) {
 }
 
 function ShopContent({ go }) {
+  const { t } = useLanguage();
   return (
     <main>
       <Hero go={go} />
       <section style={{ maxWidth: 1200, margin: "0 auto", padding: "72px 40px" }}>
         <div style={{ textAlign: "center", marginBottom: 44 }}>
-          <div className="apb-eyebrow" style={{ marginBottom: 12 }}>The Collection</div>
-          <h2 style={{ fontSize: 44, margin: 0 }}>Four rituals, one lineage</h2>
+          <div className="apb-eyebrow" style={{ marginBottom: 12 }}>{t("home.gallery.eyebrow")}</div>
+          <h2 style={{ fontSize: 44, margin: 0 }}>{t("shop.h2")}</h2>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
           {PRODUCTS.map(p => (
@@ -358,6 +334,7 @@ function ShopContent({ go }) {
 
 /* ---- Heritage strip ------------------------------------------------- */
 function HeritageStrip({ go }) {
+  const { t } = useLanguage();
   return (
     <section style={{ background: "var(--surface-green)", color: "var(--text-on-dark)" }}>
       <div
@@ -381,19 +358,19 @@ function HeritageStrip({ go }) {
         />
         <div>
           <div style={{ color: "var(--makara-300)", marginBottom: 18 }} className="apb-eyebrow">
-            Est. from a 150-year heritage
+            {t("shop.strip.eyebrow")}
           </div>
           <h2 style={{ color: "#fff", fontSize: 44, margin: "0 0 22px" }}>
-            The red-bound manuscript
+            {t("shop.strip.title")}
           </h2>
           <p style={{ font: "var(--type-lead)", color: "var(--makara-100)", marginBottom: 16 }}>
-            Over a century and a half ago, our ancestor Khun Apiban recorded his healing knowledge in a red-bound manuscript — a quiet testament to Thailand's botanical wisdom.
+            {t("shop.strip.desc1")}
           </p>
           <p style={{ fontFamily: "var(--font-sans)", color: "var(--makara-200)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
-            Today we revive that heritage for a new generation, transforming ancient remedies into rituals that invite you to slow down and reconnect.
+            {t("shop.strip.desc2")}
           </p>
           <Button variant="gold" onClick={() => go("story")}>
-            Discover the lineage
+            {t("shop.strip.button")}
           </Button>
         </div>
       </div>
@@ -403,6 +380,7 @@ function HeritageStrip({ go }) {
 
 /* ---- Newsletter ----------------------------------------------------- */
 function Newsletter() {
+  const { t } = useLanguage();
   return (
     <section style={{ maxWidth: 720, margin: "0 auto", padding: "84px 40px", textAlign: "center" }}>
       <img
@@ -410,13 +388,13 @@ function Newsletter() {
         style={{ width: 46, opacity: 0.85, marginBottom: 22, marginLeft: 'auto', marginRight: 'auto' }}
         alt=""
       />
-      <h2 style={{ fontSize: 38, margin: "0 0 14px" }}>Join the ritual</h2>
+      <h2 style={{ fontSize: 38, margin: "0 0 14px" }}>{t("shop.news.title")}</h2>
       <p style={{ font: "var(--type-lead)", color: "var(--text-body)", marginBottom: 28 }}>
-        Seasonal blends, botanical notes, and quiet moments — to your inbox.
+        {t("shop.news.desc")}
       </p>
       <div style={{ display: "flex", gap: 12, maxWidth: 460, margin: "0 auto" }}>
         <input
-          placeholder="Your email"
+          placeholder={t("shop.news.placeholder")}
           style={{
             flex: 1,
             padding: "13px 18px",
@@ -428,7 +406,7 @@ function Newsletter() {
             color: "var(--text-body)"
           }}
         />
-        <Button>Subscribe</Button>
+        <Button>{t("shop.news.button")}</Button>
       </div>
     </section>
   );
@@ -436,7 +414,14 @@ function Newsletter() {
 
 /* ---- Product detail ------------------------------------------------- */
 function ProductDetail({ id, go, add }) {
+  const { t } = useLanguage();
   const p = PRODUCTS.find(x => x.id === id) || PRODUCTS[0];
+  
+  const pName = t("shop.products." + p.id + ".name");
+  const pTagline = t("shop.products." + p.id + ".tagline");
+  const pDesc = t("shop.products." + p.id + ".desc");
+  const pTags = t("shop.products." + p.id + ".tags");
+
   return (
     <main style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 40px 96px" }}>
       <a
@@ -450,21 +435,21 @@ function ProductDetail({ id, go, add }) {
           color: "var(--text-muted)"
         }}
       >
-        ← Back to shop
+        {t("shop.back")}
       </a>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, marginTop: 24, alignItems: "start" }}>
         <ProductVisual p={p} size="lg" />
         <div style={{ paddingTop: 12 }}>
           <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-            {p.tags.map(t => (
-              <Tag key={t} tone="green">
-                {t}
+            {Array.isArray(pTags) && pTags.map(tLabel => (
+              <Tag key={tLabel} tone="green">
+                {tLabel}
               </Tag>
             ))}
           </div>
-          <h1 style={{ fontSize: 52, margin: "0 0 6px" }}>{p.name}</h1>
+          <h1 style={{ fontSize: 52, margin: "0 0 6px" }}>{pName}</h1>
           <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 22, color: "var(--brand-green)", margin: "0 0 24px" }}>
-            {p.tagline}
+            {pTagline}
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
             <span style={{ fontFamily: "var(--font-serif)", fontSize: 30, color: "var(--text-strong)" }}>
@@ -473,23 +458,23 @@ function ProductDetail({ id, go, add }) {
             <Tag>{p.vol}</Tag>
           </div>
           <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)", marginBottom: 28 }}>
-            {p.desc}
+            {pDesc}
           </p>
           <div style={{ display: "flex", gap: 14, marginBottom: 32 }}>
             <Button size="lg" onClick={add}>
-              Add to cart
+              {t("apothecary.crossroads.b2c.button") || "Add to cart"}
             </Button>
             <Button size="lg" variant="secondary">
-              Save
+              {t("shop.detail.save")}
             </Button>
           </div>
-          <Divisions label="How to use" />
+          <Divisions label={t("shop.detail.use_title")} />
           <p style={{ font: "var(--type-body)", fontSize: 14, color: "var(--text-body)" }}>
-            Warm a few drops between the palms, breathe in, and massage gently into temples, neck or shoulders. Reapply through the day as a grounding pause.
+            {t("shop.detail.use_body")}
           </p>
-          <Divisions label="Ingredients" />
+          <Divisions label={t("shop.detail.ing_title")} />
           <p style={{ fontFamily: "var(--font-sans-thai)", fontSize: 14, color: "var(--text-body)" }}>
-            Oryza sativa bran oil, caprylic/capric triglyceride, native Thai herbal extracts, menthol, essential oils. Made in small batches in Songkhla, Thailand.
+            {t("shop.detail.ing_body")}
           </p>
         </div>
       </div>
@@ -499,13 +484,14 @@ function ProductDetail({ id, go, add }) {
 
 /* ---- Story ---------------------------------------------------------- */
 function StorySection() {
+  const { t } = useLanguage();
   return (
     <main>
       <section style={{ maxWidth: 820, margin: "0 auto", padding: "80px 40px 40px", textAlign: "center" }}>
-        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>Our Story</div>
-        <h1 style={{ fontSize: 60, margin: "0 0 20px" }}>อภัยบ่อพลับ</h1>
+        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>{t("shop.story.eyebrow")}</div>
+        <h1 style={{ fontSize: 60, margin: "0 0 20px" }}>{t("shop.story.title")}</h1>
         <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 26, color: "var(--brand-green)", lineHeight: 1.4 }}>
-          "Wisdom once written in a family's red book, now reimagined for the world."
+          {t("shop.story.tagline")}
         </p>
       </section>
       <section style={{ maxWidth: 980, margin: "0 auto", padding: "24px 40px 96px" }}>
@@ -520,14 +506,14 @@ function StorySection() {
         />
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <p style={{ font: "var(--type-lead)", color: "var(--text-body)", marginBottom: 22 }}>
-            Over a century and a half ago, our ancestor Khun Apiban recorded his healing knowledge in a red-bound manuscript — a quiet testament to Thailand's botanical wisdom and spiritual balance.
+            {t("shop.story.p1")}
           </p>
           <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)", marginBottom: 22 }}>
-            Today, Apiban Bo Plup revives that heritage for a new generation, transforming ancient Thai remedies into refined self-care rituals. Rooted in nature, guided by tradition, and crafted for modern living — each creation invites you to slow down, breathe deeply, and reconnect with the serenity that endures across time.
+            {t("shop.story.p2")}
           </p>
-          <Divisions label="Made in Songkhla" />
+          <Divisions label={t("shop.story.made_title")} />
           <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)" }}>
-            Every blend is prepared in small batches from native Thai botanicals, honouring the recipes and the patience of those who came before.
+            {t("shop.story.made_body")}
           </p>
         </div>
       </section>
@@ -538,6 +524,7 @@ function StorySection() {
 
 /* ---- Site footer ---------------------------------------------------- */
 function SiteFooter() {
+  const { t } = useLanguage();
   const col = (h, items) => (
     <div key={h}>
       <div
@@ -591,12 +578,12 @@ function SiteFooter() {
               lineHeight: 1.6
             }}
           >
-            Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.
+            {t("footer.blurb")}
           </p>
         </div>
-        {col("Shop", ["Cooling Thai Oil", "Herbal Inhaler", "Massage Oils", "Gift sets"])}
-        {col("Company", ["Our story", "Journal", "Stockists", "Contact"])}
-        {col("Connect", ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"])}
+        {col(t("shop.footer.shop"), [t("shop.footer.shopItems.0"), t("shop.footer.shopItems.1"), t("shop.footer.shopItems.2"), t("shop.footer.shopItems.3")])}
+        {col(t("shop.footer.company"), [t("shop.story.eyebrow"), t("shop.footer.companyItems.1"), t("shop.footer.companyItems.2"), t("shop.footer.companyItems.3")])}
+        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
       </div>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px 40px" }}>
         <div
@@ -610,8 +597,8 @@ function SiteFooter() {
             color: "var(--makara-300)"
           }}
         >
-          <span>© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.</span>
-          <span>Privacy · Terms</span>
+          <span>{t("footer.copy")}</span>
+          <span>{t("footer.privacy")}</span>
         </div>
       </div>
     </footer>

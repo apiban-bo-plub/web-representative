@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ScrollText, Sparkles, Users } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
 import Tag from '@/components/core/Tag';
 import Divisions from '@/components/brand/Divisions';
 import ImageSlot from '@/components/ImageSlot';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const iconMap = {
   'scroll-text': ScrollText,
@@ -18,8 +20,9 @@ const iconMap = {
 
 /* ---- Nav ---------------------------------------------------------- */
 function PortalNav({ go }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const L = (id, t, extra) => (
+  const L = (id, tKey, extra) => (
     <a
       onClick={() => {
         go(id);
@@ -28,33 +31,35 @@ function PortalNav({ go }) {
       className={"pn__link " + (extra || "")}
       style={{ cursor: 'pointer' }}
     >
-      {t}
+      {t(tKey)}
     </a>
   );
   return (
     <header className="pn">
       <nav className="pn__side">
-        {L("collection", "Collection")}
-        {L("story", "Heritage")}
-        {L("apothecary", "The Apothecary")}
+        {L("collection", "nav.collection")}
+        {L("story", "nav.heritage")}
+        {L("apothecary", "nav.apothecary")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
       </a>
-      <div className="pn__side pn__side--right">
-        <span className="pn__link" style={{ cursor: 'pointer' }}>Search</span>
+      <div className="pn__side pn__side--right" style={{ gap: '16px' }}>
+        <span className="pn__link" style={{ cursor: 'pointer' }}>{t("nav.search")}</span>
+        <LanguageSelector />
       </div>
       <button className="pn__burger" aria-label="Menu" onClick={() => setOpen(v => !v)}>
         <span></span><span></span><span></span>
       </button>
       {open && (
         <div className="pn__drawer">
-          {L("collection", "Collection", "pn__drawerLink")}
-          {L("story", "Heritage", "pn__drawerLink")}
-          {L("apothecary", "The Apothecary", "pn__drawerLink")}
-          <a className="pn__link pn__drawerLink" onClick={() => setOpen(false)} style={{ cursor: 'pointer' }}>
-            Search
-          </a>
+          {L("collection", "nav.collection", "pn__drawerLink")}
+          {L("story", "nav.heritage", "pn__drawerLink")}
+          {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
+            <span>{t("nav.search")}</span>
+            <LanguageSelector />
+          </div>
         </div>
       )}
     </header>
@@ -63,27 +68,33 @@ function PortalNav({ go }) {
 
 /* ---- S1 Hero ------------------------------------------------------ */
 function Hero({ go }) {
+  const { t } = useLanguage();
   return (
     <section className="hero" id="top">
       <div className="hero__bg" style={{ backgroundImage: "url('/images/hero.jpg')" }} />
       <div className="hero__scrim" />
       <div className="hero__inner">
-        <div className="apb-eyebrow hero__eyebrow">Heritage Thai Apothecary · Est. 1870s</div>
-        <h1 className="hero__h1">150 Years of Wisdom.<br/>Reimagined for Your<br/>Modern Rituals.</h1>
-        <p className="hero__sub">Step into the world of APB—where ancient Thai wisdom meets modern artistic expression. Artisan essentials born from a heritage archive, crafted for your daily well-being.</p>
+        <div className="apb-eyebrow hero__eyebrow">{t("home.hero.eyebrow")}</div>
+        <h1 className="hero__h1">
+          {t("home.hero.h1_1")}<br/>
+          {t("home.hero.h1_2")}<br/>
+          {t("home.hero.h1_3")}
+        </h1>
+        <p className="hero__sub">{t("home.hero.sub")}</p>
         <div className="hero__cta">
-          <Button size="lg" onClick={() => go("collection")}>Discover the Collection</Button>
-          <Button size="lg" variant="secondary" onClick={() => go("story")} style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>Our Story</Button>
+          <Button size="lg" onClick={() => go("collection")}>{t("home.hero.discover")}</Button>
+          <Button size="lg" variant="secondary" onClick={() => go("story")} style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("home.hero.story")}</Button>
         </div>
       </div>
-      <div className="hero__scroll">Scroll</div>
+      <div className="hero__scroll">{t("home.hero.scroll")}</div>
     </section>
   );
 }
 
 /* ---- S1.5 Prestige marquee --------------------------------------- */
 function Prestige() {
-  const line = "Honored to be the heritage gift of choice for Embassies, Consulates, and Life's Meaningful Ceremonies.";
+  const { t } = useLanguage();
+  const line = t("home.prestige.line");
   return (
     <section className="prestige" aria-label="Recognition">
       <div className="prestige__track">
@@ -100,21 +111,22 @@ function Prestige() {
 
 /* ---- S2 Pillars --------------------------------------------------- */
 function Pillars() {
+  const { t } = useLanguage();
   const data = [
     {
       icon: "scroll-text",
-      t: "Authentic Legacy",
-      b: "Directly descended from the archives of Khun Apiban Bo Plup (APB) during the era of King Rama V."
+      t: t("home.pillars.legacy.title"),
+      b: t("home.pillars.legacy.desc")
     },
     {
       icon: "sparkles",
-      t: "Modern Magic",
-      b: "Traditional Thai botanicals transformed into stylish, portable essentials for the fast-paced urban life."
+      t: t("home.pillars.magic.title"),
+      b: t("home.pillars.magic.desc")
     },
     {
       icon: "users",
-      t: "Collective Craft",
-      b: "A collaborative revival by the Songkhla family, uniting generations to preserve artisanal heritage."
+      t: t("home.pillars.craft.title"),
+      b: t("home.pillars.craft.desc")
     }
   ];
   return (
@@ -140,6 +152,7 @@ function Pillars() {
 
 /* ---- S3 Red Book -------------------------------------------------- */
 function RedBook({ go }) {
+  const { t } = useLanguage();
   return (
     <section className="redbook" id="story">
       <div className="redbook__media">
@@ -153,10 +166,13 @@ function RedBook({ go }) {
         <div className="redbook__mark" />
       </div>
       <div className="redbook__text">
-        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>The Secret</div>
-        <h2 className="redbook__h">Ancient Roots,<br/>Modern Balance.</h2>
-        <p className="redbook__b">We offer a 150-year-old dialogue between nature and the senses. Our formulas use the exact high-quality Thai botanicals recorded in the legendary Red Book, optimized to restore your balance today. From the old streets of Songkhla to your pocket.</p>
-        <Button variant="secondary" onClick={() => go("story")}>Uncover the Red Book</Button>
+        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>{t("home.redbook.eyebrow")}</div>
+        <h2 className="redbook__h">
+          {t("home.redbook.title_1")}<br/>
+          {t("home.redbook.title_2")}
+        </h2>
+        <p className="redbook__b">{t("home.redbook.body")}</p>
+        <Button variant="secondary" onClick={() => go("story")}>{t("home.redbook.button")}</Button>
       </div>
     </section>
   );
@@ -184,6 +200,7 @@ function ApothecarySide({ id, tone, tagline, title, body, slotId, ph }) {
 }
 
 function Apothecary({ go }) {
+  const { t } = useLanguage();
   return (
     <section className="apo" id="apothecary">
       <div className="apo__split">
@@ -191,21 +208,21 @@ function Apothecary({ go }) {
           tone="green"
           slotId="portal-thepprasit"
           ph="Thepprasit — product shot"
-          tagline="The Awakener"
-          title="THEPPRASIT"
-          body="A bold, citrusy symphony of cloves and Thai bergamot. Designed to clear the mind and uplift your spirit during demanding hours."
+          tagline={t("home.apothecary.tagline_thep")}
+          title={t("home.apothecary.title_thep")}
+          body={t("home.apothecary.body_thep")}
         />
         <ApothecarySide
           tone="gold"
           slotId="portal-phetmongkol"
           ph="Phetmongkol — product shot"
-          tagline="The Restorer"
-          title="PHETMONGKOL"
-          body="Delicate Jasmine and Ylang-Ylang. A floral embrace that soothes the senses and brings inner calm after a long day."
+          tagline={t("home.apothecary.tagline_phet")}
+          title={t("home.apothecary.title_phet")}
+          body={t("home.apothecary.body_phet")}
         />
       </div>
       <div className="apo__cta">
-        <Button size="lg" onClick={() => go("collection")}>Explore the Rituals</Button>
+        <Button size="lg" onClick={() => go("collection")}>{t("home.apothecary.button")}</Button>
       </div>
     </section>
   );
@@ -213,15 +230,16 @@ function Apothecary({ go }) {
 
 /* ---- S4.5 Gallery -------------------------------------------------- */
 function Gallery() {
+  const { t } = useLanguage();
   const items = [
-    { id: "portal-gallery-1", cap: "Flagship Pop-up — Bangkok" },
-    { id: "portal-gallery-2", cap: "Corporate Gifting — Embassy of Thailand" },
-    { id: "portal-gallery-3", cap: "Craft Exhibition — Songkhla Heritage Fair" },
-    { id: "portal-gallery-4", cap: "Retail Activation — ICONSIAM" },
-    { id: "portal-gallery-5", cap: "Wedding Favors — Private Ceremony" },
-    { id: "portal-gallery-6", cap: "Trade Show — Thailand Beauty Expo" },
-    { id: "portal-gallery-7", cap: "Hotel Amenity Partnership — Luxury Resort" },
-    { id: "portal-gallery-8", cap: "Workshop — The Red Book Archive Tour" }
+    { id: "portal-gallery-1", cap: t("home.gallery.items.g1") },
+    { id: "portal-gallery-2", cap: t("home.gallery.items.g2") },
+    { id: "portal-gallery-3", cap: t("home.gallery.items.g3") },
+    { id: "portal-gallery-4", cap: t("home.gallery.items.g4") },
+    { id: "portal-gallery-5", cap: t("home.gallery.items.g5") },
+    { id: "portal-gallery-6", cap: t("home.gallery.items.g6") },
+    { id: "portal-gallery-7", cap: t("home.gallery.items.g7") },
+    { id: "portal-gallery-8", cap: t("home.gallery.items.g8") }
   ];
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -229,9 +247,9 @@ function Gallery() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced || paused) return;
-    const t = setInterval(() => setI(v => (v + 1) % items.length), 4200);
-    return () => clearInterval(t);
-  }, [paused]);
+    const tTimer = setInterval(() => setI(v => (v + 1) % items.length), 4200);
+    return () => clearInterval(tTimer);
+  }, [paused, items.length]);
 
   return (
     <section
@@ -241,9 +259,9 @@ function Gallery() {
       onMouseLeave={() => setPaused(false)}
     >
       <div className="gallery__head">
-        <div className="apb-eyebrow">The Gallery</div>
-        <h2 className="gallery__h">Where Heritage Meets the World.</h2>
-        <p className="gallery__b">From embassy gifting suites to craft fairs in Old Songkhla — a look at APB out in the world, one occasion at a time.</p>
+        <div className="apb-eyebrow">{t("home.gallery.eyebrow")}</div>
+        <h2 className="gallery__h">{t("home.gallery.title")}</h2>
+        <p className="gallery__b">{t("home.gallery.desc")}</p>
       </div>
       <div className="gallery__stage">
         {items.map((it, idx) => (
@@ -299,6 +317,7 @@ function Gallery() {
 /* ---- S5 Continuum ------------------------------------------------- */
 function Continuum() {
   const router = useRouter();
+  const { t } = useLanguage();
   return (
     <section className="cont" id="collection">
       <div className="cont__media">
@@ -311,11 +330,11 @@ function Continuum() {
       </div>
       <div className="cont__panel">
         <img className="cont__mark" src="/images/motif.svg" alt="" />
-        <h2 className="cont__h">Begin Your Ritual.</h2>
-        <p className="cont__b">Bring the Songkhla legacy into your daily life, or share the authentic Thai wellness experience with the world.</p>
+        <h2 className="cont__h">{t("home.continuum.title")}</h2>
+        <p className="cont__b">{t("home.continuum.desc")}</p>
         <div className="cont__cta">
-          <Button size="lg" onClick={() => router.push('/shop')}>Shop the Collection</Button>
-          <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>Corporate &amp; Gifting Inquiries</Button>
+          <Button size="lg" onClick={() => router.push('/shop')}>{t("home.continuum.button_shop")}</Button>
+          <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("home.continuum.button_gift")}</Button>
         </div>
       </div>
     </section>
@@ -324,6 +343,7 @@ function Continuum() {
 
 /* ---- Footer ------------------------------------------------------- */
 function PortalFooter() {
+  const { t } = useLanguage();
   const col = (h, items) => (
     <div key={h}>
       <div className="pf__h">{h}</div>
@@ -335,15 +355,15 @@ function PortalFooter() {
       <div className="pf__grid">
         <div>
           <Logo width={170} color="#f0ebe2" />
-          <p className="pf__blurb">Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.</p>
+          <p className="pf__blurb">{t("footer.blurb")}</p>
         </div>
-        {col("Explore", ["Collection", "The Red Book", "Heritage", "Journal"])}
-        {col("Company", ["Our story", "Stockists", "Corporate & gifting", "Contact"])}
-        {col("Connect", ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"])}
+        {col(t("footer.explore"), [t("nav.collection"), t("home.redbook.button"), t("nav.heritage"), "Journal"])}
+        {col(t("footer.company"), [t("shop.story.eyebrow"), "Stockists", "Corporate & gifting", "Contact"])}
+        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
       </div>
       <div className="pf__base">
-        <span>© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.</span>
-        <span>Privacy · Terms</span>
+        <span>{t("footer.copy")}</span>
+        <span>{t("footer.privacy")}</span>
       </div>
     </footer>
   );

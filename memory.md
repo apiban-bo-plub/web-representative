@@ -5,7 +5,7 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 
 ## User Context
 - **Name**: Sorawit
-- **Preferences**: Direct, expert suggestions; challenge opinions if a better approach is available. Keep memory.md updated.
+- **Preferences**: Direct, expert suggestions; challenge opinions if a better approach is available. Keep memory.md updated. Only deploy to production (Vercel, etc.) when explicitly told to do so by the user.
 
 ## Key Decisions
 - **Vanilla CSS**: Kept the design system css styles (`style_0.css` and `style_1.css`) as-is to preserve typography and spacing tokens.
@@ -23,6 +23,9 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Implemented `ImageSlot.js` React component in `src/components/`.
 - Restored React components and page routes (`/`, `/heritage`, `/apothecary`, `/shop`).
 - Removed the mobile/desktop view toggle switch from all pages per user request.
+- Initialized local Git repository, configured `.gitignore` to omit heavy/temporary assets, and successfully pushed the codebase to the organization repository [web-representative](https://github.com/apiban-bo-plub/web-representative.git) on the `main` branch.
+- Deployed the project to Vercel production at [apiban-blond.vercel.app](https://apiban-blond.vercel.app).
+- Implemented English and Thai i18n language context, JSON dictionaries, and dynamic selectors on all nav headers.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
