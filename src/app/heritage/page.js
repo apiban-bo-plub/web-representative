@@ -47,7 +47,7 @@ function PortalNav({ go }) {
           {L("story", "nav.heritage", "pn__drawerLink")}
           {L("apothecary", "nav.apothecary", "pn__drawerLink")}
           <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-            <LanguageSelector />
+            <LanguageSelector align="left" />
           </div>
         </div>
       )}

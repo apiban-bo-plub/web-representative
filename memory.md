@@ -27,6 +27,7 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Deployed the project to Vercel production at [apiban-blond.vercel.app](https://apiban-blond.vercel.app).
 - Implemented English and Thai i18n language context, JSON dictionaries, and dynamic selectors on all nav headers.
 - Removed the "Search" link from all navigation headers per user request.
+- Changed the Thai header font to "Charm" (Calligraphic Script) to match the handwritten "Red Book" manuscript branding.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks

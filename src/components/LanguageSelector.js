@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function LanguageSelector() {
+export default function LanguageSelector({ align = 'right' }) {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
@@ -52,7 +52,7 @@ export default function LanguageSelector() {
         <div
           style={{
             position: 'absolute',
-            right: 0,
+            ...(align === 'left' ? { left: 0 } : { right: 0 }),
             top: 'calc(100% + 8px)',
             background: 'rgba(240, 235, 226, 0.96)',
             backdropFilter: 'blur(10px)',
