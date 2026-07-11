@@ -198,18 +198,6 @@ function Nav({ route, go, cart }) {
               fontSize: 13,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "var(--text-body)",
-              cursor: "pointer"
-            }}
-          >
-            {t("nav.search")}
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: 13,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
               color: "var(--basil-green-800)",
               fontWeight: 600
             }}

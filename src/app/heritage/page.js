@@ -36,7 +36,6 @@ function PortalNav({ go }) {
         <Logo width={150} />
       </a>
       <div className="pn__side pn__side--right" style={{ gap: '16px' }}>
-        <span className="pn__link" style={{ cursor: 'pointer' }}>{t("nav.search")}</span>
         <LanguageSelector />
       </div>
       <button className="pn__burger" aria-label="Menu" onClick={() => setOpen(v => !v)}>
@@ -47,8 +46,7 @@ function PortalNav({ go }) {
           {L("collection", "nav.collection", "pn__drawerLink")}
           {L("story", "nav.heritage", "pn__drawerLink")}
           {L("apothecary", "nav.apothecary", "pn__drawerLink")}
-          <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}>
-            <span>{t("nav.search")}</span>
+          <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <LanguageSelector />
           </div>
         </div>
