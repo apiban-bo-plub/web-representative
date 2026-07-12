@@ -65,6 +65,30 @@ function PortalNav({ go }) {
   );
 }
 
+function Hero({ go }) {
+  const { t } = useLanguage();
+  return (
+    <section className="hero" id="top">
+      <div className="hero__bg" style={{ backgroundImage: "url('/images/hero.jpg')" }} />
+      <div className="hero__scrim" />
+      <div className="hero__inner">
+        <div className="apb-eyebrow hero__eyebrow">{t("home.hero.eyebrow")}</div>
+        <h1 className="hero__h1">
+          {t("home.hero.h1_1")}<br/>
+          {t("home.hero.h1_2")}<br/>
+          {t("home.hero.h1_3")}
+        </h1>
+        <p className="hero__sub">{t("home.hero.sub")}</p>
+        <div className="hero__cta">
+          <Button size="lg" onClick={() => go("collection")}>{t("home.hero.discover")}</Button>
+          <Button size="lg" variant="secondary" onClick={() => go("story")} style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("home.hero.story")}</Button>
+        </div>
+      </div>
+      <div className="hero__scroll">{t("home.hero.scroll")}</div>
+    </section>
+  );
+}
+
 function Prestige() {
   const { t } = useLanguage();
   const line = t("home.prestige.line");
@@ -336,26 +360,35 @@ function PortalFooter() {
   );
 }
 
-/* ---- Main Test Page Component ---- */
+/* ---- Main Parallax Reveal Page Component ---- */
 
-export default function VideoTestPage() {
+export default function VideoParallaxPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const iframeRef = useRef(null);
   
   const [scrollY, setScrollY] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(800);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showPlayOverlay, setShowPlayOverlay] = useState(false);
   const [showMuteOverlay, setShowMuteOverlay] = useState(false);
 
-  // Scroll listener to drive the video expand & opacity animations
+  // Setup scroll and height measurements on client side
   useEffect(() => {
+    setWindowHeight(window.innerHeight);
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // YouTube Shorts ID: JKFGev-fdqw
@@ -414,59 +447,62 @@ export default function VideoTestPage() {
     }
   }, [showMuteOverlay]);
 
-  // Navigation handlers
+  // Page anchor scroll handler
   const go = (id) => {
     if (id === "top") return window.scrollTo({ top: 0, behavior: "smooth" });
     if (id === "story") {
-      router.push("/heritage");
+      const el = document.getElementById("story");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
       return;
     }
     if (id === "apothecary") {
-      router.push("/apothecary");
+      const el = document.getElementById("apothecary");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
       return;
     }
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
 
-  // Scroll expansion calculations (transition finishes within 500px scroll)
-  const transitionThreshold = 550;
-  const progress = Math.min(Math.max(scrollY / transitionThreshold, 0), 1);
+  // Parallax Scroll calculations: transition completes over 1 full viewport scroll
+  const scrollThreshold = windowHeight > 0 ? windowHeight : 800;
+  const progress = Math.min(Math.max(scrollY / scrollThreshold, 0), 1);
 
-  // Dynamic styling variables derived from scroll progress
-  // Desktop properties
+  // Video transitions derived from progress:
+  // - Opacity: fades from 1.0 down to 0.0
+  // - Scaling/Expansion (Desktop only): expands outwards slightly as you scroll
   const desktopWidth = `calc( (70vh * 9 / 16) + (100vw - (70vh * 9 / 16)) * ${progress} )`;
   const desktopHeight = `calc( 70vh + (100vh - 70vh) * ${progress} )`;
   const desktopRadius = `${16 * (1 - progress)}px`;
   const desktopShadow = `0 ${24 * (1 - progress)}px ${70 * (1 - progress)}px rgba(0, 0, 0, ${0.8 * (1 - progress)})`;
-  const desktopScrimOpacity = progress * 0.7; // scrim to dim video as it expands into homepage hero background
-
-  // Mobile properties (remains full size, only opacity adjusts to show/transition to static elements)
-  const mobileVideoOpacity = 1 - progress * 0.75; // Fades from 100% to 25% opacity
+  
+  // Visibility threshold: hide fixed video layer completely once faded to save browser rendering resources
+  const isVideoHidden = progress >= 0.99;
 
   return (
-    <div className="portal video-scroll-page">
+    <div className="portal parallax-reveal-page">
       <PortalNav go={go} />
 
       {/* 
-        Scroll-driven Animation Wrapper:
-        Pins the hero section sticky while user scrolls through the expansion threshold.
+        Sticky Video Layer (Fixed behind the scrolling homepage contents):
+        Fades out and expands on desktop, fades out on mobile.
       */}
-      <section className="scroll-hero-wrapper" style={{ height: `calc(100vh + ${transitionThreshold}px)` }}>
-        <div className="scroll-hero-sticky">
-          
-          {/* Main Expanding Video Container */}
+      {!isVideoHidden && (
+        <div 
+          className="parallax-video-sticky" 
+          style={{ opacity: 1 - progress }}
+        >
+          {/* Main Expanding Video container */}
           <div className="scroll-video-box" style={{
             '--d-width': desktopWidth,
             '--d-height': desktopHeight,
             '--d-radius': desktopRadius,
-            '--d-shadow': desktopShadow,
-            '--m-opacity': mobileVideoOpacity
+            '--d-shadow': desktopShadow
           }}>
-            {/* Click catcher to play/pause */}
+            {/* Click-capture overlay to intercept pointer clicks */}
             <div className="scroll-video-click-layer" onClick={togglePlay} />
 
-            {/* Micro-interaction UI indicators */}
+            {/* Visual indicators */}
             <div className={`feedback-indicator ${showPlayOverlay ? 'active' : ''}`}>
               {isPlaying ? <Play size={28} style={{ marginLeft: 4 }} /> : <Pause size={28} />}
             </div>
@@ -474,7 +510,7 @@ export default function VideoTestPage() {
               {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
             </div>
 
-            {/* Corner audio controller (fades out as video expands) */}
+            {/* Corner audio trigger (fades with scrolling) */}
             <button 
               className="sound-toggle-btn"
               onClick={toggleMute}
@@ -484,7 +520,7 @@ export default function VideoTestPage() {
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
 
-            {/* Cropper block to remove YouTube UI elements */}
+            {/* Cropped YouTube Embed Frame */}
             <div className="scroll-iframe-cropper">
               <iframe
                 ref={iframeRef}
@@ -495,15 +531,9 @@ export default function VideoTestPage() {
                 tabIndex="-1"
               />
             </div>
-
-            {/* Scrim Overlay that dims video as it scales, improving text readability */}
-            <div className="scroll-video-scrim" style={{
-              '--d-scrim-opacity': desktopScrimOpacity,
-              '--m-scrim-opacity': progress * 0.75
-            }} />
           </div>
 
-          {/* Floating Back Button (fades out as user scrolls) */}
+          {/* Floating Back Button (fades as user scrolls) */}
           <button 
             className="video-back-btn" 
             onClick={() => router.push('/')}
@@ -513,75 +543,98 @@ export default function VideoTestPage() {
             <ArrowLeft size={16} />
             <span>Back</span>
           </button>
-
-          {/* 
-            Homepage Hero Title & Description:
-            Fades in dynamically on top of the video container as it expands.
-          */}
-          <div className="hero__inner scroll-hero-content" style={{ opacity: progress, pointerEvents: progress < 0.2 ? 'none' : 'auto' }}>
-            <div className="apb-eyebrow hero__eyebrow">{t("home.hero.eyebrow")}</div>
-            <h1 className="hero__h1">
-              {t("home.hero.h1_1")}<br/>
-              {t("home.hero.h1_2")}<br/>
-              {t("home.hero.h1_3")}
-            </h1>
-            <p className="hero__sub">{t("home.hero.sub")}</p>
-            <div className="hero__cta">
-              <Button size="lg" onClick={() => go("collection")}>{t("home.hero.discover")}</Button>
-              <Button size="lg" variant="secondary" onClick={() => go("story")} style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("home.hero.story")}</Button>
-            </div>
-          </div>
-
-          {/* Entry Scroll cue (fades out as you scroll) */}
+          
+          {/* Centered Scroll Prompt (fades as user scrolls) */}
           <div className="hero__scroll scroll-hero-cue" style={{ opacity: 1 - progress }}>
             {t("home.hero.scroll")}
           </div>
-
         </div>
-      </section>
+      )}
 
       {/* 
-        Rest of the homepage content:
-        Appears below the scroll transition area and scrolls naturally.
+        Scrolling Content Layer (Slides UP on top of the fixed background video):
       */}
-      <div className="scroll-homepage-content">
-        <Prestige />
-        <Pillars />
-        <RedBook go={go} />
-        <Apothecary go={go} />
-        <Gallery />
-        <Continuum />
-        <PortalFooter />
+      <div className="parallax-scroll-content">
+        
+        {/* 
+          1st Section: Transparent spacer of 100vh.
+          Allows the fixed video layer to be fully seen initially.
+          Clicks at scroll=0 pass directly through this transparent container to the video.
+        */}
+        <div className="parallax-spacer-section" />
+
+        {/* 
+          2nd Section: The actual homepage Hero section.
+          Slides up over the video as the user scrolls, initiating the parallax transition.
+        */}
+        <div className="parallax-homepage-hero">
+          <Hero go={go} />
+        </div>
+
+        {/* Remaining homepage sections scroll naturally */}
+        <div className="parallax-other-sections">
+          <Prestige />
+          <Pillars />
+          <RedBook go={go} />
+          <Apothecary go={go} />
+          <Gallery />
+          <Continuum />
+          <PortalFooter />
+        </div>
       </div>
 
-      {/* Styled layouts for transition mechanisms */}
+      {/* Styled layouts for parallax mechanisms */}
       <style dangerouslySetInnerHTML={{ __html: `
-        .video-scroll-page {
+        .parallax-reveal-page {
           overflow-x: hidden;
-        }
-
-        .scroll-hero-wrapper {
-          position: relative;
-          width: 100%;
           background-color: #0b0d0c;
         }
 
-        .scroll-hero-sticky {
-          position: sticky;
+        /* Fixed Background Video view */
+        .parallax-video-sticky {
+          position: fixed;
           top: 0;
+          left: 0;
+          width: 100vw;
           height: 100vh;
           height: 100dvh;
-          width: 100vw;
+          z-index: 1;
           display: flex;
           justify-content: center;
           align-items: center;
           overflow: hidden;
+          background-color: #0b0d0c;
+          pointer-events: auto; /* Allow interactions on the click overlays */
+          transition: opacity 0.1s linear;
         }
 
-        /* Expanding Video element */
+        /* Scrolling content overlay */
+        .parallax-scroll-content {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+          pointer-events: none; /* Let pointer pass through the transparent sections to the video */
+        }
+
+        /* Transparent initial spacer section (100vh viewport) */
+        .parallax-spacer-section {
+          height: 100vh;
+          height: 100dvh;
+          width: 100%;
+          pointer-events: none; /* Non-blocking */
+        }
+
+        /* The Hero section and subsequent parts block pointer actions for normal page buttons */
+        .parallax-homepage-hero,
+        .parallax-other-sections {
+          position: relative;
+          pointer-events: auto; /* Normal interaction for text buttons and navigation links */
+          background-color: #0b0d0c; /* Cover the background video */
+        }
+
+        /* Expanding Video element styles */
         .scroll-video-box {
           position: absolute;
-          z-index: 2;
           background-color: #000;
           overflow: hidden;
         }
@@ -613,23 +666,6 @@ export default function VideoTestPage() {
           pointer-events: none;
         }
 
-        /* Video Scrim overlay to darken video and make text clear */
-        .scroll-video-scrim {
-          position: absolute;
-          inset: 0;
-          z-index: 4;
-          background-color: #0b0d0c;
-          pointer-events: none;
-        }
-
-        /* Centered Hero Content */
-        .scroll-hero-content {
-          position: relative;
-          z-index: 8;
-          text-align: center;
-          transition: opacity 0.1s ease;
-        }
-
         .scroll-hero-cue {
           position: absolute;
           bottom: 32px;
@@ -647,22 +683,15 @@ export default function VideoTestPage() {
             border-radius: var(--d-radius);
             box-shadow: var(--d-shadow);
           }
-          .scroll-video-scrim {
-            opacity: var(--d-scrim-opacity);
-          }
         }
 
-        /* Mobile Layout specifications using variables */
+        /* Mobile Layout specifications */
         @media (max-width: 900px) {
           .scroll-video-box {
             width: 100vw;
             height: 100vh;
             height: 100dvh;
             border-radius: 0px;
-            opacity: var(--m-opacity);
-          }
-          .scroll-video-scrim {
-            opacity: var(--m-scrim-opacity);
           }
         }
 
@@ -692,7 +721,7 @@ export default function VideoTestPage() {
           transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Corner audio indicator styling */
+        /* Corner audio button styling */
         .sound-toggle-btn {
           position: absolute;
           bottom: 24px;
