@@ -74,6 +74,8 @@ function ProductVisual({ p, size = "md" }) {
 /* ---- Nav ------------------------------------------------------------ */
 function StorefrontNav({ route, go }) {
   const { t } = useLanguage();
+  const router = useRouter();
+  
   const link = (id, labelKey) => (
     <a
       onClick={() => go(id)}
@@ -87,6 +89,13 @@ function StorefrontNav({ route, go }) {
     <header className="shop-header">
       <div className="shop-header__inner">
         <nav className="shop-header__nav">
+          <a
+            onClick={() => router.push("/")}
+            className="shop-header__link"
+            style={{ cursor: "pointer" }}
+          >
+            {t("nav.home")}
+          </a>
           {link("home", "nav.collection")}
           {link("story", "shop.story.eyebrow")}
         </nav>

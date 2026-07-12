@@ -47,7 +47,8 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Designed minimalist Aesop/Le Labo product cards with a visual media overlay and "Quick Add" buttons.
 - Added a **Sensory Profile Matrix** of visual progress bars to the Product Detail pages.
 - Customized the successful checkout page to render a jagged-edged ticket with a vintage red-ink Apothecary stamp.
+- Removed the cart feature, cart drawer, and retail checkout flows from the Shop page per user request, replacing it with direct B2C links (Shopee & Line).
+- Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
 - None. The premium aesthetic redesign for Heritage, Apothecary, and Shop storefront is fully completed and compiles successfully.
-
