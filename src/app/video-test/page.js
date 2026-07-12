@@ -380,9 +380,7 @@ export default function VideoParallaxPage() {
   
   const [scrollY, setScrollY] = useState(0);
   const [windowHeight, setWindowHeight] = useState(800);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [showPlayOverlay, setShowPlayOverlay] = useState(false);
   const [showMuteOverlay, setShowMuteOverlay] = useState(false);
 
   // Setup scroll and height measurements on client side
@@ -420,17 +418,6 @@ export default function VideoParallaxPage() {
     }
   };
 
-  const togglePlay = (e) => {
-    e.stopPropagation();
-    if (isPlaying) {
-      postCommand('pauseVideo');
-      setIsPlaying(false);
-    } else {
-      postCommand('playVideo');
-      setIsPlaying(true);
-    }
-    setShowPlayOverlay(true);
-  };
 
   const toggleMute = (e) => {
     e.stopPropagation();
@@ -444,12 +431,6 @@ export default function VideoParallaxPage() {
     setShowMuteOverlay(true);
   };
 
-  useEffect(() => {
-    if (showPlayOverlay) {
-      const timer = setTimeout(() => setShowPlayOverlay(false), 800);
-      return () => clearTimeout(timer);
-    }
-  }, [showPlayOverlay]);
 
   useEffect(() => {
     if (showMuteOverlay) {
@@ -524,12 +505,9 @@ export default function VideoParallaxPage() {
             '--d-shadow': desktopShadow
           }}>
             {/* Click-capture overlay to intercept pointer clicks */}
-            <div className="scroll-video-click-layer" onClick={togglePlay} />
+            <div className="scroll-video-click-layer" />
 
             {/* Visual indicators */}
-            <div className={`feedback-indicator ${showPlayOverlay ? 'active' : ''}`}>
-              {isPlaying ? <Play size={28} style={{ marginLeft: 4 }} /> : <Pause size={28} />}
-            </div>
             <div className={`feedback-indicator ${showMuteOverlay ? 'active' : ''}`}>
               {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
             </div>
@@ -683,7 +661,7 @@ export default function VideoParallaxPage() {
           position: absolute;
           inset: 0;
           z-index: 5;
-          cursor: pointer;
+          cursor: default;
         }
 
         .scroll-iframe-cropper {
