@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function ImageSlot({ id, shape = 'rounded', radius = 12, fit = 'cover', placeholder, src, style, ...rest }) {
   // Map of image slot IDs to generated on-brand assets in public/images
@@ -53,14 +54,14 @@ export default function ImageSlot({ id, shape = 'rounded', radius = 12, fit = 'c
   if (imageSrc) {
     return (
       <div style={containerStyle} {...rest}>
-        <img
+        <Image
           src={imageSrc}
           alt={placeholder || 'Apiban Bo Plup Image'}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="lazy"
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: fit,
-            borderRadius,
           }}
         />
       </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { ScrollText, Sparkles, Users } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -69,7 +70,17 @@ function Hero({ go }) {
   const { t } = useLanguage();
   return (
     <section className="hero" id="top">
-      <div className="hero__bg" style={{ backgroundImage: "url('/images/hero.jpg')" }} />
+      <div className="hero__bg">
+        <Image
+          src="/images/hero.jpg"
+          alt="Apiban Bo Plup Apothecary Heritage Hero Background"
+          fill
+          priority
+          sizes="100vw"
+          quality={90}
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
       <div className="hero__scrim" />
       <div className="hero__inner">
         <div className="apb-eyebrow hero__eyebrow">{t("home.hero.eyebrow")}</div>
