@@ -55,9 +55,8 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Created a standalone video test page route (`/video-test`) to embed the requested YouTube Shorts video.
 - Implemented a CSS crop/scale wrapper hack (scaling the iframe to `1.22` with `overflow: hidden` on the outer container) alongside a transparent pointer-events overlay to completely hide YouTube's native title, creator header, seek bar, and bottom branding logo.
 - Integrated programmatic player controls (Play/Pause on video click, corner Sound Toggle) via the YouTube API `postMessage` protocol with clean visual feedback alerts.
-- Redesigned the `/video-test` page to support a true parallax reveal sequence. Locked both the video container and the homepage Hero container inside the sticky viewport box (`position: sticky; top: 0; height: 100vh`). This prevents the Hero from sliding up during the transition, allowing a completely stationary, in-place cross-fade (the video fading out from `100%` to `0%` and the Hero section fading in from `0%` to `100%` in place) before the entire sticky block scrolls away naturally.
-- Integrated a scroll-driven navbar animation: the navigation header (`PortalNav`) remains completely hidden and interactive-disabled at the start. Once the video section ends (scroll progress >= 90%), the navbar slides down and fades in with smooth transitions (`translateY(0)`).
+- Reverted the `/video-test` page back to the clean, standalone video-only page (removing the scroll transitions and replicated homepage content) per user instructions. The page currently functions as a clean, responsive video display (full page on mobile, 70vh centered on desktop) with the crop/scale overlay container hack hiding native YouTube branding and overlays.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven stationary cross-fades, and scroll-responsive navbar animations) are fully complete and validated.
+- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, and clean video-only overlay test page) are fully complete and validated.
