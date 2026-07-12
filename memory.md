@@ -58,7 +58,10 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Restored the `/video-test` page to the dynamic Hero section cross-fade sequence. The background video sits in a fixed layer that scales up and fades out (100% to 0% opacity) as the user scrolls, while the homepage Hero section slides up from below the fold, fading in from 0% to 100% opacity in absolute sync.
 - Redesigned the Pillars section to render within a styled full-width background block. Implemented a light warm sand background (`var(--makara-200)`) with subtle horizontal borders for the light page layout on the homepage, and a deep charcoal background (`#0d0f0e`) for the dark layout on the video test page.
 - Optimized text contrast and legibility inside the Pillars section: explicitly set titles to dark brown (`var(--text-strong)`) on the homepage, and override them to bright white (`var(--text-on-dark-strong)`) and body copy to high-contrast warm cream (`var(--text-on-dark)`) on the dark video test page.
+- Optimized web performance and Core Web Vitals (specifically Largest Contentful Paint / LCP) by refactoring image elements to use the Next.js `Image` component (`next/image`).
+- Set the homepage Hero background (`/images/hero.jpg`) to load with `priority={true}` (preloading in HTML head), serving it instantly on page entry.
+- Updated the global [ImageSlot.js](file:///Users/sorawitsakarin/Documents/apiban/src/components/ImageSlot.js) component to render secondary images using optimized Next images with automatic lazy loading (`loading="lazy"`), relative layout sizing, and overflow clipping.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background panel, and text legibility refinements) are fully complete and validated.
+- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, and LCP Next.js Image load optimizations) are fully complete and validated.
