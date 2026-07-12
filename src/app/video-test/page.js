@@ -481,7 +481,20 @@ export default function VideoParallaxPage() {
 
   return (
     <div className="portal parallax-reveal-page">
-      <PortalNav go={go} />
+      {/* Dynamic Navbar Wrapper: Fades in and slides down once the video section ends */}
+      <div className="video-page-nav-wrapper" style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        opacity: progress >= 0.9 ? 1 : 0,
+        transform: `translateY(${progress >= 0.9 ? '0' : '-100%'})`,
+        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        pointerEvents: progress >= 0.9 ? 'auto' : 'none',
+      }}>
+        <PortalNav go={go} />
+      </div>
 
       {/* 
         Sticky Video Layer (Fixed behind the scrolling homepage contents):
