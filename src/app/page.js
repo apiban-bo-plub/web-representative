@@ -578,7 +578,7 @@ export default function App() {
       <style dangerouslySetInnerHTML={{ __html: `
         .parallax-reveal-page {
           overflow-x: hidden;
-          background-color: #0b0d0c;
+          background-color: var(--surface-ink);
         }
 
         .parallax-reveal-page .pillars {
@@ -610,7 +610,7 @@ export default function App() {
           justify-content: center;
           align-items: center;
           overflow: hidden;
-          background-color: #0b0d0c;
+          background-color: var(--surface-ink);
           pointer-events: auto; /* Allow interactions on the click overlays */
           transition: opacity 0.1s linear;
         }
@@ -636,7 +636,7 @@ export default function App() {
         .parallax-other-sections {
           position: relative;
           pointer-events: auto; /* Normal interaction for text buttons and navigation links */
-          background-color: #0b0d0c; /* Cover the background video */
+          background-color: var(--surface-ink); /* Cover the background video */
         }
 
         /* Expanding Video element styles */
