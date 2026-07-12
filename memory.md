@@ -48,6 +48,7 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Added a **Sensory Profile Matrix** of visual progress bars to the Product Detail pages.
 - Customized the successful checkout page to render a jagged-edged ticket with a vintage red-ink Apothecary stamp.
 - Removed the cart feature, cart drawer, and retail checkout flows from the Shop page per user request, replacing it with direct B2C links (Shopee & Line).
+- Added a "Home" link to the Shop page navigation header to allow easy navigation back to the primary landing page.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
