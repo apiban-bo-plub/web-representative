@@ -772,8 +772,8 @@ export default function VideoParallaxPage() {
           -webkit-backdrop-filter: blur(12px);
           border: 1px solid rgba(203, 181, 147, 0.3);
           color: #f0ebe2;
-          width: 44px;
-          height: 44px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
           cursor: pointer;
           display: flex;
@@ -800,7 +800,7 @@ export default function VideoParallaxPage() {
           -webkit-backdrop-filter: blur(12px);
           border: 1px solid rgba(203, 181, 147, 0.3);
           color: #f0ebe2;
-          padding: 12px 20px;
+          padding: 12px 24px;
           border-radius: 9999px;
           font-family: var(--font-sans), sans-serif;
           font-size: 13px;
@@ -812,7 +812,7 @@ export default function VideoParallaxPage() {
           align-items: center;
           gap: 8px;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
         .video-back-btn:hover {
