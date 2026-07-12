@@ -580,7 +580,7 @@ export default function VideoParallaxPage() {
           2nd Section: The actual homepage Hero section.
           Slides up over the video as the user scrolls, initiating the parallax transition.
         */}
-        <div className="parallax-homepage-hero">
+        <div className="parallax-homepage-hero" style={{ opacity: progress }}>
           <Hero go={go} />
         </div>
 
