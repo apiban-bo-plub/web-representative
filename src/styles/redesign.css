@@ -1,0 +1,1462 @@
+/* ══════════════════════════════════════════════════════════════════════
+   APB PREMIUM REDESIGN STYLES
+   Adds modern layouts, interactive animations, and rich heritage details.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ─ Scroll reveal animations ────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+
+/* ─ Heritage Timeline / Museum Experience ───────────────────────────── */
+.heritage-hero {
+  position: relative;
+  padding: 120px 40px 80px;
+  background: var(--surface-page);
+  text-align: center;
+  border-bottom: 1px solid var(--border-hairline);
+  overflow: hidden;
+}
+
+.heritage-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 100px;
+  background: linear-gradient(to bottom, var(--basil-green-300), transparent);
+}
+
+.heritage-hero__crest {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 24px;
+  opacity: 0.75;
+  filter: contrast(1.1);
+}
+
+.heritage-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 5vw, 68px);
+  line-height: 1.1;
+  color: var(--text-strong);
+  margin-bottom: 24px;
+}
+
+.heritage-hero__sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--basil-green-700);
+  max-width: 680px;
+  margin: 0 auto 32px;
+}
+
+/* Chapters timeline path */
+.timeline-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--border-hairline) 90%, transparent);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timeline-chapter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  margin-bottom: 100px;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+.timeline-chapter--rev {
+  direction: rtl;
+}
+
+.timeline-chapter--rev .museum-card {
+  direction: ltr; /* Reset text direction */
+}
+
+.timeline-node {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--spring-wood-500);
+  border: 3px solid var(--makara-100);
+  box-shadow: 0 0 0 1px var(--basil-green-700);
+  z-index: 3;
+}
+
+.museum-media {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(57, 48, 45, 0.08);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.museum-media:hover {
+  transform: scale(1.02);
+}
+
+.museum-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(240, 235, 226, 0.15);
+  pointer-events: none;
+}
+
+.museum-card {
+  position: relative;
+  background: linear-gradient(135deg, #f7f3eb 0%, #f0ebe2 100%);
+  border: 1px solid var(--border-hairline);
+  padding: 48px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(57, 48, 45, 0.04);
+}
+
+.museum-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(172, 154, 116, 0.25); /* Elegant inner gold outline */
+  pointer-events: none;
+  border-radius: calc(var(--radius-md) - 8px);
+}
+
+.museum-card__badge {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--spring-wood-700);
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.museum-card__num {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-family: var(--font-serif);
+  font-size: 32px;
+  color: var(--basil-green-200);
+  opacity: 0.7;
+}
+
+.museum-card__title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--text-strong);
+  margin-bottom: 18px;
+}
+
+.museum-card__body {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-body);
+}
+
+/* Archives Accordion */
+.archive-section {
+  background: var(--makara-200);
+  padding: 96px 40px;
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.archive-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.archive-title {
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 38px;
+  color: var(--text-strong);
+  margin-bottom: 12px;
+}
+
+.archive-desc {
+  text-align: center;
+  font-family: var(--font-sans);
+  color: var(--text-body);
+  margin-bottom: 48px;
+}
+
+/* Premium styled details accordion */
+.premium-details {
+  border-bottom: 1px solid var(--border-hairline);
+  background: rgba(247, 243, 235, 0.4);
+  margin-bottom: 12px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.premium-details[open] {
+  background: rgba(247, 243, 235, 0.95);
+  box-shadow: 0 4px 16px rgba(57, 48, 45, 0.03);
+}
+
+.premium-summary {
+  padding: 22px 30px;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--text-strong);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  user-select: none;
+}
+
+.premium-summary::-webkit-details-marker {
+  display: none;
+}
+
+.premium-summary__icon {
+  width: 18px;
+  height: 18px;
+  color: var(--spring-wood-600);
+  transition: transform 0.3s ease;
+}
+
+.premium-details[open] .premium-summary__icon {
+  transform: rotate(180deg);
+}
+
+.premium-details__content {
+  padding: 0 30px 24px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+/* ─ Apothecary Sensory Showcase ──────────────────────────────────────── */
+.apothecary-hero {
+  position: relative;
+  min-height: 520px;
+  background: var(--surface-ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.apothecary-hero__bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-position: center;
+  background-size: cover;
+  filter: grayscale(20%);
+}
+
+.apothecary-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(57,48,45,0.7) 0%, rgba(57,48,45,0.95) 100%);
+}
+
+.apothecary-hero__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.apothecary-hero__eyebrow {
+  color: var(--spring-wood-300);
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+}
+
+.apothecary-hero__h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 4.5vw, 64px);
+  margin-bottom: 24px;
+  line-height: 1.1;
+  color: #f5f1ea;
+}
+
+.apothecary-hero__sub {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--makara-100);
+  opacity: 0.9;
+}
+
+/* Sensory Showcase Tabs */
+.sensory-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 40px;
+}
+
+.sensory-title-block {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.sensory-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.sensory-tab-btn {
+  border: 1px solid var(--border-hairline);
+  background: #fff;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  color: var(--text-body);
+  transition: all 0.3s ease;
+}
+
+.sensory-tab-btn--active-warm {
+  background: var(--spring-wood-600);
+  color: #fff;
+  border-color: var(--spring-wood-600);
+}
+
+.sensory-tab-btn--active-cool {
+  background: var(--basil-green-800);
+  color: #fff;
+  border-color: var(--basil-green-800);
+}
+
+.sensory-content-box {
+  background: #fdfcf9;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  box-shadow: 0 16px 48px rgba(57, 48, 45, 0.05);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.sensory-content-box--rev {
+  direction: rtl;
+}
+
+.sensory-content-box--rev > * {
+  direction: ltr;
+}
+
+.sensory-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.sensory-gallery__img {
+  aspect-ratio: 4/5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.sensory-profile__badge {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 20px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.sensory-profile__badge--warm { color: var(--spring-wood-700); }
+.sensory-profile__badge--cool { color: var(--basil-green-700); }
+
+.sensory-profile__title {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  color: var(--text-strong);
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+
+.sensory-profile__vibe {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-body);
+  margin-bottom: 28px;
+}
+
+.sensory-specs {
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sensory-spec-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  border-bottom: 1px dashed rgba(57, 48, 45, 0.08);
+  padding-bottom: 10px;
+}
+
+.sensory-spec-label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.sensory-spec-val {
+  font-family: var(--font-serif);
+  color: var(--text-body);
+}
+
+/* Ritual Timeline */
+.ritual-section {
+  background: var(--makara-200);
+  padding: 96px 40px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.ritual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 48px auto 0;
+  position: relative;
+}
+
+.ritual-card {
+  background: #fff;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(57,48,45,0.02);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+}
+
+.ritual-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 36px rgba(57,48,45,0.08);
+}
+
+.ritual-card__num {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  color: var(--spring-wood-500);
+  opacity: 0.8;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.ritual-card__title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--text-strong);
+  margin-bottom: 12px;
+}
+
+.ritual-card__desc {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+/* Editorial Crossroads */
+.editorial-crossroads {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.crossroads-card {
+  border-radius: var(--radius-lg);
+  padding: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(57,48,45,0.03);
+}
+
+.crossroads-card--personal {
+  background: linear-gradient(135deg, #f3ede2 0%, #e6dcc9 100%);
+  border: 1px solid var(--makara-300);
+}
+
+.crossroads-card--b2b {
+  background: var(--basil-green-800);
+  color: #fff;
+  border: 1px solid var(--basil-green-900);
+}
+
+.crossroads-card__badge {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.crossroads-card--personal .crossroads-card__badge { color: var(--spring-wood-700); }
+.crossroads-card--b2b .crossroads-card__badge { color: var(--spring-wood-300); }
+
+.crossroads-card__h {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.crossroads-card--personal .crossroads-card__h { color: var(--text-strong); }
+.crossroads-card--b2b .crossroads-card__h { color: #f5f1ea; }
+
+.crossroads-card__b {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.crossroads-card--personal .crossroads-card__b { color: var(--text-body); }
+.crossroads-card--b2b .crossroads-card__b { color: var(--basil-green-100); opacity: 0.9; }
+
+.crossroads-card__cta {
+  display: flex;
+  gap: 14px;
+}
+
+/* ─ Premium Shop Redesign ────────────────────────────────────────────── */
+.shop-hero-new {
+  position: relative;
+  background: var(--makara-200);
+  padding: 80px 40px;
+  border-bottom: 1px solid var(--border-hairline);
+  overflow: hidden;
+}
+
+.shop-hero-new__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.shop-hero-new__media {
+  aspect-ratio: 16/10;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(57, 48, 45, 0.08);
+}
+
+.shop-card-new {
+  background: #fff;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(57, 48, 45, 0.02);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-card-new:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(57, 48, 45, 0.08);
+}
+
+.shop-card-new__media {
+  position: relative;
+  background: var(--makara-100);
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.shop-card-new:hover .shop-card-new__media {
+  background: var(--makara-200);
+}
+
+.shop-card-new__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(83, 97, 88, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.shop-card-new:hover .shop-card-new__overlay {
+  opacity: 1;
+}
+
+.shop-card-new__text {
+  padding: 24px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.shop-card-new__title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--text-strong);
+  margin-bottom: 6px;
+}
+
+.shop-card-new__tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.shop-card-new__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 14px;
+  margin-top: auto;
+}
+
+.shop-card-new__price {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--basil-green-900);
+}
+
+/* Quantity Picker */
+.quantity-picker {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--makara-400);
+  border-radius: var(--radius-pill);
+  background: #fff;
+  overflow: hidden;
+}
+
+.quantity-btn {
+  border: none;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-body);
+  transition: background 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background: var(--makara-200);
+}
+
+.quantity-val {
+  width: 40px;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Shopping Cart Drawer */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(57, 48, 45, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.cart-overlay--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 460px;
+  background: var(--surface-page);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+  z-index: 101;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer--open {
+  transform: translateX(0);
+}
+
+.cart-drawer__header {
+  padding: 24px 30px;
+  border-bottom: 1px solid var(--border-hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fcfaf6;
+}
+
+.cart-drawer__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.cart-drawer__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.cart-drawer__close:hover {
+  color: var(--text-strong);
+}
+
+.cart-drawer__items {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.cart-item__media {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cart-item__title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--text-strong);
+  margin: 0 0 4px;
+}
+
+.cart-item__meta {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.cart-item__price {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-strong);
+  text-align: right;
+}
+
+.cart-item__remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: 6px;
+  transition: color 0.2s ease;
+}
+
+.cart-item__remove:hover {
+  color: #bd4a4a;
+}
+
+.cart-drawer__footer {
+  padding: 30px;
+  border-top: 1px solid var(--border-hairline);
+  background: #fcfaf6;
+}
+
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--text-strong);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Elegant Checkout Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(57, 48, 45, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.checkout-modal-content {
+  background: var(--surface-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+  position: relative;
+  padding: 40px;
+}
+
+.checkout-modal-content::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(172, 154, 116, 0.2);
+  pointer-events: none;
+  border-radius: calc(var(--radius-lg) - 12px);
+}
+
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--makara-400);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text-strong);
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--basil-green-700);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.success-receipt {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-receipt__crest {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 24px;
+}
+
+.success-receipt__title {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  color: var(--basil-green-800);
+  margin-bottom: 12px;
+}
+
+.success-receipt__desc {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--text-body);
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.receipt-ticket {
+  background: #fdfcf9;
+  border: 1px dashed var(--makara-500);
+  padding: 24px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.receipt-ticket__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--text-body);
+  margin-bottom: 10px;
+}
+
+.receipt-ticket__row--total {
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 12px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-strong);
+}
+
+/* ─ Responsive Adjustments for redesign ──────────────────────────────── */
+@media (max-width: 900px) {
+  .timeline-line {
+    left: 20px;
+  }
+  .timeline-chapter {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+  }
+  .timeline-chapter--rev {
+    direction: ltr;
+  }
+  .timeline-node {
+    left: 20px;
+  }
+  .museum-media {
+    margin-left: 40px;
+    aspect-ratio: 16/10;
+  }
+  .museum-card {
+    margin-left: 40px;
+    padding: 30px;
+  }
+  .sensory-content-box {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 30px;
+  }
+  .sensory-content-box--rev {
+    direction: ltr;
+  }
+  .ritual-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .editorial-crossroads {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 60px 20px;
+  }
+  .crossroads-card {
+    padding: 36px;
+    min-height: auto;
+  }
+  .shop-hero-new__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .shop-hero-new {
+    padding: 60px 20px;
+  }
+}
+
+/* ─ Ambient Atmosphere and Apothecary Premium Enhancements ──────────── */
+.apothecary-page {
+  position: relative;
+  transition: background-color 1s ease-in-out;
+}
+.apothecary-page::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 60vh;
+  background: radial-gradient(circle, rgba(200, 158, 104, 0.06) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 1s ease-in-out;
+}
+.apothecary-page--cool::before {
+  background: radial-gradient(circle, rgba(83, 97, 88, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.botanical-matrix-wrapper {
+  margin-top: 80px;
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 60px;
+}
+.botanical-matrix-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--text-strong);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.botanical-matrix-desc {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: var(--text-body);
+  text-align: center;
+  margin-bottom: 40px;
+}
+.botanical-matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .botanical-matrix-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.botanical-swatches {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.botanical-swatch-btn {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+}
+.botanical-swatch-btn:hover {
+  border-color: var(--makara-500);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+.botanical-swatch-btn--active {
+  border-color: var(--brand-gold);
+  background: #fcfaf6;
+  box-shadow: var(--shadow-md);
+}
+.botanical-swatch-sketch {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--spring-wood-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--basil-green-800);
+  flex-shrink: 0;
+  border: 1px solid var(--makara-200);
+}
+.botanical-swatch-sketch svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+}
+.botanical-swatch-text {
+  display: flex;
+  flex-direction: column;
+}
+.botanical-swatch-role {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--makara-600);
+  margin-bottom: 2px;
+}
+.botanical-swatch-name {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--text-strong);
+}
+
+.botanical-detail-card {
+  border: 1px solid var(--makara-300);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+.botanical-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.botanical-detail-thai {
+  font-family: var(--font-serif-thai);
+  font-size: 16px;
+  color: var(--makara-700);
+  display: block;
+  margin-bottom: 4px;
+}
+.botanical-detail-name {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--text-strong);
+  margin: 0;
+}
+.botanical-detail-tag {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  background: rgba(200, 158, 104, 0.12);
+  color: #8f6734;
+  border-radius: var(--radius-sm);
+}
+.botanical-detail-divider {
+  height: 1px;
+  background: linear-gradient(to right, var(--makara-300), rgba(255,255,255,0));
+  margin-bottom: 24px;
+}
+.botanical-detail-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.botanical-detail-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.botanical-detail-lbl {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--makara-600);
+}
+.botanical-detail-val {
+  font-family: var(--font-sans);
+  color: var(--text-body);
+}
+
+/* ─ Respiration Guide Breathing Trainer ───────────────────────────────── */
+.respiration-guide-box {
+  background: #faf8f5;
+  border: 1px solid var(--makara-300);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  min-height: 380px;
+}
+.respiration-guide-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--text-strong);
+  margin-bottom: 24px;
+}
+.respiration-orb-container {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+.respiration-orb {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(83, 97, 88, 0.4) 0%, rgba(83, 97, 88, 0.15) 60%, rgba(83, 97, 88, 0.02) 100%);
+  transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(83, 97, 88, 0.3);
+  box-shadow: 0 0 30px rgba(83, 97, 88, 0.1);
+}
+.respiration-orb--inhale {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(200, 158, 104, 0.5) 0%, rgba(200, 158, 104, 0.2) 60%, rgba(200, 158, 104, 0.05) 100%);
+  border-color: rgba(200, 158, 104, 0.4);
+  box-shadow: 0 0 50px rgba(200, 158, 104, 0.2);
+}
+.respiration-orb--hold {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(143, 103, 52, 0.6) 0%, rgba(143, 103, 52, 0.25) 60%, rgba(143, 103, 52, 0.05) 100%);
+  border-color: rgba(143, 103, 52, 0.5);
+  box-shadow: 0 0 60px rgba(143, 103, 52, 0.3);
+}
+.respiration-orb--exhale {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(83, 97, 88, 0.4) 0%, rgba(83, 97, 88, 0.15) 60%, rgba(83, 97, 88, 0.02) 100%);
+  border-color: rgba(83, 97, 88, 0.3);
+}
+.respiration-instruction {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--basil-green-900);
+  height: 30px;
+  margin-bottom: 8px;
+  transition: color 0.5s ease;
+}
+.respiration-timer {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--makara-600);
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+
+/* ─ Shop Grid Hover Media Overlays ────────────────────────────────────── */
+.apb-pcard__media-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+.apb-pcard__hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(253, 252, 249, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 20px;
+  z-index: 10;
+}
+.apb-pcard:hover .apb-pcard__hover-overlay {
+  opacity: 1;
+}
+.apb-pcard__hover-frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--makara-300);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+}
+.apb-pcard__hover-details {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--makara-700);
+}
+
+/* ─ Shop Detail Sensory Profile Matrix ────────────────────────────────── */
+.shop-detail__sensory-matrix {
+  margin-top: 36px;
+  margin-bottom: 36px;
+  border: 1px solid var(--makara-300);
+  border-radius: var(--radius-md);
+  padding: 28px;
+}
+.sensory-matrix__title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--text-strong);
+  margin: 0 0 20px;
+  letter-spacing: 0.02em;
+}
+.sensory-matrix__scales {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sensory-matrix__row {
+  display: grid;
+  grid-template-columns: 110px 1fr 40px;
+  align-items: center;
+  gap: 16px;
+}
+.sensory-matrix__label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-body);
+}
+.sensory-matrix__bar-bg {
+  height: 6px;
+  background: rgba(83, 97, 88, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sensory-matrix__bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+}
+.sensory-matrix__value {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-strong);
+  text-align: right;
+}
+
+/* ─ Vintage Receipt Seal Stamp & Details ─────────────────────────────── */
+.receipt-ticket {
+  position: relative;
+  background: #faf8f4 !important;
+  border: 1px dashed var(--makara-400) !important;
+  overflow: hidden;
+}
+.receipt-ticket__stamp {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  transform: rotate(-12deg);
+  pointer-events: none;
+  opacity: 0.85;
+  z-index: 2;
+}
+.stamp-circle {
+  width: 90px;
+  height: 90px;
+  border: 2px dashed #bd3e31;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  font-family: var(--font-serif);
+  color: #bd3e31;
+}
+.stamp-text {
+  display: block;
+  font-size: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-align: center;
+}
+.stamp-text--mid {
+  font-size: 13px;
+  font-family: var(--font-serif-thai);
+  margin: 3px 0;
+  border-top: 1px solid #bd3e31;
+  border-bottom: 1px solid #bd3e31;
+  padding: 2px 4px;
+}
+.stamp-text--bottom {
+  font-size: 8px;
+}
+

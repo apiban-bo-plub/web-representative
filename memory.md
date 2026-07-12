@@ -28,7 +28,26 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Implemented English and Thai i18n language context, JSON dictionaries, and dynamic selectors on all nav headers.
 - Removed the "Search" link from all navigation headers per user request.
 - Changed the Thai header font to "Charm" (Calligraphic Script) to match the handwritten "Red Book" manuscript branding.
+- Fixed the language selector dropdown in the mobile navigation drawer to align to the left side, preventing it from clipping off-screen.
+- Redesigned the Heritage page with an alternating timeline layout, scroll-driven entry reveals, and a details accordion for the ancient Red Book excerpts.
+- Redesigned the Apothecary page with an interactive sensory profile tab-switcher, custom spec comparisons, and a 3-step daily ritual sequence.
+- Redesigned the Shop page with a modern sliding cart drawer (supporting items list, quantity updates, removal, subtotal, and checkout actions), and clean grid card sizing.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
+- Redesigned the **Heritage** page (`/heritage`) with scroll reveal animations, a museum timeline connector path, and a details accordion for Red Book manuscript excerpts.
+- Redesigned the **Apothecary** page (`/apothecary`) with sensory tabs (Thepprasit vs Phetmongkol), active botanical matrices, and a ritual application step-by-step guide.
+- Redesigned the **Shop** storefront page (`/shop`) with premium product cards, a fully functional sliding Cart Drawer (with item quantity adjustment), and an integrated checkout workflow displaying custom receipt tickets upon success.
+- Created and integrated [pages.css](file:///Users/sorawitsakarin/Documents/apiban/src/styles/pages.css) to add responsive container queries, refined padding/margins, image hover transitions, and visual Polish to all three routes.
+- Refactored the Shop storefront page (`src/app/shop/page.js`) to utilize the premium classes from `pages.css` and `redesign.css`.
+- Fixed a Next.js build-breaking ReferenceError in the Shop storefront by importing `ImageSlot`.
+- Integrated actual product photography (`phetmongkol.jpg`, `thepprasit.jpg`, etc.) directly into the `ProductVisual` packaging slot of the storefront.
+- Enhanced the **Heritage** page layout to use parchment textures, ledger-style tables, and gold-framed cards.
+- Implemented **Ambient Atmosphere Shift** on the Apothecary page to change layout tone based on warm/cool selection.
+- Created the **Sensory Botanical Matrix** with hand-drawn SVG sketches and detailed ingredient profiles.
+- Integrated a pulsing CSS **Respiration Guide Circle** breathing trainer inside the Apothecary ritual section.
+- Designed minimalist Aesop/Le Labo product cards with a visual media overlay and "Quick Add" buttons.
+- Added a **Sensory Profile Matrix** of visual progress bars to the Product Detail pages.
+- Customized the successful checkout page to render a jagged-edged ticket with a vintage red-ink Apothecary stamp.
 
 ## Active Tasks
-- None. Project successfully compiled and validated. Ready for deployment.
+- None. The premium aesthetic redesign for Heritage, Apothecary, and Shop storefront is fully completed and compiles successfully.
+

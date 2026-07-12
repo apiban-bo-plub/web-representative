@@ -24,6 +24,12 @@ export default function ImageSlot({ id, shape = 'rounded', radius = 12, fit = 'c
     'apo-phet-oil': '/images/phetmongkol.jpg',
     'apo-app-inhale': '/images/lifestyle.jpg',
     'apo-app-apply': '/images/lifestyle.jpg',
+    // Heritage page slots
+    'heritage-discovery': '/images/redbook.jpg',
+    'heritage-guardian': '/images/product-26.jpg',
+    'heritage-philosophy': '/images/thepprasit.jpg',
+    'heritage-collective': '/images/lifestyle.jpg',
+    'heritage-finale': '/images/hero.jpg',
   };
 
   const imageSrc = imageMap[id] || src;

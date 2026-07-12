@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
@@ -84,40 +85,251 @@ function PortalFooter() {
 }
 
 /* ---- Museum chapter: image one side, text the other, alternating -- */
-function Chapter({ id, index, kicker, headline, body, slotId, ph, cta, reverse }) {
+function TimelineChapter({ index, kicker, headline, body, slotId, ph, reverse }) {
   return (
-    <section className={"chapter" + (reverse ? " chapter--rev" : "")} id={id}>
-      <div className="chapter__media">
-        <ImageSlot
-          id={slotId}
-          shape="rect"
-          fit="cover"
-          placeholder={ph}
-        />
-        <div className="chapter__mediaScrim" />
+    <div className={`timeline-chapter ${reverse ? 'timeline-chapter--rev' : ''} reveal`}>
+      <div className="timeline-node"></div>
+      <div className="museum-media-wrapper">
+        <div className="museum-frame-corner museum-frame-corner--tl"></div>
+        <div className="museum-frame-corner museum-frame-corner--tr"></div>
+        <div className="museum-frame-corner museum-frame-corner--bl"></div>
+        <div className="museum-frame-corner museum-frame-corner--br"></div>
+        <div className="museum-media">
+          <ImageSlot
+            id={slotId}
+            shape="rect"
+            fit="cover"
+            placeholder={ph}
+          />
+        </div>
       </div>
-      <div className="chapter__text">
-        <div className="chapter__index">{index}</div>
-        <div className="apb-eyebrow chapter__kicker">{kicker}</div>
-        <h2 className="chapter__h">{headline}</h2>
-        <p className="chapter__b">{body}</p>
-        {cta}
+      <div className="museum-card paper-texture">
+        <div className="museum-card__frame">
+          <span className="museum-card__badge">{kicker}</span>
+          <span className="museum-card__num">{index}</span>
+          <h2 className="museum-card__title">{headline}</h2>
+          <div className="museum-card__divider"></div>
+          <p className="museum-card__body">{body}</p>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
 /* ---- Museum intro band --------------------------------------------- */
-function HeritageIntro() {
+function HeritageHero() {
   const { t } = useLanguage();
   return (
-    <section className="hintro" id="top-heritage">
-      <div className="apb-eyebrow hintro__eyebrow">{t("heritage.kicker")}</div>
-      <h1 className="hintro__h1">
+    <section className="heritage-hero reveal paper-texture" id="top-heritage">
+      <div className="heritage-hero__glow"></div>
+      <img className="heritage-hero__crest" src="/images/motif.svg" alt="" />
+      <div className="apb-eyebrow" style={{ color: 'var(--basil-green-700)', marginBottom: '16px', letterSpacing: '0.15em' }}>{t("heritage.kicker")}</div>
+      <h1 className="heritage-hero__title">
         {t("heritage.h1_1")}<br/>
         {t("heritage.h1_2")}
       </h1>
-      <p className="hintro__sub">{t("heritage.sub")}</p>
+      <p className="heritage-hero__sub">{t("heritage.sub")}</p>
+      <div className="heritage-hero__botanical-accent"></div>
+    </section>
+  );
+}
+
+/* ---- Archives Section --------------------------------------------- */
+function ArchivesSection() {
+  const { t } = useLanguage();
+  
+  return (
+    <section className="archive-section reveal paper-texture">
+      <div className="archive-inner">
+        <h2 className="archive-title">{t("heritage.archives.title")}</h2>
+        <p className="archive-desc">{t("heritage.archives.desc")}</p>
+        
+        <div className="accordion-group">
+          {/* Section 1 */}
+          <details className="premium-details" name="red-book-recipes" open>
+            <summary className="premium-summary">
+              <span className="premium-summary__text">
+                <span className="premium-summary__num">01 /</span> {t("heritage.archives.recipe1.title")}
+              </span>
+              <span className="premium-summary__icon">
+                <ChevronDown size={18} />
+              </span>
+            </summary>
+            <div className="premium-details__content">
+              <div className="ledger-grid">
+                <div className="ledger-info">
+                  <h4 className="ledger-section-title">Ingredients & Proportions</h4>
+                  <table className="ledger-table">
+                    <tbody>
+                      <tr>
+                        <td>Camphor (การบูร)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">30%</td>
+                      </tr>
+                      <tr>
+                        <td>Borneol (พิมเสน)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">25%</td>
+                      </tr>
+                      <tr>
+                        <td>Menthol (เกล็ดสะระแหน่)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">20%</td>
+                      </tr>
+                      <tr>
+                        <td>14 Sun-Dried Herbs (สมุนไพร 14 ชนิด)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">25%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="ledger-desc">{t("heritage.archives.recipe1.body")}</p>
+                </div>
+                <div className="ledger-visual">
+                  <div className="botanical-sketch">
+                    <svg viewBox="0 0 120 120" className="sketch-svg">
+                      {/* Detailed Clove & Leaves sketch */}
+                      <path d="M 60 110 C 60 110, 60 70, 65 60 C 70 50, 85 45, 95 45 C 95 45, 80 55, 75 70 C 72 80, 68 100, 68 110" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      <path d="M 60 85 C 60 85, 55 60, 42 50 C 30 40, 20 45, 15 50 C 15 50, 30 55, 38 68 C 45 80, 50 90, 52 100" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      {/* Clove buds */}
+                      <circle cx="65" cy="40" r="4" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      <path d="M 61 40 L 61 50 M 69 40 L 69 50" stroke="var(--spring-wood-700)" strokeWidth="0.8" />
+                      <path d="M 65 36 C 63 32, 67 32, 65 36 Z" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      <circle cx="58" cy="45" r="3" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                    </svg>
+                  </div>
+                  <div className="ledger-notes">
+                    <span className="ledger-notes__label">Guardian's Note:</span>
+                    <p className="ledger-notes__script">
+                      "Dry the blossoms for three noon phases until they release their light soul. Blend with oil in unglazed clay."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Section 2 */}
+          <details className="premium-details" name="red-book-recipes">
+            <summary className="premium-summary">
+              <span className="premium-summary__text">
+                <span className="premium-summary__num">02 /</span> {t("heritage.archives.recipe2.title")}
+              </span>
+              <span className="premium-summary__icon">
+                <ChevronDown size={18} />
+              </span>
+            </summary>
+            <div className="premium-details__content">
+              <div className="ledger-grid">
+                <div className="ledger-info">
+                  <h4 className="ledger-section-title">Ingredients & Infusion Details</h4>
+                  <table className="ledger-table">
+                    <tbody>
+                      <tr>
+                        <td>Lemongrass Stalks (ตะไคร้หอม)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Aromatics</td>
+                      </tr>
+                      <tr>
+                        <td>Fresh Kaffir Lime Zest (ผิวมะกรูด)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Citrus base</td>
+                      </tr>
+                      <tr>
+                        <td>Plai Root (เหง้าไพล)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Anti-inflammatory</td>
+                      </tr>
+                      <tr>
+                        <td>Cold-Pressed Coconut Oil (น้ำมันมะพร้าว)</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Carrier medium</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="ledger-desc">{t("heritage.archives.recipe2.body")}</p>
+                </div>
+                <div className="ledger-visual">
+                  <div className="botanical-sketch">
+                    <svg viewBox="0 0 120 120" className="sketch-svg">
+                      {/* Lemongrass stalks & Lime sketch */}
+                      {/* Lime */}
+                      <circle cx="45" cy="75" r="18" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" strokeDasharray="1,1" />
+                      <path d="M 45 57 C 42 55, 48 55, 45 57" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      {/* Lemongrass stalks */}
+                      <path d="M 75 110 L 95 30 M 70 110 L 90 20 M 80 110 L 105 40" stroke="var(--spring-wood-700)" strokeWidth="0.8" />
+                      <path d="M 73 90 C 76 80, 84 82, 88 78" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                    </svg>
+                  </div>
+                  <div className="ledger-notes">
+                    <span className="ledger-notes__label">Guardian's Note:</span>
+                    <p className="ledger-notes__script">
+                      "Age the infusion under shelter for thirty-three days to allow the earth properties to stabilize."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          {/* Section 3 */}
+          <details className="premium-details" name="red-book-recipes">
+            <summary className="premium-summary">
+              <span className="premium-summary__text">
+                <span className="premium-summary__num">03 /</span> {t("heritage.archives.recipe3.title")}
+              </span>
+              <span className="premium-summary__icon">
+                <ChevronDown size={18} />
+              </span>
+            </summary>
+            <div className="premium-details__content">
+              <div className="ledger-grid">
+                <div className="ledger-info">
+                  <h4 className="ledger-section-title">Core Principles</h4>
+                  <table className="ledger-table">
+                    <tbody>
+                      <tr>
+                        <td>Tenet I</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">No Synthetic Enhancers</td>
+                      </tr>
+                      <tr>
+                        <td>Tenet II</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Lunar Cycle Gathering</td>
+                      </tr>
+                      <tr>
+                        <td>Tenet III</td>
+                        <td className="ledger-dots"></td>
+                        <td className="ledger-val">Cognitive-Physical Bridge</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="ledger-desc">{t("heritage.archives.recipe3.body")}</p>
+                </div>
+                <div className="ledger-visual">
+                  <div className="botanical-sketch">
+                    <svg viewBox="0 0 120 120" className="sketch-svg">
+                      {/* Mortar & Pestle sketch */}
+                      <path d="M 30 70 C 30 95, 90 95, 90 70 C 90 60, 30 60, 30 70 Z" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      <path d="M 35 70 C 35 85, 85 85, 85 70" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                      <path d="M 50 35 L 75 75" stroke="var(--spring-wood-700)" strokeWidth="0.8" />
+                      <path d="M 45 40 L 70 80" stroke="var(--spring-wood-700)" strokeWidth="0.8" />
+                      <path d="M 45 40 C 42 36, 52 32, 50 35 Z" stroke="var(--spring-wood-700)" strokeWidth="0.8" fill="none" />
+                    </svg>
+                  </div>
+                  <div className="ledger-notes">
+                    <span className="ledger-notes__label">Guardian's Note:</span>
+                    <p className="ledger-notes__script">
+                      "The breath is the first gate of wellness. Cleanse it, and the spirit shall follow."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
     </section>
   );
 }
@@ -126,7 +338,7 @@ function HeritageIntro() {
 function HeritageFinale({ go }) {
   const { t } = useLanguage();
   return (
-    <section className="hfin">
+    <section className="hfin reveal">
       <div className="hfin__media">
         <ImageSlot
           id="heritage-finale"
@@ -142,16 +354,40 @@ function HeritageFinale({ go }) {
           {t("heritage.finale.title_1")}<br/>
           {t("heritage.finale.title_2")}
         </h2>
-        <Button size="lg" onClick={() => go("apothecary")}>{t("heritage.finale.button")}</Button>
+        <Button size="lg" onClick={() => go("apothecary")}>
+          {t("heritage.finale.button")} <ArrowRight size={16} style={{ marginLeft: '8px', display: 'inline-block', verticalAlign: 'middle' }} />
+        </Button>
       </div>
     </section>
   );
 }
 
 /* ---- Main Page Component ------------------------------------------ */
-export default function App() {
+export default function HeritagePage() {
   const router = useRouter();
   const { t } = useLanguage();
+
+  // Scroll reveal IntersectionObserver setup
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const revealElements = document.querySelectorAll(".reveal");
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
   const go = (id) => {
     if (id === "top") {
       router.push("/");
@@ -172,51 +408,61 @@ export default function App() {
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
+
   return (
     <div className="portal heritage">
       <PortalNav go={go} />
-      <HeritageIntro />
-      <Chapter
-        id="discovery"
-        index="01"
-        kicker={t("heritage.c1.kicker")}
-        slotId="heritage-discovery"
-        ph="Macro shot — The Red Book, antique paper texture"
-        headline={t("heritage.c1.headline")}
-        body={t("heritage.c1.body")}
-        reverse={false}
-      />
-      <Chapter
-        id="guardian"
-        index="02"
-        kicker={t("heritage.c2.kicker")}
-        slotId="heritage-guardian"
-        reverse={true}
-        ph="Historical portrait or Old Songkhla city view"
-        headline={t("heritage.c2.headline")}
-        body={t("heritage.c2.body")}
-      />
-      <Chapter
-        id="philosophy"
-        index="03"
-        kicker={t("heritage.c3.kicker")}
-        slotId="heritage-philosophy"
-        ph="Raw Thai herbs, dramatic lighting"
-        headline={t("heritage.c3.headline")}
-        body={t("heritage.c3.body")}
-        reverse={false}
-      />
-      <Chapter
-        id="collective"
-        index="04"
-        kicker={t("heritage.c4.kicker")}
-        slotId="heritage-collective"
-        reverse={true}
-        ph="Songkhla family portraits / behind-the-scenes"
-        headline={t("heritage.c4.headline")}
-        body={t("heritage.c4.body")}
-      />
+      
+      <HeritageHero />
+
+      <div className="timeline-container">
+        <div className="timeline-line"></div>
+        
+        <TimelineChapter
+          index="01"
+          kicker={t("heritage.c1.kicker")}
+          slotId="heritage-discovery"
+          ph="Macro shot — The Red Book, antique paper texture"
+          headline={t("heritage.c1.headline")}
+          body={t("heritage.c1.body")}
+          reverse={false}
+        />
+        
+        <TimelineChapter
+          index="02"
+          kicker={t("heritage.c2.kicker")}
+          slotId="heritage-guardian"
+          reverse={true}
+          ph="Historical portrait or Old Songkhla city view"
+          headline={t("heritage.c2.headline")}
+          body={t("heritage.c2.body")}
+        />
+        
+        <TimelineChapter
+          index="03"
+          kicker={t("heritage.c3.kicker")}
+          slotId="heritage-philosophy"
+          ph="Raw Thai herbs, dramatic lighting"
+          headline={t("heritage.c3.headline")}
+          body={t("heritage.c3.body")}
+          reverse={false}
+        />
+        
+        <TimelineChapter
+          index="04"
+          kicker={t("heritage.c4.kicker")}
+          slotId="heritage-collective"
+          reverse={true}
+          ph="Songkhla family portraits / behind-the-scenes"
+          headline={t("heritage.c4.headline")}
+          body={t("heritage.c4.body")}
+        />
+      </div>
+
+      <ArchivesSection />
+
       <HeritageFinale go={go} />
+      
       <PortalFooter />
     </div>
   );

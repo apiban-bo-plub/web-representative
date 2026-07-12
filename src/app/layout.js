@@ -1,5 +1,7 @@
 import "@/styles/style_0.css";
 import "@/styles/style_1.css";
+import "@/styles/redesign.css";
+import "@/styles/pages.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata = {

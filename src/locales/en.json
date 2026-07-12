@@ -112,6 +112,22 @@
       "title_1": "From the Archive",
       "title_2": "to Your Pocket.",
       "button": "Explore the Apothecary Collection"
+    },
+    "archives": {
+      "title": "Excerpts from the Red Book",
+      "desc": "Transcribed recipes and philosophical notes from the Apiban family legacy.",
+      "recipe1": {
+        "title": "The 1870 Botanical Inhaler formula",
+        "body": "A precise combination of Camphor, Borneol, Peppermint oil, and 14 sun-dried roots and blossoms. Preserved in a traditional unglazed clay pot to maintain proper ambient humidity."
+      },
+      "recipe2": {
+        "title": "The Restoration Oil recipe (Phetmongkol)",
+        "body": "Formulated to ground the senses. Slowly infused cold-pressed coconut oil, plai root, lemongrass stalks, and fresh kaffir lime zest, aged under shelter for thirty-three days."
+      },
+      "recipe3": {
+        "title": "Tenets of the Guardian's Craft",
+        "body": "Tenet I: No synthetic enhancers shall be introduced. Tenet II: All botanicals are gathered in accordance with lunar cycles. Tenet III: Scent is the bridge between cognitive balance and raw physical comfort."
+      }
     }
   },
   "apothecary": {

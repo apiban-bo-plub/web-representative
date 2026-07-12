@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
+import { X, Check, ArrowRight } from 'lucide-react';
 
 import Logo from '@/components/brand/Logo';
 import Button from '@/components/core/Button';
 import Tag from '@/components/core/Tag';
 import Divisions from '@/components/brand/Divisions';
 import LanguageSelector from '@/components/LanguageSelector';
+import ImageSlot from '@/components/ImageSlot';
 
 /* ---- Data ---------------------------------------------------------- */
 const PRODUCTS = [
@@ -18,192 +20,80 @@ const PRODUCTS = [
   { id: "kaffir", tone: "green", price: 480, vol: "100 ml" }
 ];
 
-const toneBg = {
-  green: "var(--basil-green-800)",
-  sand: "var(--makara-300)",
-  gold: "var(--spring-wood-600)"
-};
-
-const toneInk = {
-  green: "#f0ebe2",
-  sand: "var(--brown-600)",
-  gold: "var(--brown-700)"
+const productImages = {
+  cooling: '/images/phetmongkol.jpg',
+  inhaler: '/images/thepprasit.jpg',
+  floral: '/images/lifestyle.jpg',
+  kaffir: '/images/product-26.jpg'
 };
 
 const baht = n => "฿" + n;
 
-/* ---- Packaging visual (CSS label mock) ----------------------------- */
+/* ---- Packaging visual (Actual Photography + Classic Label Overlay) --- */
 function ProductVisual({ p, size = "md" }) {
   const { t } = useLanguage();
-  const h = size === "lg" ? 460 : 300;
-  const cream = p.tone !== "sand";
-  
+  const isLg = size === "lg";
   const pName = t("shop.products." + p.id + ".name");
   const pTh = t("shop.products." + p.id + ".th");
 
   return (
-    <div
-      style={{
-        position: "relative",
-        height: h,
-        borderRadius: "var(--radius-md)",
-        overflow: "hidden",
-        background: toneBg[p.tone],
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 28,
-        textAlign: "center"
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          right: -70,
-          bottom: -70,
-          width: 240,
-          height: 240,
-          opacity: 0.12,
-          background: "url('/images/motif.svg') center/contain no-repeat",
-          filter: cream ? "brightness(0) invert(1)" : "none"
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          border: `1px solid ${cream ? "rgba(240,235,226,.5)" : "rgba(57,48,45,.35)"}`,
-          borderRadius: 8,
-          padding: size === "lg" ? "40px 34px" : "26px 22px",
-          width: "82%"
-        }}
-      >
-        <div
+    <div className={`shop-pvisual shop-pvisual--${p.tone} ${isLg ? 'shop-pvisual--lg' : ''}`}>
+      {productImages[p.id] && (
+        <img
+          src={productImages[p.id]}
+          alt={pName}
           style={{
-            font: "var(--type-caption)",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: toneInk[p.tone],
-            opacity: 0.8,
-            marginBottom: 12
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: p.tone === 'sand' ? 0.32 : 0.42,
+            mixBlendMode: p.tone === 'sand' ? 'multiply' : 'luminosity',
+            filter: 'contrast(1.1) brightness(0.95)',
+            transition: 'transform 0.6s var(--ease-out), opacity 0.4s ease',
+            zIndex: 1
           }}
-        >
-          Apiban Bo Plup
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-serif-thai)",
-            fontSize: size === "lg" ? 30 : 22,
-            color: toneInk[p.tone],
-            marginBottom: 6
-          }}
-        >
-          {pTh}
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-serif)",
-            fontWeight: 600,
-            fontSize: size === "lg" ? 34 : 24,
-            letterSpacing: "0.02em",
-            color: toneInk[p.tone],
-            lineHeight: 1.1
-          }}
-        >
-          {pName}
-        </div>
-        <div
-          style={{
-            width: 40,
-            height: 1,
-            background: toneInk[p.tone],
-            opacity: 0.5,
-            margin: "16px auto"
-          }}
+          className="product-bg-img"
         />
-        <div
-          style={{
-            font: "var(--type-caption)",
-            letterSpacing: "0.12em",
-            color: toneInk[p.tone],
-            opacity: 0.85
-          }}
-        >
-          {p.vol} · Songkhla
-        </div>
+      )}
+      
+      <div className="shop-pvisual__motif" style={{ zIndex: 2 }} />
+      
+      <div className="shop-pvisual__border" style={{ zIndex: 3, backdropFilter: 'blur(1px)' }}>
+        <div className="shop-pvisual__brand">Apiban Bo Plup</div>
+        <div className="shop-pvisual__th">{pTh}</div>
+        <div className="shop-pvisual__en">{pName}</div>
+        <div className="shop-pvisual__divider" />
+        <div className="shop-pvisual__meta">{p.vol} · Songkhla</div>
       </div>
     </div>
   );
 }
 
 /* ---- Nav ------------------------------------------------------------ */
-function Nav({ route, go, cart }) {
+function StorefrontNav({ route, go }) {
   const { t } = useLanguage();
   const link = (id, labelKey) => (
     <a
       onClick={() => go(id)}
-      style={{
-        cursor: "pointer",
-        fontFamily: "var(--font-sans)",
-        fontSize: 13,
-        fontWeight: 500,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        color: route === id ? "var(--basil-green-800)" : "var(--text-body)"
-      }}
+      className={`shop-header__link ${route === id ? 'shop-header__link--active' : ''}`}
     >
       {t(labelKey)}
     </a>
   );
+  
   return (
-    <header
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 20,
-        background: "rgba(240,235,226,0.9)",
-        backdropFilter: "blur(8px)",
-        borderBottom: "1px solid var(--border-hairline)"
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "18px 40px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}
-      >
-        <nav style={{ display: "flex", gap: 28, flex: 1, alignItems: 'center' }}>
+    <header className="shop-header">
+      <div className="shop-header__inner">
+        <nav className="shop-header__nav">
           {link("home", "nav.collection")}
           {link("story", "shop.story.eyebrow")}
         </nav>
-        <a onClick={() => go("home")} style={{ cursor: "pointer" }}>
+        <a onClick={() => go("home")} className="shop-header__logo">
           <Logo width={150} />
         </a>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 22,
-            alignItems: "center",
-            flex: 1
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: 13,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              color: "var(--basil-green-800)",
-              fontWeight: 600
-            }}
-          >
-            {t("nav.cart")} ({cart})
-          </span>
+        <div className="shop-header__side">
           <LanguageSelector />
         </div>
       </div>
@@ -212,65 +102,41 @@ function Nav({ route, go, cart }) {
 }
 
 /* ---- Hero ----------------------------------------------------------- */
-function Hero({ go }) {
+function StorefrontHero({ go }) {
   const { t } = useLanguage();
   return (
-    <section
-      style={{
-        position: "relative",
-        minHeight: 560,
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr"
-      }}
-    >
-      <div
-        style={{
-          padding: "96px 40px 96px 80px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          maxWidth: 620
-        }}
-      >
-        <div className="apb-eyebrow" style={{ marginBottom: 20 }}>{t("home.hero.eyebrow")}</div>
-        <h1 style={{ fontSize: 68, lineHeight: 1.04, margin: "0 0 24px" }}>
+    <section className="shop-hero reveal">
+      <div className="shop-hero__content">
+        <div className="apb-eyebrow" style={{ color: 'var(--brand-gold)', marginBottom: 20 }}>
+          {t("home.hero.eyebrow")}
+        </div>
+        <h1 className="shop-hero__title" style={{ fontFamily: "var(--font-serif)", color: "var(--text-strong)" }}>
           {t("shop.hero.title_1")}<br/>
           {t("shop.hero.title_2")}
         </h1>
-        <p
-          style={{
-            font: "var(--type-lead)",
-            color: "var(--text-body)",
-            maxWidth: 460,
-            marginBottom: 32
-          }}
-        >
+        <p className="shop-hero__sub">
           {t("shop.hero.sub")}
         </p>
-        <div style={{ display: "flex", gap: 14 }}>
-          <Button onClick={() => go("home")}>{t("shop.hero.button_shop")}</Button>
-          <Button variant="secondary" onClick={() => go("story")}>{t("shop.hero.button_story")}</Button>
+        <div className="shop-hero__cta">
+          <Button size="lg" onClick={() => go("home")}>{t("shop.hero.button_shop")}</Button>
+          <Button size="lg" variant="secondary" onClick={() => go("story")}>{t("shop.hero.button_story")}</Button>
         </div>
       </div>
-      <div
-        style={{
-          position: "relative",
-          background: "url('/images/hero.jpg') center/cover"
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(90deg, var(--makara-100) 0%, rgba(240,235,226,0) 24%)"
-          }}
+      <div className="shop-hero__media">
+        <ImageSlot
+          id="shop-hero"
+          src="/images/hero.jpg"
+          shape="rect"
+          fit="cover"
+          placeholder="Apothecary collection showcase"
         />
+        <div className="shop-hero__scrim" />
       </div>
     </section>
   );
 }
 
-/* ---- Product grid --------------------------------------------------- */
+/* ---- Product card --------------------------------------------------- */
 function ProductCard({ p, go }) {
   const { t } = useLanguage();
   const pName = t("shop.products." + p.id + ".name");
@@ -279,41 +145,51 @@ function ProductCard({ p, go }) {
   return (
     <div
       onClick={() => go("product:" + p.id)}
-      style={{ cursor: "pointer" }}
-      className="apb-pcard"
+      className="apb-pcard reveal"
     >
-      <ProductVisual p={p} />
-      <div style={{ padding: "18px 4px 0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-          <h3 style={{ fontSize: 22, margin: 0 }}>{pName}</h3>
-          <span style={{ fontFamily: "var(--font-sans)", fontSize: 15, color: "var(--text-body)" }}>
-            {baht(p.price)}
-          </span>
+      <div className="apb-pcard__media-wrapper">
+        <ProductVisual p={p} />
+        <div className="apb-pcard__hover-overlay">
+          <div className="apb-pcard__hover-frame">
+            <span className="apb-pcard__hover-details">Click for Editorial Specs</span>
+          </div>
         </div>
-        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 15, color: "var(--text-muted)", margin: "6px 0 0" }}>
-          {pTagline}
-        </p>
+      </div>
+      <div className="apb-pcard__info">
+        <div className="apb-pcard__header">
+          <h3 className="apb-pcard__title">{pName}</h3>
+          <span className="apb-pcard__price">{baht(p.price)}</span>
+        </div>
+        <p className="apb-pcard__tagline">{pTagline}</p>
       </div>
     </div>
   );
 }
 
+/* ---- Main Shop Listings ------------------------------------------- */
 function ShopContent({ go }) {
   const { t } = useLanguage();
   return (
     <main>
-      <Hero go={go} />
-      <section style={{ maxWidth: 1200, margin: "0 auto", padding: "72px 40px" }}>
-        <div style={{ textAlign: "center", marginBottom: 44 }}>
-          <div className="apb-eyebrow" style={{ marginBottom: 12 }}>{t("home.gallery.eyebrow")}</div>
-          <h2 style={{ fontSize: 44, margin: 0 }}>{t("shop.h2")}</h2>
+      <StorefrontHero go={go} />
+      
+      <section className="shop-grid-section">
+        <div className="shop-grid-section__head reveal">
+          <span className="apb-eyebrow" style={{ color: 'var(--brand-gold)', display: 'block', marginBottom: 12 }}>
+            {t("home.gallery.eyebrow")}
+          </span>
+          <h2 className="shop-grid-section__title" style={{ fontFamily: "var(--font-serif)", color: "var(--text-strong)" }}>
+            {t("shop.h2")}
+          </h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
+        
+        <div className="shop-grid">
           {PRODUCTS.map(p => (
             <ProductCard key={p.id} p={p} go={go} />
           ))}
         </div>
       </section>
+
       <HeritageStrip go={go} />
       <Newsletter />
     </main>
@@ -324,41 +200,29 @@ function ShopContent({ go }) {
 function HeritageStrip({ go }) {
   const { t } = useLanguage();
   return (
-    <section style={{ background: "var(--surface-green)", color: "var(--text-on-dark)" }}>
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "80px 40px",
-          display: "grid",
-          gridTemplateColumns: "0.9fr 1.1fr",
-          gap: 64,
-          alignItems: "center"
-        }}
-      >
-        <div
-          style={{
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-            aspectRatio: "4/5",
-            background: "url('/images/product-26.jpg') center/cover"
-          }}
-        />
-        <div>
-          <div style={{ color: "var(--makara-300)", marginBottom: 18 }} className="apb-eyebrow">
-            {t("shop.strip.eyebrow")}
-          </div>
-          <h2 style={{ color: "#fff", fontSize: 44, margin: "0 0 22px" }}>
-            {t("shop.strip.title")}
+    <section className="heritage-strip-sec reveal">
+      <div className="heritage-strip">
+        <div className="heritage-strip__image">
+          <ImageSlot
+            id="shop-strip-heritage"
+            src="/images/product-26.jpg"
+            shape="rect"
+            fit="cover"
+            placeholder="Apiban Bo Plup traditional apothecary raw ingredients"
+          />
+        </div>
+        <div className="heritage-strip__content">
+          <span className="apb-eyebrow" style={{ color: 'var(--basil-green-700)', display: 'block', marginBottom: 16 }}>
+            {t("shop.heritage.eyebrow")}
+          </span>
+          <h2 className="heritage-strip__title" style={{ fontFamily: "var(--font-serif)", marginBottom: 24, fontSize: 'clamp(28px, 3.5vw, 42px)' }}>
+            {t("shop.heritage.title")}
           </h2>
-          <p style={{ font: "var(--type-lead)", color: "var(--makara-100)", marginBottom: 16 }}>
-            {t("shop.strip.desc1")}
+          <p className="heritage-strip__desc" style={{ marginBottom: 32 }}>
+            {t("shop.heritage.desc")}
           </p>
-          <p style={{ fontFamily: "var(--font-sans)", color: "var(--makara-200)", fontSize: 14, lineHeight: 1.6, marginBottom: 28 }}>
-            {t("shop.strip.desc2")}
-          </p>
-          <Button variant="gold" onClick={() => go("story")}>
-            {t("shop.strip.button")}
+          <Button variant="secondary" size="lg" onClick={() => go("story")}>
+            {t("shop.heritage.button")}
           </Button>
         </div>
       </div>
@@ -370,38 +234,39 @@ function HeritageStrip({ go }) {
 function Newsletter() {
   const { t } = useLanguage();
   return (
-    <section style={{ maxWidth: 720, margin: "0 auto", padding: "84px 40px", textAlign: "center" }}>
+    <section className="newsletter-sec reveal">
       <img
         src="/images/motif.svg"
-        style={{ width: 46, opacity: 0.85, marginBottom: 22, marginLeft: 'auto', marginRight: 'auto' }}
+        className="newsletter-sec__motif"
         alt=""
       />
-      <h2 style={{ fontSize: 38, margin: "0 0 14px" }}>{t("shop.news.title")}</h2>
-      <p style={{ font: "var(--type-lead)", color: "var(--text-body)", marginBottom: 28 }}>
+      <h2 className="newsletter-sec__title" style={{ fontFamily: "var(--font-serif)", color: "var(--text-strong)" }}>
+        {t("shop.news.title")}
+      </h2>
+      <p className="newsletter-sec__desc">
         {t("shop.news.desc")}
       </p>
-      <div style={{ display: "flex", gap: 12, maxWidth: 460, margin: "0 auto" }}>
+      <div className="newsletter-sec__form">
         <input
           placeholder={t("shop.news.placeholder")}
-          style={{
-            flex: 1,
-            padding: "13px 18px",
-            borderRadius: "var(--radius-pill)",
-            border: "1px solid var(--makara-500)",
-            background: "#fff",
-            fontFamily: "var(--font-sans)",
-            fontSize: 14,
-            color: "var(--text-body)"
-          }}
+          className="newsletter-sec__input"
         />
-        <Button>{t("shop.news.button")}</Button>
+        <Button size="lg">{t("shop.news.button")}</Button>
       </div>
     </section>
   );
 }
 
+/* ---- Product sensory data mapping --------------------------------- */
+const SENSORY_MAP = {
+  "cooling": { fresh: 95, warm: 15, floral: 70, spice: 20, color: "var(--basil-green-600)" },
+  "inhaler": { fresh: 60, warm: 85, floral: 20, spice: 80, color: "var(--brand-gold)" },
+  "floral": { fresh: 50, warm: 90, floral: 30, spice: 75, color: "var(--brand-gold)" },
+  "kaffir": { fresh: 80, warm: 20, floral: 85, spice: 25, color: "var(--basil-green-600)" },
+};
+
 /* ---- Product detail ------------------------------------------------- */
-function ProductDetail({ id, go, add }) {
+function ProductDetail({ id, go }) {
   const { t } = useLanguage();
   const p = PRODUCTS.find(x => x.id === id) || PRODUCTS[0];
   
@@ -410,58 +275,98 @@ function ProductDetail({ id, go, add }) {
   const pDesc = t("shop.products." + p.id + ".desc");
   const pTags = t("shop.products." + p.id + ".tags");
 
+  const sensory = SENSORY_MAP[p.id] || { fresh: 50, warm: 50, floral: 50, spice: 50, color: "var(--brand-gold)" };
+
   return (
-    <main style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 40px 96px" }}>
-      <a
-        onClick={() => go("home")}
-        style={{
-          cursor: "pointer",
-          fontFamily: "var(--font-sans)",
-          fontSize: 13,
-          letterSpacing: "0.06em",
-          textTransform: "uppercase",
-          color: "var(--text-muted)"
-        }}
-      >
+    <main className="shop-detail reveal">
+      <a onClick={() => go("home")} className="shop-detail__back">
         {t("shop.back")}
       </a>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, marginTop: 24, alignItems: "start" }}>
-        <ProductVisual p={p} size="lg" />
-        <div style={{ paddingTop: 12 }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+      
+      <div className="shop-detail__grid">
+        <div className="shop-detail__media-wrapper">
+          <ProductVisual p={p} size="lg" />
+        </div>
+        
+        <div className="shop-detail__content">
+          <div className="shop-detail__tags">
             {Array.isArray(pTags) && pTags.map(tLabel => (
-              <Tag key={tLabel} tone="green">
+              <Tag key={tLabel} tone={p.id.includes("inhaler") ? "gold" : "green"}>
                 {tLabel}
               </Tag>
             ))}
           </div>
-          <h1 style={{ fontSize: 52, margin: "0 0 6px" }}>{pName}</h1>
-          <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 22, color: "var(--brand-green)", margin: "0 0 24px" }}>
+          
+          <h1 className="shop-detail__title" style={{ fontFamily: "var(--font-serif)" }}>
+            {pName}
+          </h1>
+          
+          <p className="shop-detail__tagline">
             {pTagline}
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
-            <span style={{ fontFamily: "var(--font-serif)", fontSize: 30, color: "var(--text-strong)" }}>
+          
+          <div className="shop-detail__price-row">
+            <span className="shop-detail__price">
               {baht(p.price)}
             </span>
-            <Tag>{p.vol}</Tag>
+            <Tag tone="gold">{p.vol}</Tag>
           </div>
-          <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)", marginBottom: 28 }}>
+          
+          <p className="shop-detail__desc">
             {pDesc}
           </p>
-          <div style={{ display: "flex", gap: 14, marginBottom: 32 }}>
-            <Button size="lg" onClick={add}>
-              {t("apothecary.crossroads.b2c.button") || "Add to cart"}
+          
+          <div className="shop-detail__cta" style={{ display: 'flex', gap: '12px' }}>
+            <Button size="lg" onClick={() => window.open("https://shopee.co.th", "_blank")}>
+              {t("apothecary.crossroads.personal.button1") || "Shop on Shopee"}
             </Button>
-            <Button size="lg" variant="secondary">
-              {t("shop.detail.save")}
+            <Button size="lg" variant="secondary" onClick={() => window.open("https://line.me", "_blank")}>
+              Line Inquiry
             </Button>
           </div>
+          
+          {/* Sensory Profile Matrix */}
+          <div className="shop-detail__sensory-matrix paper-texture">
+            <h4 className="sensory-matrix__title">Sensory Profile Matrix</h4>
+            <div className="sensory-matrix__scales">
+              <div className="sensory-matrix__row">
+                <span className="sensory-matrix__label">Freshness</span>
+                <div className="sensory-matrix__bar-bg">
+                  <div className="sensory-matrix__bar-fill" style={{ width: `${sensory.fresh}%`, backgroundColor: 'var(--basil-green-500)' }}></div>
+                </div>
+                <span className="sensory-matrix__value">{sensory.fresh}%</span>
+              </div>
+              <div className="sensory-matrix__row">
+                <span className="sensory-matrix__label">Warmth</span>
+                <div className="sensory-matrix__bar-bg">
+                  <div className="sensory-matrix__bar-fill" style={{ width: `${sensory.warm}%`, backgroundColor: '#c89e68' }}></div>
+                </div>
+                <span className="sensory-matrix__value">{sensory.warm}%</span>
+              </div>
+              <div className="sensory-matrix__row">
+                <span className="sensory-matrix__label">Floral Density</span>
+                <div className="sensory-matrix__bar-bg">
+                  <div className="sensory-matrix__bar-fill" style={{ width: `${sensory.floral}%`, backgroundColor: '#e2bebc' }}></div>
+                </div>
+                <span className="sensory-matrix__value">{sensory.floral}%</span>
+              </div>
+              <div className="sensory-matrix__row">
+                <span className="sensory-matrix__label">Spice Levels</span>
+                <div className="sensory-matrix__bar-bg">
+                  <div className="sensory-matrix__bar-fill" style={{ width: `${sensory.spice}%`, backgroundColor: '#af6b5c' }}></div>
+                </div>
+                <span className="sensory-matrix__value">{sensory.spice}%</span>
+              </div>
+            </div>
+          </div>
+
           <Divisions label={t("shop.detail.use_title")} />
-          <p style={{ font: "var(--type-body)", fontSize: 14, color: "var(--text-body)" }}>
+          <p className="shop-detail__section-body" style={{ marginBottom: 24 }}>
             {t("shop.detail.use_body")}
           </p>
+          
           <Divisions label={t("shop.detail.ing_title")} />
-          <p style={{ fontFamily: "var(--font-sans-thai)", fontSize: 14, color: "var(--text-body)" }}>
+          <p className="shop-detail__section-body-thai">
             {t("shop.detail.ing_body")}
           </p>
         </div>
@@ -470,42 +375,47 @@ function ProductDetail({ id, go, add }) {
   );
 }
 
-/* ---- Story ---------------------------------------------------------- */
-function StorySection() {
+/* ---- Story Section -------------------------------------------------- */
+function StorefrontStory() {
   const { t } = useLanguage();
   return (
-    <main>
-      <section style={{ maxWidth: 820, margin: "0 auto", padding: "80px 40px 40px", textAlign: "center" }}>
-        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>{t("shop.story.eyebrow")}</div>
-        <h1 style={{ fontSize: 60, margin: "0 0 20px" }}>{t("shop.story.title")}</h1>
-        <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 26, color: "var(--brand-green)", lineHeight: 1.4 }}>
+    <main className="shop-story reveal">
+      <section className="shop-story-intro">
+        <span className="apb-eyebrow shop-story-intro__eyebrow" style={{ color: 'var(--brand-gold)', display: 'block' }}>
+          {t("shop.story.eyebrow")}
+        </span>
+        <h1 className="shop-story-intro__title" style={{ fontFamily: "var(--font-serif-thai)" }}>
+          {t("shop.story.title")}
+        </h1>
+        <p className="shop-story-intro__tagline">
           {t("shop.story.tagline")}
         </p>
       </section>
-      <section style={{ maxWidth: 980, margin: "0 auto", padding: "24px 40px 96px" }}>
-        <div
-          style={{
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-            height: 420,
-            background: "url('/images/product-26.jpg') center/cover",
-            marginBottom: 44
-          }}
-        />
-        <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <p style={{ font: "var(--type-lead)", color: "var(--text-body)", marginBottom: 22 }}>
+      
+      <section className="shop-story-content">
+        <div className="shop-story-content__image">
+          <ImageSlot
+            id="story-heritage-image"
+            src="/images/product-26.jpg"
+            shape="rect"
+            fit="cover"
+            placeholder="Heritage Apothecary Book Archive"
+          />
+        </div>
+        <div className="shop-story-content__body-wrapper">
+          <p className="shop-story-content__lead">
             {t("shop.story.p1")}
           </p>
-          <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)", marginBottom: 22 }}>
+          <p className="shop-story-content__text" style={{ marginBottom: 32 }}>
             {t("shop.story.p2")}
           </p>
+          
           <Divisions label={t("shop.story.made_title")} />
-          <p style={{ font: "var(--type-body)", fontSize: 15, color: "var(--text-body)" }}>
+          <p className="shop-story-content__text" style={{ marginTop: 12 }}>
             {t("shop.story.made_body")}
           </p>
         </div>
       </section>
-      <Newsletter />
     </main>
   );
 }
@@ -513,59 +423,24 @@ function StorySection() {
 /* ---- Site footer ---------------------------------------------------- */
 function SiteFooter() {
   const { t } = useLanguage();
-  const col = (h, items) => (
-    <div key={h}>
-      <div
-        style={{
-          font: "var(--type-caption)",
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          color: "var(--makara-300)",
-          marginBottom: 14
-        }}
-      >
-        {h}
-      </div>
-      {items.map(i => (
-        <div
-          key={i}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: 13,
-            color: "var(--makara-100)",
-            marginBottom: 9,
-            opacity: 0.9
-          }}
-        >
-          {i}
+  
+  const col = (title, items) => (
+    <div key={title}>
+      <div className="shop-footer__title">{title}</div>
+      {items.map(item => (
+        <div className="shop-footer__item" key={item}>
+          {item}
         </div>
       ))}
     </div>
   );
+
   return (
-    <footer style={{ background: "var(--surface-ink)" }}>
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "64px 40px 40px",
-          display: "grid",
-          gridTemplateColumns: "1.4fr 1fr 1fr 1fr",
-          gap: 40
-        }}
-      >
+    <footer className="shop-footer">
+      <div className="shop-footer__inner">
         <div>
           <Logo width={180} color="#f0ebe2" />
-          <p
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: 13,
-              color: "var(--makara-200)",
-              maxWidth: 260,
-              marginTop: 18,
-              lineHeight: 1.6
-            }}
-          >
+          <p className="shop-footer__blurb">
             {t("footer.blurb")}
           </p>
         </div>
@@ -573,18 +448,9 @@ function SiteFooter() {
         {col(t("shop.footer.company"), [t("shop.story.eyebrow"), t("shop.footer.companyItems.1"), t("shop.footer.companyItems.2"), t("shop.footer.companyItems.3")])}
         {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
       </div>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px 40px" }}>
-        <div
-          style={{
-            borderTop: "1px solid rgba(240,235,226,0.2)",
-            paddingTop: 22,
-            display: "flex",
-            justifyContent: "space-between",
-            fontFamily: "var(--font-sans)",
-            fontSize: 12,
-            color: "var(--makara-300)"
-          }}
-        >
+      
+      <div className="shop-footer__bottom">
+        <div className="shop-footer__border">
           <span>{t("footer.copy")}</span>
           <span>{t("footer.privacy")}</span>
         </div>
@@ -594,10 +460,55 @@ function SiteFooter() {
 }
 
 /* ---- Main Shop Component ------------------------------------------- */
-export default function Storefront() {
+function Storefront() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [route, setRoute] = useState("home"); // home, story, product:<id>
-  const [cart, setCart] = useState(0);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState("form"); // form, success
+  
+  // Checkout Form State
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formAddress, setFormAddress] = useState("");
+  const [formZip, setFormZip] = useState("");
+  const [formInquiry, setFormInquiry] = useState("personal"); // personal, corporate
+
+  const { t } = useLanguage();
+
+  // Scroll reveal setup
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const revealElements = document.querySelectorAll(".reveal");
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [route]);
+
+  // Handle URL query params (e.g. corporate gifting)
+  useEffect(() => {
+    const inquiryParam = searchParams.get('inquiry');
+    if (inquiryParam === 'corporate') {
+      setFormInquiry("corporate");
+      setIsCheckoutOpen(true);
+    } else if (inquiryParam === 'stores') {
+      alert("Locate Apiban Bo Plup in Old Town Songkhla, Nakorn-Nai Road. Opening Hours: 9 AM - 6 PM Daily.");
+    }
+  }, [searchParams]);
 
   const go = (target) => {
     if (target === "home" || target === "story") {
@@ -607,24 +518,164 @@ export default function Storefront() {
       setRoute(target);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // standard link redirect fallbacks
       router.push("/");
     }
   };
 
-  const handleAddToCart = () => {
-    setCart(prev => prev + 1);
+  const handleCheckoutSubmit = (e) => {
+    e.preventDefault();
+    setCheckoutStep("success");
+  };
+
+  const handleCloseCheckout = () => {
+    setIsCheckoutOpen(false);
+    if (checkoutStep === "success") {
+      setCheckoutStep("form");
+      setFormName("");
+      setFormEmail("");
+      setFormPhone("");
+      setFormAddress("");
+      setFormZip("");
+    }
   };
 
   return (
     <div style={{ background: "var(--surface-page)", minHeight: "100vh" }}>
-      <Nav route={route} go={go} cart={cart} />
+      <StorefrontNav route={route} go={go} />
+      
       {route === "home" && <ShopContent go={go} />}
-      {route === "story" && <StorySection />}
+      {route === "story" && <StorefrontStory />}
       {route.startsWith("product:") && (
-        <ProductDetail id={route.split(":")[1]} go={go} add={handleAddToCart} />
+        <ProductDetail 
+          id={route.split(":")[1]} 
+          go={go} 
+        />
       )}
+      
       <SiteFooter />
+
+      {/* --- Corporate Gifting Inquiry Modal --- */}
+      <div 
+        className={`modal-overlay ${isCheckoutOpen ? 'modal-overlay--open' : ''}`}
+        onClick={handleCloseCheckout}
+      >
+        <div 
+          className="checkout-modal-content"
+          onClick={e => e.stopPropagation()}
+        >
+          <button 
+            style={{ position: 'absolute', top: 24, right: 24, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', zIndex: 10 }}
+            onClick={handleCloseCheckout}
+          >
+            <X size={20} />
+          </button>
+
+          {checkoutStep === "form" ? (
+            <form onSubmit={handleCheckoutSubmit} style={{ position: 'relative', zIndex: 5 }}>
+              <div style={{ textAlign: 'center', marginBottom: 32 }}>
+                <img src="/images/motif.svg" style={{ width: 42, margin: '0 auto 16px', opacity: 0.8 }} alt="" />
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, margin: '0 0 8px' }}>
+                  Corporate & Gifting Inquiry
+                </h2>
+                <p style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                  Let us know your event size, delivery dates, and customization options.
+                </p>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Full Name / Organization</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  required 
+                  value={formName}
+                  onChange={e => setFormName(e.target.value)}
+                  placeholder="Organization / Representative Name"
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Email Address</label>
+                  <input 
+                    type="email" 
+                    className="form-input" 
+                    required 
+                    value={formEmail}
+                    onChange={e => setFormEmail(e.target.value)}
+                    placeholder="representative@organization.com"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    className="form-input" 
+                    required 
+                    value={formPhone}
+                    onChange={e => setFormPhone(e.target.value)}
+                    placeholder="081-234-5678"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Delivery or Event Location</label>
+                <textarea 
+                  className="form-input" 
+                  rows="3" 
+                  required 
+                  value={formAddress}
+                  onChange={e => setFormAddress(e.target.value)}
+                  style={{ resize: 'none', borderRadius: 'var(--radius-md)' }}
+                  placeholder="Address or Event Venue details"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Inquiry Details / Customs</label>
+                <textarea 
+                  className="form-input" 
+                  rows="3" 
+                  required
+                  style={{ resize: 'none', borderRadius: 'var(--radius-md)' }}
+                  placeholder="e.g. Requesting 100 sets of the Phetmongkol oil with custom wood boxes by mid-September."
+                />
+              </div>
+
+              <Button 
+                size="lg" 
+                style={{ width: '100%', marginTop: 12 }} 
+                type="submit"
+              >
+                Send Corporate Request
+              </Button>
+            </form>
+          ) : (
+            <div className="success-receipt" style={{ position: 'relative', zIndex: 5 }}>
+              <div style={{ display: 'inline-flex', background: 'rgba(83, 97, 88, 0.08)', padding: 16, borderRadius: '50%', marginBottom: 20 }}>
+                <Check size={36} style={{ color: 'var(--basil-green-800)' }} />
+              </div>
+              <h2 className="success-receipt__title">Inquiry Submitted</h2>
+              <p className="success-receipt__desc" style={{ marginBottom: 30 }}>
+                Thank you, {formName}. Your corporate gifting request has been sent to our Songkhla archive team. We will contact you via email at {formEmail} within 24 hours.
+              </p>
+
+              <Button size="lg" style={{ width: '100%' }} onClick={handleCloseCheckout}>
+                Continue Journey
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
+  );
+}
+
+export default function StorefrontPage() {
+  return (
+    <Suspense fallback={<div className="portal" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Apothecary Store...</div>}>
+      <Storefront />
+    </Suspense>
   );
 }
