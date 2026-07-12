@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ScrollText, Sparkles, Users } from 'lucide-react';
+import { ScrollText, Sparkles, Users, ArrowRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
@@ -19,7 +19,8 @@ const iconMap = {
   'users': Users
 };
 
-/* ---- Nav ---------------------------------------------------------- */
+/* ---- Replicated Sub-components from Home Page ---- */
+
 function PortalNav({ go }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
@@ -65,7 +66,6 @@ function PortalNav({ go }) {
   );
 }
 
-/* ---- S1 Hero ------------------------------------------------------ */
 function Hero({ go }) {
   const { t } = useLanguage();
   return (
@@ -100,7 +100,6 @@ function Hero({ go }) {
   );
 }
 
-/* ---- S1.5 Prestige marquee --------------------------------------- */
 function Prestige() {
   const { t } = useLanguage();
   const line = t("home.prestige.line");
@@ -118,7 +117,6 @@ function Prestige() {
   );
 }
 
-/* ---- S2 Pillars --------------------------------------------------- */
 function Pillars() {
   const { t } = useLanguage();
   const data = [
@@ -159,7 +157,6 @@ function Pillars() {
   );
 }
 
-/* ---- S3 Red Book -------------------------------------------------- */
 function RedBook({ go }) {
   const { t } = useLanguage();
   return (
@@ -187,7 +184,6 @@ function RedBook({ go }) {
   );
 }
 
-/* ---- S4 Apothecary 50/50 ----------------------------------------- */
 function ApothecarySide({ id, tone, tagline, title, body, slotId, ph }) {
   return (
     <div className={"apo__side apo__side--" + tone}>
@@ -237,7 +233,6 @@ function Apothecary({ go }) {
   );
 }
 
-/* ---- S4.5 Gallery -------------------------------------------------- */
 function Gallery() {
   const { t } = useLanguage();
   const items = [
@@ -323,7 +318,6 @@ function Gallery() {
   );
 }
 
-/* ---- S5 Continuum ------------------------------------------------- */
 function Continuum() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -350,7 +344,6 @@ function Continuum() {
   );
 }
 
-/* ---- Footer ------------------------------------------------------- */
 function PortalFooter() {
   const { t } = useLanguage();
   const col = (h, items) => (
@@ -378,33 +371,392 @@ function PortalFooter() {
   );
 }
 
-/* ---- Main Page Component ------------------------------------------ */
+/* ---- Main Parallax Reveal Page Component ---- */
+
 export default function App() {
   const router = useRouter();
+  const { t } = useLanguage();
+  const iframeRef = useRef(null);
+  
+  const [scrollY, setScrollY] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(800);
+  const [isMuted, setIsMuted] = useState(true);
+  const [showMuteOverlay, setShowMuteOverlay] = useState(false);
+
+  // Setup scroll and height measurements on client side
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // YouTube Shorts ID: JKFGev-fdqw
+  const videoId = 'JKFGev-fdqw';
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&enablejsapi=1`;
+
+  // Programmatic API triggers
+  const postCommand = (func, args = []) => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      try {
+        iframeRef.current.contentWindow.postMessage(
+          JSON.stringify({ event: 'command', func: func, args: args }),
+          '*'
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    if (isMuted) {
+      postCommand('unMute');
+      setIsMuted(false);
+    } else {
+      postCommand('mute');
+      setIsMuted(true);
+    }
+    setShowMuteOverlay(true);
+  };
+
+
+  useEffect(() => {
+    if (showMuteOverlay) {
+      const timer = setTimeout(() => setShowMuteOverlay(false), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [showMuteOverlay]);
+
+  // Page anchor scroll handler
   const go = (id) => {
     if (id === "top") return window.scrollTo({ top: 0, behavior: "smooth" });
     if (id === "story") {
-      router.push("/heritage");
+      const el = document.getElementById("story");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
       return;
     }
     if (id === "apothecary") {
-      router.push("/apothecary");
+      const el = document.getElementById("apothecary");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
       return;
     }
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
+
+  // Parallax Scroll calculations: transition completes over 1 full viewport scroll
+  const scrollThreshold = windowHeight > 0 ? windowHeight : 800;
+  const progress = Math.min(Math.max(scrollY / scrollThreshold, 0), 1);
+
+  // Video transitions derived from progress:
+  // - Opacity: fades from 1.0 down to 0.0
+  // - Scaling/Expansion (Desktop only): expands outwards slightly as you scroll
+  const desktopWidth = `calc( (70vh * 9 / 16) + (100vw - (70vh * 9 / 16)) * ${progress} )`;
+  const desktopHeight = `calc( 70vh + (100vh - 70vh) * ${progress} )`;
+  const desktopRadius = `${16 * (1 - progress)}px`;
+  const desktopShadow = `0 ${24 * (1 - progress)}px ${70 * (1 - progress)}px rgba(0, 0, 0, ${0.8 * (1 - progress)})`;
+  
+  // Visibility threshold: hide fixed video layer completely once faded to save browser rendering resources
+  const isVideoHidden = progress >= 0.99;
+
   return (
-    <div className="portal">
-      <PortalNav go={go} />
-      <Hero go={go} />
-      <Prestige />
-      <Pillars />
-      <RedBook go={go} />
-      <Apothecary go={go} />
-      <Gallery />
-      <Continuum />
-      <PortalFooter />
+    <div className="portal parallax-reveal-page">
+      {/* Dynamic Navbar Wrapper: Fades in and slides down once the video section ends */}
+      <div className="video-page-nav-wrapper" style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        opacity: progress >= 0.9 ? 1 : 0,
+        transform: `translateY(${progress >= 0.9 ? '0' : '-100%'})`,
+        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        pointerEvents: progress >= 0.9 ? 'auto' : 'none',
+      }}>
+        <PortalNav go={go} />
+      </div>
+
+      {/* 
+        Sticky Video Layer (Fixed behind the scrolling homepage contents):
+        Fades out and expands on desktop, fades out on mobile.
+      */}
+      {!isVideoHidden && (
+        <div 
+          className="parallax-video-sticky" 
+          style={{ opacity: 1 - progress }}
+        >
+          {/* Main Expanding Video container */}
+          <div className="scroll-video-box" style={{
+            '--d-width': desktopWidth,
+            '--d-height': desktopHeight,
+            '--d-radius': desktopRadius,
+            '--d-shadow': desktopShadow
+          }}>
+            {/* Click-capture overlay to intercept pointer clicks */}
+            <div className="scroll-video-click-layer" />
+
+            {/* Visual indicators */}
+            <div className={`feedback-indicator ${showMuteOverlay ? 'active' : ''}`}>
+              {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
+            </div>
+
+            {/* Corner audio trigger (fades with scrolling) */}
+            <button 
+              className="sound-toggle-btn"
+              onClick={toggleMute}
+              style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
+              aria-label={isMuted ? "Unmute Video" : "Mute Video"}
+            >
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+
+            {/* Cropped YouTube Embed Frame */}
+            <div className="scroll-iframe-cropper">
+              <iframe
+                ref={iframeRef}
+                className="scroll-video-iframe"
+                src={embedUrl}
+                title="Apiban Bo Plup YouTube Video"
+                allow="autoplay; encrypted-media; gyroscope"
+                tabIndex="-1"
+              />
+            </div>
+          </div>
+
+          {/* Centered Scroll Prompt (fades as user scrolls) */}
+          <div className="hero__scroll scroll-hero-cue" style={{ opacity: 1 - progress }}>
+            {t("home.hero.scroll")}
+          </div>
+        </div>
+      )}
+
+      {/* 
+        Scrolling Content Layer (Slides UP on top of the fixed background video):
+      */}
+      <div className="parallax-scroll-content">
+        
+        {/* 
+          1st Section: Transparent spacer of 100vh.
+          Allows the fixed video layer to be fully seen initially.
+          Clicks at scroll=0 pass directly through this transparent container to the video.
+        */}
+        <div className="parallax-spacer-section" />
+
+        {/* 
+          2nd Section: The actual homepage Hero section.
+          Slides up over the video as the user scrolls, initiating the parallax transition.
+        */}
+        <div className="parallax-homepage-hero" style={{ opacity: progress }}>
+          <Hero go={go} />
+        </div>
+
+        {/* Remaining homepage sections scroll naturally */}
+        <div className="parallax-other-sections">
+          <Prestige />
+          <Pillars />
+          <RedBook go={go} />
+          <Apothecary go={go} />
+          <Gallery />
+          <Continuum />
+          <PortalFooter />
+        </div>
+      </div>
+
+      {/* Styled layouts for parallax mechanisms */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .parallax-reveal-page {
+          overflow-x: hidden;
+          background-color: #0b0d0c;
+        }
+
+        .parallax-reveal-page .pillars {
+          background: #0d0f0e; /* Deep charcoal background block */
+          border-top: 1px solid rgba(203, 181, 147, 0.12);
+          border-bottom: 1px solid rgba(203, 181, 147, 0.12);
+        }
+        .parallax-reveal-page .pillar__rule {
+          background: rgba(203, 181, 147, 0.12);
+        }
+        .parallax-reveal-page .pillar__t {
+          color: var(--text-on-dark-strong, #ffffff);
+        }
+        .parallax-reveal-page .pillar__b {
+          color: var(--text-on-dark, #f0ebe2);
+          opacity: 0.85;
+        }
+
+        /* Fixed Background Video view */
+        .parallax-video-sticky {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          z-index: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          background-color: #0b0d0c;
+          pointer-events: auto; /* Allow interactions on the click overlays */
+          transition: opacity 0.1s linear;
+        }
+
+        /* Scrolling content overlay */
+        .parallax-scroll-content {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+          pointer-events: none; /* Let pointer pass through the transparent sections to the video */
+        }
+
+        /* Transparent initial spacer section (100vh viewport) */
+        .parallax-spacer-section {
+          height: 100vh;
+          height: 100dvh;
+          width: 100%;
+          pointer-events: none; /* Non-blocking */
+        }
+
+        /* The Hero section and subsequent parts block pointer actions for normal page buttons */
+        .parallax-homepage-hero,
+        .parallax-other-sections {
+          position: relative;
+          pointer-events: auto; /* Normal interaction for text buttons and navigation links */
+          background-color: #0b0d0c; /* Cover the background video */
+        }
+
+        /* Expanding Video element styles */
+        .scroll-video-box {
+          position: absolute;
+          background-color: #000;
+          overflow: hidden;
+        }
+
+        .scroll-video-click-layer {
+          position: absolute;
+          inset: 0;
+          z-index: 5;
+          cursor: default;
+        }
+
+        .scroll-iframe-cropper {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          transform: scale(1.22);
+          transform-origin: center center;
+        }
+
+        .scroll-video-iframe {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          border: none;
+          pointer-events: none;
+        }
+
+        .scroll-hero-cue {
+          position: absolute;
+          bottom: 32px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 9;
+          transition: opacity 0.2s ease;
+        }
+
+        /* Desktop Layout specifications using variables */
+        @media (min-width: 901px) {
+          .scroll-video-box {
+            width: var(--d-width);
+            height: var(--d-height);
+            border-radius: var(--d-radius);
+            box-shadow: var(--d-shadow);
+          }
+        }
+
+        /* Mobile Layout specifications */
+        @media (max-width: 900px) {
+          .scroll-video-box {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            border-radius: 0px;
+          }
+        }
+
+        /* Central interaction indicators */
+        .feedback-indicator {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(0.8);
+          background: rgba(11, 13, 12, 0.8);
+          border: 1px solid rgba(203, 181, 147, 0.3);
+          color: #f0ebe2;
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 6;
+          opacity: 0;
+          pointer-events: none;
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feedback-indicator.active {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Corner audio button styling */
+        .sound-toggle-btn {
+          position: absolute;
+          bottom: 24px;
+          right: 24px;
+          z-index: 10;
+          background: rgba(11, 13, 12, 0.75);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(203, 181, 147, 0.3);
+          color: #f0ebe2;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .sound-toggle-btn:hover {
+          background: #3e5044;
+          border-color: #cbb593;
+          transform: scale(1.05);
+        }
+
+      ` }} />
     </div>
   );
 }
