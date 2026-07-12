@@ -603,6 +603,15 @@ export default function VideoParallaxPage() {
           background-color: #0b0d0c;
         }
 
+        .parallax-reveal-page .pillars {
+          background: #0d0f0e; /* Deep charcoal background block */
+          border-top: 1px solid rgba(203, 181, 147, 0.12);
+          border-bottom: 1px solid rgba(203, 181, 147, 0.12);
+        }
+        .parallax-reveal-page .pillar__rule {
+          background: rgba(203, 181, 147, 0.12);
+        }
+
         /* Fixed Background Video view */
         .parallax-video-sticky {
           position: fixed;
