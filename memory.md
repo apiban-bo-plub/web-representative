@@ -65,7 +65,8 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Merged the full background video parallax entrance flow directly into the primary homepage ([page.js](file:///Users/sorawitsakarin/Documents/apiban/src/app/page.js)).
 - Terminated the video test route (`src/app/video-test/page.js`), cleaning up the floating "Back" buttons and associated route-specific styles.
 - Updated the background colors of the video parallax container, scroll-reveal wrapper, and subsequent covers on the homepage to use `var(--surface-ink)` (the footer's theme color) instead of solid black, creating perfect layout design consistency.
+- Configured the background video's default sound state to unmuted by default (`isMuted: false` state and `mute=0` in embed URL query params).
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, LCP Next.js Image load optimizations, 8px spacing grid alignment, mobile footer base bottom padding, non-pausable video autoplay loop, merging the parallax entrance flow, and video section background color matching) are fully complete and validated.
+- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, LCP Next.js Image load optimizations, 8px spacing grid alignment, mobile footer base bottom padding, non-pausable video autoplay loop, merging the parallax entrance flow, video section background color matching, and default unmuted sound) are fully complete and validated.
