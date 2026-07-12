@@ -85,7 +85,7 @@
   .pillar__rule { align-self: stretch; background: var(--border-hairline); }
   .pillar__icon { color: var(--brand-gold); display: inline-flex; margin-bottom: 20px; }
   .pillar__icon svg { width: 42px; height: 42px; stroke-width: 1.2; }
-  .pillar__t { font-size: 27px; margin: 0 0 12px; }
+  .pillar__t { font-size: 27px; margin: 0 0 12px; color: var(--text-strong); }
   .pillar__b { font-family: var(--font-sans); font-size: 14px; line-height: 1.6; color: var(--text-body); margin: 0; }
 
   /* ---- Red Book ---- */

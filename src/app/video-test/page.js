@@ -611,6 +611,13 @@ export default function VideoParallaxPage() {
         .parallax-reveal-page .pillar__rule {
           background: rgba(203, 181, 147, 0.12);
         }
+        .parallax-reveal-page .pillar__t {
+          color: var(--text-on-dark-strong, #ffffff);
+        }
+        .parallax-reveal-page .pillar__b {
+          color: var(--text-on-dark, #f0ebe2);
+          opacity: 0.85;
+        }
 
         /* Fixed Background Video view */
         .parallax-video-sticky {
