@@ -52,7 +52,10 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Reduced the Shop page hero title font size from `68px` to `48px` max (using responsive clamp sizing) to improve visual hierarchy and page layout balance.
 - Staged and renamed all 28 raw photo uploads inside `public/images/` subfolders (`products`, `red-book`, `store`, and `event`) to descriptive, human-readable names.
 - Mapped all newly renamed photos dynamically across components (`ImageSlot.js`, Shop storefront pages, timelines, and gallery slides) for an authentic, premium brand presentation.
+- Created a standalone video test page route (`/video-test`) to embed the requested YouTube Shorts video.
+- Implemented a CSS crop/scale wrapper hack (scaling the iframe to `1.22` with `overflow: hidden` on the outer container) alongside a transparent pointer-events overlay to completely hide YouTube's native title, creator header, seek bar, and bottom branding logo.
+- Integrated programmatic player controls (Play/Pause on video click, corner Sound Toggle) via the YouTube API `postMessage` protocol with clean visual feedback alerts.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown positioning, layout scaling, cart removal, navigation adjustment, and photo renaming/mapping) are fully complete and validated.
+- None. All current user requests (i18n dropdown positioning, layout scaling, cart removal, navigation adjustment, photo renaming/mapping, and video embedding layout/hiding hacks) are fully complete and validated.
