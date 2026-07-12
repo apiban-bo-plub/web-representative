@@ -21,10 +21,10 @@ const PRODUCTS = [
 ];
 
 const productImages = {
-  cooling: '/images/phetmongkol.jpg',
-  inhaler: '/images/thepprasit.jpg',
-  floral: '/images/lifestyle.jpg',
-  kaffir: '/images/product-26.jpg'
+  cooling: '/images/products/inhaler-and-oil-on-brick.jpg',
+  inhaler: '/images/products/thepprasit-inhaler-jar-closed.jpg',
+  floral: '/images/products/hands-holding-inhaler-and-oil.jpg',
+  kaffir: '/images/products/applying-workday-oil-to-wrist.jpg'
 };
 
 const baht = n => "฿" + n;
@@ -214,7 +214,7 @@ function HeritageStrip({ go }) {
         <div className="heritage-strip__image">
           <ImageSlot
             id="shop-strip-heritage"
-            src="/images/product-26.jpg"
+            src="/images/event/dried-herbs-in-ceramic-bowls.jpg"
             shape="rect"
             fit="cover"
             placeholder="Apiban Bo Plup traditional apothecary raw ingredients"
@@ -405,7 +405,7 @@ function StorefrontStory() {
         <div className="shop-story-content__image">
           <ImageSlot
             id="story-heritage-image"
-            src="/images/product-26.jpg"
+            src="/images/red-book/red-book-on-stand.jpg"
             shape="rect"
             fit="cover"
             placeholder="Heritage Apothecary Book Archive"
