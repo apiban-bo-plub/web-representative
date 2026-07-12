@@ -61,7 +61,8 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Optimized web performance and Core Web Vitals (specifically Largest Contentful Paint / LCP) by refactoring image elements to use the Next.js `Image` component (`next/image`).
 - Set the homepage Hero background (`/images/hero.jpg`) to load with `priority={true}` (preloading in HTML head), serving it instantly on page entry.
 - Updated the global [ImageSlot.js](file:///Users/sorawitsakarin/Documents/apiban/src/components/ImageSlot.js) component to render secondary images using optimized Next images with automatic lazy loading (`loading="lazy"`), relative layout sizing, and overflow clipping.
+- Audited and updated all padding, margin, gap, and size dimensions across [style_1.css](file:///Users/sorawitsakarin/Documents/apiban/src/styles/style_1.css) and the custom styles in [page.js](file:///Users/sorawitsakarin/Documents/apiban/src/app/video-test/page.js) to conform to the 8px/4px grid system, ensuring a clean, pixel-perfect layout alignment.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, and LCP Next.js Image load optimizations) are fully complete and validated.
+- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, LCP Next.js Image load optimizations, and 8px spacing grid alignment) are fully complete and validated.
