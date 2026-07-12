@@ -56,7 +56,8 @@ Conversion of a 14MB standalone HTML bundle of the **Apiban Bo Plup** Thai welln
 - Implemented a CSS crop/scale wrapper hack (scaling the iframe to `1.22` with `overflow: hidden` on the outer container) alongside a transparent pointer-events overlay to completely hide YouTube's native title, creator header, seek bar, and bottom branding logo.
 - Integrated programmatic player controls (Play/Pause on video click, corner Sound Toggle) via the YouTube API `postMessage` protocol with clean visual feedback alerts.
 - Restored the `/video-test` page to the dynamic Hero section cross-fade sequence. The background video sits in a fixed layer that scales up and fades out (100% to 0% opacity) as the user scrolls, while the homepage Hero section slides up from below the fold, fading in from 0% to 100% opacity in absolute sync.
+- Redesigned the Pillars section to render within a styled full-width background block. Implemented a light warm sand background (`var(--makara-200)`) with subtle horizontal borders for the light page layout on the homepage, and a deep charcoal background (`#0d0f0e`) for the dark layout on the video test page.
 - Built and validated successfully using Turbopack compilation (`npm run build`).
 
 ## Active Tasks
-- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, and scroll-responsive navbar animations) are fully complete and validated.
+- None. All current user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, and Pillars background panel styling) are fully complete and validated.
