@@ -497,103 +497,114 @@ export default function VideoParallaxPage() {
       </div>
 
       {/* 
-        Sticky Video Layer (Fixed behind the scrolling homepage contents):
-        Fades out and expands on desktop, fades out on mobile.
+        Sticky Cross-Fade Container:
+        Pins BOTH the Video Background and the Homepage Hero Section in place during the scroll transition.
+        This allows them to cross-fade on top of each other without any sliding movement.
       */}
-      {!isVideoHidden && (
-        <div 
-          className="parallax-video-sticky" 
-          style={{ opacity: 1 - progress }}
-        >
-          {/* Main Expanding Video container */}
-          <div className="scroll-video-box" style={{
-            '--d-width': desktopWidth,
-            '--d-height': desktopHeight,
-            '--d-radius': desktopRadius,
-            '--d-shadow': desktopShadow
-          }}>
-            {/* Click-capture overlay to intercept pointer clicks */}
-            <div className="scroll-video-click-layer" onClick={togglePlay} />
-
-            {/* Visual indicators */}
-            <div className={`feedback-indicator ${showPlayOverlay ? 'active' : ''}`}>
-              {isPlaying ? <Play size={28} style={{ marginLeft: 4 }} /> : <Pause size={28} />}
-            </div>
-            <div className={`feedback-indicator ${showMuteOverlay ? 'active' : ''}`}>
-              {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
-            </div>
-
-            {/* Corner audio trigger (fades with scrolling) */}
-            <button 
-              className="sound-toggle-btn"
-              onClick={toggleMute}
-              style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
-              aria-label={isMuted ? "Unmute Video" : "Mute Video"}
-            >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-
-            {/* Cropped YouTube Embed Frame */}
-            <div className="scroll-iframe-cropper">
-              <iframe
-                ref={iframeRef}
-                className="scroll-video-iframe"
-                src={embedUrl}
-                title="Apiban Bo Plup YouTube Video"
-                allow="autoplay; encrypted-media; gyroscope"
-                tabIndex="-1"
-              />
-            </div>
-          </div>
-
-          {/* Floating Back Button (fades as user scrolls) */}
-          <button 
-            className="video-back-btn" 
-            onClick={() => router.push('/')}
-            style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
-            aria-label="Go Back to Portal"
-          >
-            <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
+      <section className="scroll-hero-wrapper" style={{ height: `calc(100vh + ${scrollThreshold}px)`, position: 'relative', width: '100%' }}>
+        <div className="scroll-hero-sticky" style={{ position: 'sticky', top: 0, height: '100vh', height: '100dvh', width: '100vw', overflow: 'hidden' }}>
           
-          {/* Centered Scroll Prompt (fades as user scrolls) */}
-          <div className="hero__scroll scroll-hero-cue" style={{ opacity: 1 - progress }}>
-            {t("home.hero.scroll")}
+          {/* 
+            1. Fixed Background Video Layer (Fades out from 1 to 0):
+          */}
+          {!isVideoHidden && (
+            <div 
+              className="parallax-video-sticky" 
+              style={{ 
+                opacity: 1 - progress,
+                pointerEvents: progress > 0.8 ? 'none' : 'auto' 
+              }}
+            >
+              {/* Main Expanding Video container */}
+              <div className="scroll-video-box" style={{
+                '--d-width': desktopWidth,
+                '--d-height': desktopHeight,
+                '--d-radius': desktopRadius,
+                '--d-shadow': desktopShadow
+              }}>
+                {/* Click-capture overlay to intercept pointer clicks */}
+                <div className="scroll-video-click-layer" onClick={togglePlay} />
+
+                {/* Visual indicators */}
+                <div className={`feedback-indicator ${showPlayOverlay ? 'active' : ''}`}>
+                  {isPlaying ? <Play size={28} style={{ marginLeft: 4 }} /> : <Pause size={28} />}
+                </div>
+                <div className={`feedback-indicator ${showMuteOverlay ? 'active' : ''}`}>
+                  {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
+                </div>
+
+                {/* Corner audio trigger */}
+                <button 
+                  className="sound-toggle-btn"
+                  onClick={toggleMute}
+                  style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
+                  aria-label={isMuted ? "Unmute Video" : "Mute Video"}
+                >
+                  {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                </button>
+
+                {/* Cropped YouTube Embed Frame */}
+                <div className="scroll-iframe-cropper">
+                  <iframe
+                    ref={iframeRef}
+                    className="scroll-video-iframe"
+                    src={embedUrl}
+                    title="Apiban Bo Plup YouTube Video"
+                    allow="autoplay; encrypted-media; gyroscope"
+                    tabIndex="-1"
+                  />
+                </div>
+              </div>
+
+              {/* Floating Back Button (fades as user scrolls) */}
+              <button 
+                className="video-back-btn" 
+                onClick={() => router.push('/')}
+                style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
+                aria-label="Go Back to Portal"
+              >
+                <ArrowLeft size={16} />
+                <span>Back</span>
+              </button>
+              
+              {/* Centered Scroll Prompt (fades as user scrolls) */}
+              <div className="hero__scroll scroll-hero-cue" style={{ opacity: 1 - progress }}>
+                {t("home.hero.scroll")}
+              </div>
+            </div>
+          )}
+
+          {/* 
+            2. Pinned Homepage Hero Layer (Fades in from 0 to 1 stationary in the background):
+          */}
+          <div 
+            className="parallax-homepage-hero-pinned" 
+            style={{ 
+              position: 'absolute',
+              inset: 0,
+              zIndex: 3,
+              opacity: progress,
+              pointerEvents: progress >= 0.8 ? 'auto' : 'none',
+              transition: 'opacity 0.05s linear'
+            }}
+          >
+            <Hero go={go} />
           </div>
+
         </div>
-      )}
+      </section>
 
       {/* 
-        Scrolling Content Layer (Slides UP on top of the fixed background video):
+        Scrolling Content Layer (Slides up naturally right behind the completed transition container):
       */}
-      <div className="parallax-scroll-content">
-        
-        {/* 
-          1st Section: Transparent spacer of 100vh.
-          Allows the fixed video layer to be fully seen initially.
-          Clicks at scroll=0 pass directly through this transparent container to the video.
-        */}
-        <div className="parallax-spacer-section" />
-
-        {/* 
-          2nd Section: The actual homepage Hero section.
-          Slides up over the video as the user scrolls, initiating the parallax transition.
-        */}
-        <div className="parallax-homepage-hero" style={{ opacity: progress }}>
-          <Hero go={go} />
-        </div>
-
-        {/* Remaining homepage sections scroll naturally */}
-        <div className="parallax-other-sections">
-          <Prestige />
-          <Pillars />
-          <RedBook go={go} />
-          <Apothecary go={go} />
-          <Gallery />
-          <Continuum />
-          <PortalFooter />
-        </div>
+      <div className="parallax-other-sections" style={{ position: 'relative', zIndex: 10, backgroundColor: '#0b0d0c' }}>
+        <Prestige />
+        <Pillars />
+        <RedBook go={go} />
+        <Apothecary go={go} />
+        <Gallery />
+        <Continuum />
+        <PortalFooter />
       </div>
 
       {/* Styled layouts for parallax mechanisms */}
@@ -603,46 +614,20 @@ export default function VideoParallaxPage() {
           background-color: #0b0d0c;
         }
 
+        .scroll-hero-wrapper {
+          background-color: #0b0d0c;
+        }
+
         /* Fixed Background Video view */
         .parallax-video-sticky {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          height: 100dvh;
-          z-index: 1;
+          position: absolute;
+          inset: 0;
+          z-index: 2;
           display: flex;
           justify-content: center;
           align-items: center;
           overflow: hidden;
           background-color: #0b0d0c;
-          pointer-events: auto; /* Allow interactions on the click overlays */
-          transition: opacity 0.1s linear;
-        }
-
-        /* Scrolling content overlay */
-        .parallax-scroll-content {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-          pointer-events: none; /* Let pointer pass through the transparent sections to the video */
-        }
-
-        /* Transparent initial spacer section (100vh viewport) */
-        .parallax-spacer-section {
-          height: 100vh;
-          height: 100dvh;
-          width: 100%;
-          pointer-events: none; /* Non-blocking */
-        }
-
-        /* The Hero section and subsequent parts block pointer actions for normal page buttons */
-        .parallax-homepage-hero,
-        .parallax-other-sections {
-          position: relative;
-          pointer-events: auto; /* Normal interaction for text buttons and navigation links */
-          background-color: #0b0d0c; /* Cover the background video */
         }
 
         /* Expanding Video element styles */
