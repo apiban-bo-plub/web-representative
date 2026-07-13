@@ -380,7 +380,7 @@ export default function App() {
   
   const [scrollY, setScrollY] = useState(0);
   const [windowHeight, setWindowHeight] = useState(800);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [showMuteOverlay, setShowMuteOverlay] = useState(false);
 
   // Setup scroll and height measurements on client side
@@ -402,7 +402,7 @@ export default function App() {
 
   // YouTube Shorts ID: JKFGev-fdqw
   const videoId = 'JKFGev-fdqw';
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&enablejsapi=1`;
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&enablejsapi=1`;
 
   // Programmatic API triggers
   const postCommand = (func, args = []) => {
