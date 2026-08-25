@@ -5,16 +5,31 @@
     "heritage": "Heritage",
     "apothecary": "The Apothecary",
     "search": "Search",
-    "cart": "Cart"
+    "cart": "Cart",
+    "menu": "Menu"
   },
   "footer": {
     "blurb": "Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.",
     "explore": "Explore",
-    "exploreItems": ["Collection", "The Red Book", "Heritage", "Journal"],
+    "exploreItems": [
+      "Collection",
+      "The Red Book",
+      "Heritage",
+      "Journal"
+    ],
     "company": "Company",
-    "companyItems": ["Our story", "Stockists", "Corporate & gifting", "Contact"],
+    "companyItems": [
+      "Our story",
+      "Stockists",
+      "Corporate & gifting",
+      "Contact"
+    ],
     "connect": "Connect",
-    "connectItems": ["@ApibanAPB", "LINE @apibanapb", "apibanapb@gmail.com"],
+    "connectItems": [
+      "@ApibanAPB",
+      "LINE @apibanapb",
+      "apibanapb@gmail.com"
+    ],
     "copy": "© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.",
     "privacy": "Privacy · Terms"
   },
@@ -27,7 +42,10 @@
       "sub": "Step into the world of APB—where ancient Thai wisdom meets modern artistic expression. Artisan essentials born from a heritage archive, crafted for your daily well-being.",
       "discover": "Discover the Collection",
       "story": "Our Story",
-      "scroll": ""
+      "scroll": "",
+      "videoAlt": "Apiban Bo Plup — heritage apothecary film",
+      "unmute": "Unmute film",
+      "mute": "Mute film"
     },
     "prestige": {
       "line": "Honored to be the heritage gift of choice for Embassies, Consulates, and Life's Meaningful Ceremonies."
@@ -46,12 +64,90 @@
         "desc": "A collaborative revival by the Songkhla family, uniting generations to preserve artisanal heritage."
       }
     },
+    "numbers": {
+      "eyebrow": "The Ledger",
+      "title": "Kept by Hand, Since Rama V.",
+      "items": {
+        "n1": {
+          "value": "1870",
+          "suffix": "s",
+          "label": "The First Entry",
+          "note": "Written in Old Songkhla during the reign of King Rama V."
+        },
+        "n2": {
+          "value": "150",
+          "suffix": "",
+          "label": "Years Unbroken",
+          "note": "A century and a half of formulas kept, tested, and carried forward."
+        },
+        "n3": {
+          "value": "5",
+          "suffix": "",
+          "label": "Generations",
+          "note": "One family, one archive, still measuring by hand."
+        }
+      }
+    },
     "redbook": {
       "eyebrow": "The Secret",
       "title_1": "Ancient Roots,",
       "title_2": "Modern Balance.",
       "body": "We offer a 150-year-old dialogue between nature and the senses. Our formulas use the exact high-quality Thai botanicals recorded in the legendary Red Book, optimized to restore your balance today. From the old streets of Songkhla to your pocket.",
-      "button": "Uncover the Red Book"
+      "button": "Uncover the Red Book",
+      "chapters": {
+        "c1": {
+          "idx": "Chapter I",
+          "title": "The Book That Survived.",
+          "body": "A leather-bound ledger of remedies, carried out of Old Songkhla and kept in the family for five generations. Water, war and time took almost everything else."
+        },
+        "c2": {
+          "idx": "Chapter II",
+          "title": "Written to Be Read.",
+          "body": "Its pages are not incantations. They are measurements — grams, hours, the exact hour of the day to pick each flower. A working manual, kept by someone who expected it to be used."
+        },
+        "c3": {
+          "idx": "Chapter III",
+          "title": "Still in Use.",
+          "body": "Every formula we make traces to a numbered recipe in that book. We have modernised the vessel, never the proportions."
+        }
+      }
+    },
+    "provenance": {
+      "eyebrow": "Provenance",
+      "title": "Every Ingredient Has an Address.",
+      "hint": "Drag to explore",
+      "items": {
+        "p1": {
+          "name": "Thai Bergamot",
+          "origin": "Songkhla · Southern Groves",
+          "desc": "Cold-pressed peel, picked green. The bright first note that opens Thepprasit."
+        },
+        "p2": {
+          "name": "Clove",
+          "origin": "Trat · Eastern Seaboard",
+          "desc": "Sun-dried buds, ground the morning they are used. Warmth with an edge to it."
+        },
+        "p3": {
+          "name": "Camphor",
+          "origin": "Chiang Mai · Northern Highlands",
+          "desc": "Crystallised slowly from hardwood. The clearing breath in every inhaler."
+        },
+        "p4": {
+          "name": "Jasmine",
+          "origin": "Nakhon Pathom · Central Plain",
+          "desc": "Gathered before dawn, while the flower still holds its scent. The heart of Phetmongkol."
+        },
+        "p5": {
+          "name": "Ylang-Ylang",
+          "origin": "Surat Thani · Gulf Coast",
+          "desc": "Steam-distilled in small batches. A soft floral close that settles the room."
+        },
+        "p6": {
+          "name": "Borneol",
+          "origin": "The Red Book · Recipe No. 7",
+          "desc": "The rarest line in the archive, and the one we have never changed."
+        }
+      }
     },
     "apothecary": {
       "tagline_thep": "The Awakener",
@@ -61,6 +157,12 @@
       "title_phet": "PHETMONGKOL",
       "body_phet": "Delicate Jasmine and Ylang-Ylang. A floral embrace that soothes the senses and brings inner calm after a long day.",
       "button": "Explore the Rituals"
+    },
+    "quote": {
+      "text": "A remedy is not a secret to be hoarded. It is a kindness — written down so that it outlives the hand that wrote it.",
+      "attrib": "Khun Apiban Bo Plup",
+      "role": "From the Red Book, circa 1874",
+      "alt": "Portrait of the founder, Khun Apiban Bo Plup"
     },
     "gallery": {
       "eyebrow": "The Gallery",
@@ -75,13 +177,18 @@
         "g6": "Trade Show — Thailand Beauty Expo",
         "g7": "Hotel Amenity Partnership — Luxury Resort",
         "g8": "Workshop — The Red Book Archive Tour"
-      }
+      },
+      "hint": "Drag to explore"
     },
     "continuum": {
       "title": "Begin Your Ritual.",
       "desc": "Bring the Songkhla legacy into your daily life, or share the authentic Thai wellness experience with the world.",
       "button_shop": "Shop the Collection",
       "button_gift": "Corporate & Gifting Inquiries"
+    },
+    "stickyCta": {
+      "label": "150 years, in your pocket.",
+      "button": "Shop the Collection"
     }
   },
   "heritage": {
@@ -92,42 +199,109 @@
     "c1": {
       "kicker": "The Discovery",
       "headline": "150 Years in the Shadows.",
-      "body": "It began with a single, crimson-bound volume. A 19th-century medical journal belonging to Khun Apiban Bo Plup (APB), a sanitation officer during the transformative reign of King Rama V. Within its weathered pages lay a forgotten dialogue between nature and the human spirit—a collection of botanical rituals used to maintain the balance of life."
+      "body": "It began with a single, crimson-bound volume. A 19th-century medical journal belonging to Khun Apiban Bo Plup (APB), a sanitation officer during the transformative reign of King Rama V. Within its weathered pages lay a forgotten dialogue between nature and the human spirit—a collection of botanical rituals used to maintain the balance of life.",
+      "alt": "A page from the Red Book — weathered manuscript paper with handwritten Thai herbal recipes"
     },
     "c2": {
       "kicker": "The Guardian",
       "headline": "The Visionary of Old Songkhla.",
-      "body": "Khun Apiban Bo Plup was more than a practitioner; he was a guardian of wellness in an era of change. As a public health pioneer in Old Town Songkhla, he understood that true restoration comes from the harmony of the senses. His “Red Book” was not just a record of herbs, but a map to self-healing—a practice where one takes the power of well-being into their own hands."
+      "body": "Khun Apiban Bo Plup was more than a practitioner; he was a guardian of wellness in an era of change. As a public health pioneer in Old Town Songkhla, he understood that true restoration comes from the harmony of the senses. His “Red Book” was not just a record of herbs, but a map to self-healing—a practice where one takes the power of well-being into their own hands.",
+      "alt": "Painted portrait of Khun Apiban Bo Plup, seated in Rama V-era dress"
     },
     "c3": {
       "kicker": "Philosophy",
       "headline": "Ancient Wisdom for the Modern Soul.",
-      "body": "In the 19th century, self-care was an intuitive ritual. Today, we bring that intuition back. We believe that the modern fast-paced world needs the slow, deliberate magic of ancestral Thai botanicals. Our philosophy is simple: Modern Rituals rooted in Ancient Truths. We provide the tools; you perform the ritual."
+      "body": "In the 19th century, self-care was an intuitive ritual. Today, we bring that intuition back. We believe that the modern fast-paced world needs the slow, deliberate magic of ancestral Thai botanicals. Our philosophy is simple: Modern Rituals rooted in Ancient Truths. We provide the tools; you perform the ritual.",
+      "alt": "Thai herbs being ground in a stone mortar"
     },
     "c4": {
       "kicker": "The Collective",
       "headline": "A Legacy Reborn Through Family.",
-      "body": "APB is not a solo journey. It is a collaborative revival by the descendants of the Songkhla family. Uniting multiple households, we have come together to breathe life into our ancestor's archives. Each bottle is a testament to our family's shared commitment to preserving our artisanal heritage and sharing it with a global generation."
+      "body": "APB is not a solo journey. It is a collaborative revival by the descendants of the Songkhla family. Uniting multiple households, we have come together to breathe life into our ancestor's archives. Each bottle is a testament to our family's shared commitment to preserving our artisanal heritage and sharing it with a global generation.",
+      "alt": "The Apiban Bo Plup booth at Pakk Taii Design Week"
     },
     "finale": {
       "title_1": "From the Archive",
       "title_2": "to Your Pocket.",
-      "button": "Explore the Apothecary Collection"
+      "button": "Explore the Apothecary Collection",
+      "alt": "The Apiban Bo Plup storefront sign in Old Town Songkhla"
     },
     "archives": {
       "title": "Excerpts from the Red Book",
       "desc": "Transcribed recipes and philosophical notes from the Apiban family legacy.",
       "recipe1": {
         "title": "The 1870 Botanical Inhaler formula",
-        "body": "A precise combination of Camphor, Borneol, Peppermint oil, and 14 sun-dried roots and blossoms. Preserved in a traditional unglazed clay pot to maintain proper ambient humidity."
+        "body": "A precise combination of Camphor, Borneol, Peppermint oil, and 14 sun-dried roots and blossoms. Preserved in a traditional unglazed clay pot to maintain proper ambient humidity.",
+        "sectionTitle": "Ingredients & Proportions",
+        "rows": [
+          {
+            "label": "Camphor (การบูร)",
+            "value": "30%"
+          },
+          {
+            "label": "Borneol (พิมเสน)",
+            "value": "25%"
+          },
+          {
+            "label": "Menthol (เกล็ดสะระแหน่)",
+            "value": "20%"
+          },
+          {
+            "label": "14 Sun-Dried Herbs (สมุนไพร 14 ชนิด)",
+            "value": "25%"
+          }
+        ],
+        "noteLabel": "Guardian's Note:",
+        "note": "Dry the blossoms for three noon phases until they release their light soul. Blend with oil in unglazed clay.",
+        "imageAlt": "Original Red Book pages showing handwritten ingredient columns ruled in red ink"
       },
       "recipe2": {
         "title": "The Restoration Oil recipe (Phetmongkol)",
-        "body": "Formulated to ground the senses. Slowly infused cold-pressed coconut oil, plai root, lemongrass stalks, and fresh kaffir lime zest, aged under shelter for thirty-three days."
+        "body": "Formulated to ground the senses. Slowly infused cold-pressed coconut oil, plai root, lemongrass stalks, and fresh kaffir lime zest, aged under shelter for thirty-three days.",
+        "sectionTitle": "Ingredients & Infusion Details",
+        "rows": [
+          {
+            "label": "Lemongrass Stalks (ตะไคร้หอม)",
+            "value": "Aromatics"
+          },
+          {
+            "label": "Fresh Kaffir Lime Zest (ผิวมะกรูด)",
+            "value": "Citrus base"
+          },
+          {
+            "label": "Plai Root (เหง้าไพล)",
+            "value": "Anti-inflammatory"
+          },
+          {
+            "label": "Cold-Pressed Coconut Oil (น้ำมันมะพร้าว)",
+            "value": "Carrier medium"
+          }
+        ],
+        "noteLabel": "Guardian's Note:",
+        "note": "Age the infusion under shelter for thirty-three days to allow the earth properties to stabilize.",
+        "imageAlt": "The red cloth-bound manuscript on a workbench beside citrus fruit and an unglazed clay pot"
       },
       "recipe3": {
         "title": "Tenets of the Guardian's Craft",
-        "body": "Tenet I: No synthetic enhancers shall be introduced. Tenet II: All botanicals are gathered in accordance with lunar cycles. Tenet III: Scent is the bridge between cognitive balance and raw physical comfort."
+        "body": "Tenet I: No synthetic enhancers shall be introduced. Tenet II: All botanicals are gathered in accordance with lunar cycles. Tenet III: Scent is the bridge between cognitive balance and raw physical comfort.",
+        "sectionTitle": "Core Principles",
+        "rows": [
+          {
+            "label": "Tenet I",
+            "value": "No Synthetic Enhancers"
+          },
+          {
+            "label": "Tenet II",
+            "value": "Lunar Cycle Gathering"
+          },
+          {
+            "label": "Tenet III",
+            "value": "Cognitive-Physical Bridge"
+          }
+        ],
+        "noteLabel": "Guardian's Note:",
+        "note": "The breath is the first gate of wellness. Cleanse it, and the spirit shall follow.",
+        "imageAlt": "The Red Book preserved under a glass case with dried botanicals and a stone mortar"
       }
     }
   },
@@ -138,21 +312,31 @@
     "thep": {
       "tagline": "The Awakener",
       "vibe": "For days that demand clarity. A bold citrus symphony designed to refresh the mind and awaken your senses.",
-      "notes": ["Thai Bergamot", "Clove", "Warm"]
+      "notes": [
+        "Thai Bergamot",
+        "Clove",
+        "Warm"
+      ]
     },
     "phet": {
       "tagline": "The Restorer",
       "vibe": "For moments of exhaustion. A delicate floral embrace crafted to soothe the spirit and bring inner calm.",
-      "notes": ["Jasmine", "Ylang-Ylang", "Water Jasmine"]
+      "notes": [
+        "Jasmine",
+        "Ylang-Ylang",
+        "Water Jasmine"
+      ]
     },
     "app": {
       "inhale": {
         "title": "Inhale",
-        "desc": "Keep it close. Perfect for your pocket, workspace, or bedside."
+        "desc": "Keep it close. Perfect for your pocket, workspace, or bedside.",
+        "alt": "A herbal inhaler and oil held in the hand"
       },
       "apply": {
         "title": "Apply",
-        "desc": "Roll the Workday Oil on pulse points or temples for instant serenity."
+        "desc": "Roll the Workday Oil on pulse points or temples for instant serenity.",
+        "alt": "Applying the Workday Oil to the wrist"
       }
     },
     "crossroads": {
@@ -168,6 +352,134 @@
         "title": "Share the Legacy.",
         "desc": "Trusted by embassies, consulates, and premium corporate clients. Our collection is the perfect meaningful gift for global distribution, hospitality amenities, weddings, and life's significant milestones.",
         "button": "Corporate & Gifting Inquiries"
+      }
+    },
+    "eyebrow": "The Grand Apothecary",
+    "tabs": {
+      "warm": "(Warm)",
+      "cool": "(Cool)"
+    },
+    "sensory": {
+      "eyebrow": "Sensory Exploration",
+      "title_warm": "The Solar Awakening",
+      "title_cool": "The Lunar Restorative"
+    },
+    "specs": [
+      {
+        "label": "Aromatic Profile",
+        "warm": "Citrus, Camphoraceous, Warm Spice",
+        "cool": "Sweet White Floral, Herbaceous, Cool Breeze"
+      },
+      {
+        "label": "Key Botanicals",
+        "warm": "Citrus bergamia, Syzygium aromaticum, Cinnamon",
+        "cool": "Jasminum sambac, Cananga odorata, Patchouli"
+      },
+      {
+        "label": "Optimal Hour",
+        "warm": "09:00 AM – 02:00 PM (Focus & Energy Peaks)",
+        "cool": "06:00 PM – 11:00 PM (Sunset Wind-down)"
+      },
+      {
+        "label": "Energetic Effect",
+        "warm": "Cognitive awakening, focus booster",
+        "cool": "Nervous system soothing, calm inducer"
+      }
+    ],
+    "matrix": {
+      "title": "Active Botanical Matrix",
+      "desc": "Select an ingredient to reveal its ancestral origin and therapeutic extraction process.",
+      "origin": "Origin:",
+      "extraction": "Extraction:",
+      "benefit": "Wellness Benefit:",
+      "empty": "Select a botanical swatch on the left to read details"
+    },
+    "ritual": {
+      "eyebrow": "Daily Application",
+      "title": "The Art of the Ritual",
+      "desc": "Transform simple application into an intentional moment of self-restoration. Blend our formulas with three conscious steps.",
+      "steps": [
+        {
+          "numeral": "I",
+          "title": "Prepare & Centering",
+          "desc": "Cleanse your sensory field. Sit upright, drop your shoulders, and close your eyes. Take one deep breath to reset your system."
+        },
+        {
+          "numeral": "II",
+          "title": "Deep Inhalation",
+          "desc": "Hold the pocket herbal inhaler one inch below the nose. Inhale slowly through the diaphragm for 4 seconds, hold for 4, and release."
+        },
+        {
+          "numeral": "III",
+          "title": "Dermal Application",
+          "desc": "Glide the cooling herb oil onto your temples and pulse points. Massage in small circles, letting your body heat release the botanicals."
+        }
+      ]
+    },
+    "breath": {
+      "inhale": "Inhale Slowly",
+      "holdIn": "Hold Breath",
+      "exhale": "Exhale Softly",
+      "holdOut": "Hold Empty",
+      "idle": "Tap to Begin",
+      "desc_active": "Sync your breath with the expanding rhythm to open your sensory olfactory gates.",
+      "desc_idle": "Engage the pranayama breath trainer to elevate your apothecary ritual experience.",
+      "toggle": "Start or pause the breathing guide"
+    },
+    "alt": {
+      "inhaler_warm": "Thepprasit herbal inhaler",
+      "inhaler_cool": "Phetmongkol herbal inhaler",
+      "oil_warm": "Thepprasit herbal oil",
+      "oil_cool": "Phetmongkol herbal oil"
+    },
+    "botanicals": {
+      "kaffir-lime": {
+        "name": "Citrus bergamia (Kaffir Lime)",
+        "thaiName": "ผิวมะกรูด",
+        "role": "Solar Uplift",
+        "origin": "Songkhla Highlands",
+        "process": "Cold-press peel extraction",
+        "benefit": "Clears respiratory passages, promotes alert mental focus, and calms emotional tension."
+      },
+      "clove": {
+        "name": "Syzygium aromaticum (Clove)",
+        "thaiName": "กานพลู",
+        "role": "Thermal Depth",
+        "origin": "Southern Plantations",
+        "process": "Steam-distilled flower buds",
+        "benefit": "Provides warming depth, eases physical fatigue, and acts as an organic air purifier."
+      },
+      "cinnamon": {
+        "name": "Cinnamomum verum (Cinnamon)",
+        "thaiName": "อบเชย",
+        "role": "Spiced Grounding",
+        "origin": "Ancient Forest Wilds",
+        "process": "Sun-cured bark infusion",
+        "benefit": "Stimulates cognitive focus, delivers a comforting aroma, and targets mental lethargy."
+      },
+      "jasmine": {
+        "name": "Jasminum sambac (Jasmine)",
+        "thaiName": "มะลิลา",
+        "role": "Lunar Soothing",
+        "origin": "Songkhla Smallholds",
+        "process": "Night-harvest extraction",
+        "benefit": "Soothes the central nervous system, relieves restlessness, and brings peace to the spirit."
+      },
+      "ylang-ylang": {
+        "name": "Cananga odorata (Ylang-Ylang)",
+        "thaiName": "กระดังงา",
+        "role": "Ethereal Release",
+        "origin": "Coastal Ranong Groves",
+        "process": "Fractional distillation",
+        "benefit": "Reduces acute heart rate responses to stress, slows hyperventilation, and melts fatigue."
+      },
+      "patchouli": {
+        "name": "Pogostemon cablin (Patchouli)",
+        "thaiName": "พิมเสนใบ",
+        "role": "Earthy Anchor",
+        "origin": "Evergreen Foothills",
+        "process": "Shade-cured leaf steam",
+        "benefit": "Provides a dark woody baseline, grounds overactive thoughts, and stabilizes vital energy."
       }
     }
   },
@@ -212,9 +524,19 @@
     },
     "footer": {
       "shop": "Shop",
-      "shopItems": ["Cooling Thai Oil", "Herbal Inhaler", "Massage Oils", "Gift sets"],
+      "shopItems": [
+        "Cooling Thai Oil",
+        "Herbal Inhaler",
+        "Massage Oils",
+        "Gift sets"
+      ],
       "company": "Company",
-      "companyItems": ["Our story", "Journal", "Stockists", "Contact"]
+      "companyItems": [
+        "Our story",
+        "Journal",
+        "Stockists",
+        "Contact"
+      ]
     },
     "products": {
       "cooling": {
@@ -222,28 +544,40 @@
         "th": "ยาหม่องน้ำ",
         "tagline": "Inspired by Khun Apiban's herbal recipe",
         "desc": "Cool your senses, relax deeply, and find relief from office syndrome — all in one soothing herbal oil.",
-        "tags": ["Herbal", "Cooling"]
+        "tags": [
+          "Herbal",
+          "Cooling"
+        ]
       },
       "inhaler": {
         "name": "Herbal Inhaler",
         "th": "ยาดม",
         "tagline": "A breath of the forest, anywhere",
         "desc": "A bright, camphor-forward inhalant blended from native Thai herbs to clear the mind and settle the breath.",
-        "tags": ["Herbal", "Uplifting"]
+        "tags": [
+          "Herbal",
+          "Uplifting"
+        ]
       },
       "floral": {
         "name": "Floral Massage Oil",
         "th": "น้ำมันนวดดอกไม้",
         "tagline": "Petals pressed into calm",
         "desc": "A warming massage oil carrying jasmine and ylang, drawn from the family's floral traditions.",
-        "tags": ["Massage", "Floral"]
+        "tags": [
+          "Massage",
+          "Floral"
+        ]
       },
       "kaffir": {
         "name": "Kaffir Massage Oil",
         "th": "น้ำมันนวดมะกรูด",
         "tagline": "Green, citrus, grounding",
         "desc": "Kaffir lime and lemongrass in a nourishing base oil — a bright, grounding ritual for tired muscles.",
-        "tags": ["Massage", "Citrus"]
+        "tags": [
+          "Massage",
+          "Citrus"
+        ]
       }
     }
   }

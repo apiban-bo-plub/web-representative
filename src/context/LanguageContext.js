@@ -20,6 +20,13 @@ export function LanguageProvider({ children }) {
     }
   }, []);
 
+  // Keep the document language in sync so screen readers, Thai line-breaking
+  // and crawlers see the language the user actually selected. layout.js is a
+  // Server Component, so this has to be set imperatively from the client.
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const setLanguage = (lang) => {
     if (lang === 'en' || lang === 'th') {
       setLanguageState(lang);

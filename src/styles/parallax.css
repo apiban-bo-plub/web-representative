@@ -1,0 +1,1005 @@
+/* ══════════════════════════════════════════════════════════════════════
+   APB · PARALLAX LANDING
+   Scroll-driven motion for the home route. Everything decorative animates
+   off `animation-timeline`, so the compositor owns it and JS runs zero
+   work per frame. The only scripted value on the page is `--p`, the
+   cold-open progress, written once per rAF by src/app/page.js.
+
+   Tokens come from style_0.css. No new colors, no new fonts.
+   ══════════════════════════════════════════════════════════════════════ */
+
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.px-page {
+  --p: 0;
+  position: relative;
+  overflow-x: clip;
+  background-color: var(--surface-ink);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   1 · Parallax layer primitive
+   Background/decorative layers only — never body copy, never a control.
+   Max delta is ±18%; past that foreground and background visibly desync.
+   ───────────────────────────────────────────────────────────────────── */
+
+.px-layer {
+  will-change: transform;
+}
+
+@supports (animation-timeline: view()) {
+  .px-layer {
+    animation: px-drift linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+  .px-layer--slow  { --px-shift: -6%;  }
+  .px-layer--mid   { --px-shift: -12%; }
+  .px-layer--fast  { --px-shift: -18%; }
+  .px-layer--down  { --px-shift: 10%;  }
+
+  @keyframes px-drift {
+    from { translate: 0 0; }
+    to   { translate: 0 var(--px-shift, -10%); }
+  }
+
+  /* Slow zoom-out, used on full-bleed portraits. */
+  .px-zoom {
+    animation: px-zoom-out linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+    will-change: transform;
+  }
+  @keyframes px-zoom-out {
+    from { scale: 1.18; }
+    to   { scale: 1; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   2 · Grain / weathering
+   Masking technique per scratch_guidance.md — the element must set
+   `background-color`, never the `background` shorthand, or it resets
+   the mask's own background-image siblings.
+   ───────────────────────────────────────────────────────────────────── */
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("/images/textures/grain.png");
+  background-repeat: repeat;
+  background-size: 512px;
+}
+
+/* Fallback when the texture asset has not landed yet: procedural grain. */
+@supports not (background-image: url("/images/textures/grain.png")) {
+  .grain::after { background-image: none; }
+}
+
+.grain--mask {
+  -webkit-mask-image: url("/images/textures/grain.png");
+  -webkit-mask-repeat: repeat;
+  -webkit-mask-size: 420px;
+  mask-image: url("/images/textures/grain.png");
+  mask-repeat: repeat;
+  mask-size: 420px;
+}
+
+@supports (not (mask-image: url(x))) and (not (-webkit-mask-image: url(x))) {
+  .grain--mask { -webkit-mask-image: none; mask-image: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   3 · Cold open (fixed video layer)
+   Sized off --p in calc(). This is the one place width/height animate;
+   it is a single fixed element, contained, and nothing reflows around it.
+   ───────────────────────────────────────────────────────────────────── */
+
+.cold-open {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--surface-ink);
+  contain: layout paint;
+  opacity: calc(1 - var(--p));
+}
+
+.cold-open__frame {
+  /* Kept as custom properties because the iframe below has to do its own
+     cover-fit arithmetic against them — an iframe has no object-fit. */
+  --co-w: calc((70vh * 9 / 16) + (100vw - (70vh * 9 / 16)) * var(--p));
+  --co-h: calc(70vh + (100vh - 70vh) * var(--p));
+
+  position: absolute;
+  overflow: hidden;
+  background-color: var(--brown-900);
+  width: var(--co-w);
+  height: var(--co-h);
+  border-radius: calc(16px * (1 - var(--p)));
+  box-shadow: 0 calc(24px * (1 - var(--p))) calc(70px * (1 - var(--p)))
+    rgba(0, 0, 0, calc(0.8 * (1 - var(--p))));
+}
+
+/* The YouTube embed.
+
+   `object-fit: cover` does nothing to an iframe, so cover is done by hand:
+   size the player to whichever of the two axes overflows for a 9:16 source
+   in the current frame, centre it, and let the frame's overflow clip the
+   rest. `scale` on top over-crops by 22% to hide the title card and
+   progress bar the player still paints with controls=0. Pointer events are
+   off so clicks reach the page, not YouTube's own UI. */
+.cold-open__yt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(var(--co-w), calc(var(--co-h) * 9 / 16));
+  height: max(var(--co-h), calc(var(--co-w) * 16 / 9));
+  translate: -50% -50%;
+  scale: 1.22;
+  border: 0;
+  pointer-events: none;
+}
+
+.cold-open__still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cold-open__cue {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  opacity: calc(1 - var(--p));
+}
+
+/* Corner sound toggle */
+.cold-open__sound {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #f0ebe2;
+  background: rgba(11, 13, 12, 0.75);
+  border: 1px solid rgba(203, 181, 147, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background-color 0.24s ease, border-color 0.24s ease, transform 0.24s ease;
+}
+.cold-open__sound:hover {
+  background: var(--basil-green-800);
+  border-color: var(--brand-gold);
+  transform: scale(1.05);
+}
+.cold-open__sound:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 3px;
+}
+
+.cold-open__feedback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  color: #f0ebe2;
+  background: rgba(11, 13, 12, 0.8);
+  border: 1px solid rgba(203, 181, 147, 0.3);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.cold-open__feedback.is-on {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   4 · Scrolling content stack over the cold open
+   ───────────────────────────────────────────────────────────────────── */
+
+.px-scroll {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  pointer-events: none; /* clicks fall through the spacer to the video */
+}
+
+.px-spacer {
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+}
+
+.px-portal {
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Visually hidden, still announced. */
+.apb-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.reveal-delay-0 { transition-delay: 0s; }
+
+.px-hero-wrap,
+.px-sections {
+  position: relative;
+  pointer-events: auto;
+  background-color: var(--surface-ink);
+}
+
+.px-hero-wrap { opacity: var(--p); }
+
+.px-nav {
+  /* `.pn` relies on the unnamed `@container (max-width: 900px)` block in
+     style_1.css for its burger menu and collapsed links. That block resolves
+     against the nearest containment ancestor — which used to be `.portal`.
+     The nav has to live outside `.portal` to stay truly fixed, so it carries
+     its own container instead, or the mobile nav never appears. */
+  container-type: inline-size;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.px-nav.is-on {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   5 · Hero depth layers
+   ───────────────────────────────────────────────────────────────────── */
+
+.hero-px { position: relative; overflow: hidden; }
+
+.hero-px .hero__bg { z-index: 0; }
+
+.hero-cutouts {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-cutout {
+  position: absolute;
+  opacity: 0.72;
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.45));
+}
+.hero-cutout img,
+.hero-cutout svg { width: 100%; height: auto; display: block; }
+
+.hero-cutout--a { top: -4%;  right: 4%;  width: 26%; }
+.hero-cutout--b { bottom: -8%; left: -3%; width: 22%; opacity: 0.55; }
+.hero-cutout--c { top: 34%;  right: 30%; width: 13%; opacity: 0.42; }
+
+.hero-px .hero__inner { z-index: 3; }
+.hero-px .hero__scrim { z-index: 2; }
+
+/* At the shared 720px measure the three-line headline wrapped to six lines on
+   desktop. Widened measure + a lower cap puts each `<br/>` line back on its
+   own row. Scoped above 900px so style_1.css keeps owning the phone sizing —
+   an unscoped `.hero-px .hero__h1` would outrank it on specificity. */
+@container (min-width: 901px) {
+  .hero-px .hero__inner { max-width: 880px; }
+  .hero-px .hero__h1 { font-size: clamp(32px, 4.6cqw, 64px); }
+}
+
+/* Line-art fallback strokes when no cutout PNGs are supplied. */
+.hero-cutout__sketch {
+  fill: none;
+  stroke: var(--spring-wood-400);
+  stroke-width: 1.4;
+  opacity: 0.9;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   6 · Legacy numbers band
+   ───────────────────────────────────────────────────────────────────── */
+
+.legacy {
+  position: relative;
+  background-color: var(--surface-ink);
+  border-top: 1px solid rgba(203, 181, 147, 0.16);
+  border-bottom: 1px solid rgba(203, 181, 147, 0.16);
+  padding: 96px 48px;
+  overflow: hidden;
+}
+
+.legacy__grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 48px;
+  text-align: center;
+}
+
+.legacy__item { position: relative; padding: 0 16px; }
+
+.legacy__item + .legacy__item::before {
+  content: "";
+  position: absolute;
+  left: -24px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: rgba(203, 181, 147, 0.2);
+}
+
+.legacy__num {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 5.6cqw, 88px);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-display);
+  color: var(--spring-wood-400);
+  margin: 0 0 12px;
+  font-variant-numeric: tabular-nums;
+}
+:root[lang="th"] .legacy__num { font-family: var(--font-serif-thai); }
+
+.legacy__label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--makara-300);
+  margin: 0 0 8px;
+}
+
+.legacy__note {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-light);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(240, 235, 226, 0.72);
+  margin: 0;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+.legacy__mark {
+  position: absolute;
+  right: -60px;
+  bottom: -70px;
+  width: 260px;
+  opacity: 0.05;
+  filter: brightness(0) invert(1);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   7 · Red Book — sticky chapter reveal (the page's only pinned section)
+   ───────────────────────────────────────────────────────────────────── */
+
+.rbook {
+  position: relative;
+  background-color: var(--makara-200);
+}
+
+.rbook__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.rbook__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  overflow: hidden;
+}
+
+.rbook__media {
+  position: relative;
+  width: 100%;
+  height: min(76vh, 720px);
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: var(--makara-300);
+}
+
+.rbook__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rbook__frame.is-active { opacity: 1; }
+
+.rbook__eyebrow {
+  margin-bottom: -24px;
+  padding-top: 88px;
+  color: var(--spring-wood-900);
+}
+
+.rbook__mark {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 120px;
+  height: 120px;
+  opacity: 0.12;
+  background-image: url("/images/motif.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.rbook__stages {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+}
+
+.rbstage {
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.rbstage__idx {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  /* spring-wood-700 measured 3.33:1 here at 11px — below the 4.5 floor. */
+  color: var(--spring-wood-900);
+  margin-bottom: 16px;
+}
+
+.rbstage__h {
+  font-size: clamp(30px, 3.4cqw, 48px);
+  line-height: var(--leading-tight);
+  color: var(--text-strong);
+  margin: 0 0 20px;
+}
+
+.rbstage__b {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-light);
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--text-body);
+  max-width: 440px;
+  margin: 0 0 28px;
+}
+
+.rbstage__rule {
+  width: 64px;
+  height: 1px;
+  background: var(--border-hairline);
+  margin-bottom: 24px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   8 · Provenance — horizontal scroll journey
+   ───────────────────────────────────────────────────────────────────── */
+
+.prov {
+  position: relative;
+  background-color: var(--surface-page);
+  padding: 96px 0 88px;
+  overflow: hidden;
+}
+
+.prov__head {
+  max-width: 1180px;
+  margin: 0 auto 40px;
+  padding: 0 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.prov__title {
+  font-size: clamp(30px, 3.2cqw, 44px);
+  margin: 12px 0 0;
+  color: var(--text-strong);
+}
+
+.prov__hint {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  /* text-muted measured 3.66:1 here — this label is the only affordance
+     telling the user the strip scrolls, so it has to clear 4.5. */
+  color: var(--text-body);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.prov__track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 48px;
+  padding: 8px 48px 32px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--makara-400) transparent;
+}
+
+.prov__card {
+  flex: 0 0 clamp(260px, 30cqw, 380px);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prov__card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px rgba(57, 48, 45, 0.16);
+}
+
+.prov__media {
+  position: relative;
+  aspect-ratio: 4 / 3; /* reserved so the track never shifts (CLS) */
+  overflow: hidden;
+  background-color: var(--makara-200);
+}
+
+.prov__body { padding: 24px 24px 28px; }
+
+.prov__idx {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.2em;
+  /* brand-gold measured 2.75:1 on the white card at 11px. */
+  color: var(--spring-wood-900);
+  margin-bottom: 10px;
+}
+
+.prov__name {
+  font-family: var(--font-serif);
+  font-size: 23px;
+  line-height: 1.2;
+  color: var(--text-strong);
+  margin: 0 0 4px;
+}
+:root[lang="th"] .prov__name { font-family: var(--font-serif-thai); }
+
+.prov__origin {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--spring-wood-800);
+  margin: 0 0 14px;
+}
+
+.prov__desc {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-light);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-body);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   9 · Founder quote — full-bleed
+   ───────────────────────────────────────────────────────────────────── */
+
+.fquote {
+  position: relative;
+  min-height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--surface-ink);
+  padding: 96px 48px;
+}
+
+.fquote__bg { position: absolute; inset: 0; z-index: 0; }
+
+.fquote__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 15, 13, 0.58) 0%,
+    rgba(20, 15, 13, 0.78) 62%,
+    rgba(20, 15, 13, 0.9) 100%
+  );
+}
+
+.fquote__inner {
+  position: relative;
+  z-index: 3;
+  max-width: 860px;
+  text-align: center;
+}
+
+.fquote__mark {
+  width: 44px;
+  margin: 0 auto 28px;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+  display: block;
+}
+
+.fquote__text {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.1cqw, 42px);
+  line-height: 1.34;
+  letter-spacing: var(--tracking-display);
+  color: #f5f1ea;
+  margin: 0 0 28px;
+}
+:root[lang="th"] .fquote__text { font-family: var(--font-serif-thai); }
+
+.fquote__attrib {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--spring-wood-400);
+  margin: 0;
+}
+
+.fquote__role {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(240, 235, 226, 0.68);
+  margin: 8px 0 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   10 · Gallery — horizontal snap track (replaces the timed cross-fade)
+   ───────────────────────────────────────────────────────────────────── */
+
+.gtrack {
+  position: relative;
+  background-color: var(--surface-page);
+  padding: 96px 0 88px;
+  overflow: hidden;
+}
+
+.gtrack__head {
+  max-width: 620px;
+  margin: 0 auto 40px;
+  padding: 0 48px;
+  text-align: center;
+}
+
+.gtrack__h {
+  font-size: clamp(30px, 3.2cqw, 44px);
+  margin: 16px 0;
+  color: var(--text-strong);
+}
+
+.gtrack__b {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-body);
+  margin: 0;
+}
+
+.gtrack__rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 48px;
+  padding: 0 48px 24px;
+  scrollbar-width: none;
+}
+.gtrack__rail::-webkit-scrollbar { display: none; }
+
+.gtrack__item {
+  position: relative;
+  flex: 0 0 clamp(280px, 42cqw, 620px);
+  aspect-ratio: 4 / 3; /* reserved: no CLS as slides lazy-load */
+  scroll-snap-align: center;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--makara-200);
+}
+
+.gtrack__cap {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 16px;
+  z-index: 3;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  color: #f5f1ea;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+:root[lang="th"] .gtrack__cap { font-family: var(--font-serif-thai); }
+
+.gtrack__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(20, 15, 13, 0.66) 0%, rgba(20, 15, 13, 0) 42%);
+}
+
+.gtrack__bar {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 48px;
+  height: 2px;
+  background: transparent;
+}
+.gtrack__bar > div {
+  height: 2px;
+  background: var(--makara-300);
+  position: relative;
+  overflow: hidden;
+}
+.gtrack__progress {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--basil-green-800);
+  transform-origin: left center;
+  transition: transform 0.18s linear;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   11 · Floating sticky CTA
+   ───────────────────────────────────────────────────────────────────── */
+
+.px-cta {
+  /* Bottom-right on desktop: centred it sat squarely over the reading column
+     of the provenance and gallery cards. */
+  position: fixed;
+  right: 32px;
+  bottom: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 10px 10px 22px;
+  border-radius: 999px;
+  background: rgba(45, 38, 35, 0.9);
+  border: 1px solid rgba(203, 181, 147, 0.32);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.px-cta.is-on {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.px-cta__label {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.08em;
+  color: var(--makara-100);
+  white-space: nowrap;
+}
+
+.px-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--basil-green-800);
+  transition: background-color 0.24s ease;
+}
+.px-cta__btn:hover { background: var(--basil-green-900); }
+.px-cta__btn:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   12 · Dark-surface overrides for reused light-theme sections
+   ───────────────────────────────────────────────────────────────────── */
+
+.px-page .pillars {
+  background-color: #0d0f0e;
+  border-top: 1px solid rgba(203, 181, 147, 0.12);
+  border-bottom: 1px solid rgba(203, 181, 147, 0.12);
+}
+.px-page .pillar__rule { background: rgba(203, 181, 147, 0.12); }
+.px-page .pillar__t { color: var(--text-on-dark-strong, #ffffff); }
+.px-page .pillar__b { color: var(--text-on-dark, #f0ebe2); opacity: 0.85; }
+
+.px-page .apo__media { overflow: hidden; }
+
+/* ─────────────────────────────────────────────────────────────────────
+   13 · Responsive
+   `.portal` sets container-type: inline-size, so container queries match
+   the house pattern used throughout style_1.css.
+   ───────────────────────────────────────────────────────────────────── */
+
+@container (max-width: 900px) {
+  .legacy { padding: 64px 24px; }
+  .legacy__grid { grid-template-columns: 1fr; gap: 40px; }
+  .legacy__item + .legacy__item::before {
+    left: 50%;
+    right: auto;
+    top: -20px;
+    bottom: auto;
+    width: 48px;
+    height: 1px;
+    transform: translateX(-50%);
+  }
+
+  /* Pinning off below 900px — it fights native scroll on touch. */
+  .rbook__inner { grid-template-columns: minmax(0, 1fr); }
+  .rbook__sticky {
+    position: relative;
+    height: auto;
+    padding: 24px;
+  }
+  .rbook__media { height: 340px; }
+  .rbook__stages { padding: 0 24px 48px; }
+  .rbstage { min-height: 0; padding: 32px 0; }
+
+  .prov { padding: 56px 0; }
+  .prov__head { padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .prov__track { padding: 8px 24px 28px; scroll-padding-left: 24px; }
+  .prov__card { flex-basis: 78cqw; }
+
+  .fquote { min-height: 68vh; padding: 64px 24px; }
+
+  .gtrack { padding: 56px 0; }
+  .gtrack__head { padding: 0 24px; }
+  .gtrack__rail { padding: 0 24px 20px; scroll-padding-left: 24px; }
+  .gtrack__item { flex-basis: 82cqw; aspect-ratio: 4 / 5; }
+  .gtrack__bar { padding: 0 24px; }
+
+  /* One cutout only on phones — three layers is noise at this width. */
+  .hero-cutout--b,
+  .hero-cutout--c { display: none; }
+  .hero-cutout--a { width: 40%; opacity: 0.5; }
+
+}
+
+/* Fixed-position layers live outside `.portal`, so they have no container
+   context — they must use viewport media queries, not container queries. */
+@media (max-width: 900px) {
+  .px-cta {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: space-between;
+    padding: 8px 8px 8px 18px;
+  }
+  .px-cta__label { font-size: 11.5px; }
+
+  .cold-open__frame {
+    /* --co-h stays in vh: a custom property cannot carry a vh->dvh
+       fallback pair, and the large viewport over-covers rather than
+       under-covers, which is the safe direction for a cropped embed. */
+    --co-w: 100vw;
+    --co-h: 100vh;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   14 · Reduced motion
+   Every scroll-driven layer is pinned to a resting state — pinned, not
+   snapping. style_0.css already zeroes transition-duration globally, so
+   anything phase-based would otherwise jump rather than animate.
+   ───────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .px-layer,
+  .px-zoom {
+    animation: none !important;
+    translate: none !important;
+    scale: 1 !important;
+    will-change: auto;
+  }
+
+  .reveal { opacity: 1 !important; transform: none !important; }
+
+  .prov__track,
+  .gtrack__rail { scroll-behavior: auto; }
+
+  .prov__card:hover { transform: none; }
+
+  .cold-open__sound:hover { transform: none; }
+}

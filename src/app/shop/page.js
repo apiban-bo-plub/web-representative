@@ -199,15 +199,16 @@ function ShopContent({ go }) {
         </div>
       </section>
 
-      <HeritageStrip go={go} />
+      <HeritageStrip />
       <Newsletter />
     </main>
   );
 }
 
 /* ---- Heritage strip ------------------------------------------------- */
-function HeritageStrip({ go }) {
+function HeritageStrip() {
   const { t } = useLanguage();
+  const router = useRouter();
   return (
     <section className="heritage-strip-sec reveal">
       <div className="heritage-strip">
@@ -222,16 +223,19 @@ function HeritageStrip({ go }) {
         </div>
         <div className="heritage-strip__content">
           <span className="apb-eyebrow" style={{ color: 'var(--basil-green-700)', display: 'block', marginBottom: 16 }}>
-            {t("shop.heritage.eyebrow")}
+            {t("shop.strip.eyebrow")}
           </span>
           <h2 className="heritage-strip__title" style={{ fontFamily: "var(--font-serif)", marginBottom: 24, fontSize: 'clamp(28px, 3.5vw, 42px)' }}>
-            {t("shop.heritage.title")}
+            {t("shop.strip.title")}
           </h2>
-          <p className="heritage-strip__desc" style={{ marginBottom: 32 }}>
-            {t("shop.heritage.desc")}
+          <p className="heritage-strip__desc" style={{ marginBottom: 16 }}>
+            {t("shop.strip.desc1")}
           </p>
-          <Button variant="secondary" size="lg" onClick={() => go("story")}>
-            {t("shop.heritage.button")}
+          <p className="heritage-strip__desc" style={{ marginBottom: 32 }}>
+            {t("shop.strip.desc2")}
+          </p>
+          <Button variant="secondary" size="lg" onClick={() => router.push("/heritage")}>
+            {t("shop.strip.button")}
           </Button>
         </div>
       </div>

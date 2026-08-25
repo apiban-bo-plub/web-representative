@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
-import { ArrowRight, Moon, Sun, Wind } from 'lucide-react';
+import { ArrowRight, Wind } from 'lucide-react';
 
 import Logo from '@/components/brand/Logo';
+import PortalFooter from '@/components/brand/PortalFooter';
 import Button from '@/components/core/Button';
 import Tag from '@/components/core/Tag';
 import ImageSlot from '@/components/ImageSlot';
@@ -40,7 +41,7 @@ function PortalNav({ go }) {
       <div className="pn__side pn__side--right" style={{ gap: '16px' }}>
         <LanguageSelector />
       </div>
-      <button className="pn__burger" aria-label="Menu" onClick={() => setOpen(v => !v)}>
+      <button className="pn__burger" aria-label={t("nav.menu")} onClick={() => setOpen(v => !v)}>
         <span></span><span></span><span></span>
       </button>
       {open && (
@@ -58,32 +59,6 @@ function PortalNav({ go }) {
 }
 
 /* ---- Footer (identical to Portal Page) ------------------------------ */
-function PortalFooter() {
-  const { t } = useLanguage();
-  const col = (h, items) => (
-    <div key={h}>
-      <div className="pf__h">{h}</div>
-      {items.map(i => <div className="pf__i" key={i}>{i}</div>)}
-    </div>
-  );
-  return (
-    <footer className="pf">
-      <div className="pf__grid">
-        <div>
-          <Logo width={170} color="#f0ebe2" />
-          <p className="pf__blurb">{t("footer.blurb")}</p>
-        </div>
-        {col(t("footer.explore"), [t("nav.collection"), t("home.redbook.button"), t("nav.heritage"), "Journal"])}
-        {col(t("footer.company"), [t("shop.story.eyebrow"), "Stockists", "Corporate & gifting", "Contact"])}
-        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
-      </div>
-      <div className="pf__base">
-        <span>{t("footer.copy")}</span>
-        <span>{t("footer.privacy")}</span>
-      </div>
-    </footer>
-  );
-}
 
 /* ---- Apothecary Hero ------------------------------------------- */
 function ApothecaryHero() {
@@ -93,25 +68,25 @@ function ApothecaryHero() {
       <div className="apothecary-hero__bg" style={{ backgroundImage: "url('/images/hero.jpg')" }} />
       <div className="apothecary-hero__scrim" />
       <div className="apothecary-hero__inner">
-        <div className="apb-eyebrow apothecary-hero__eyebrow">{t("apothecary.h1_1")}</div>
-        <h1 className="apothecary-hero__h1">{t("apothecary.h1_2")}</h1>
+        <div className="apb-eyebrow apothecary-hero__eyebrow">{t("apothecary.eyebrow")}</div>
+        <h1 className="apothecary-hero__h1">
+          {t("apothecary.h1_1")}<br/>
+          {t("apothecary.h1_2")}
+        </h1>
         <p className="apothecary-hero__sub">{t("apothecary.sub")}</p>
       </div>
     </section>
   );
 }
 
-/* ---- Botanical Matrix Data --------------------------------------- */
+/* ---- Botanical Matrix Data ---------------------------------------
+   Copy for these lives in the locale files under
+   `apothecary.botanicals.<id>` — only the id and its hand-drawn sketch
+   stay here, because the sketch is JSX and cannot live in JSON. -- */
 const BOTANICALS_DATA = {
   warm: [
     {
       id: "kaffir-lime",
-      name: "Citrus bergamia (Kaffir Lime)",
-      thaiName: "ผิวมะกรูด",
-      role: "Solar Uplift",
-      origin: "Songkhla Highlands",
-      process: "Cold-press peel extraction",
-      benefit: "Clears respiratory passages, promotes alert mental focus, and calms emotional tension.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="0.8" fill="none" />
@@ -123,12 +98,6 @@ const BOTANICALS_DATA = {
     },
     {
       id: "clove",
-      name: "Syzygium aromaticum (Clove)",
-      thaiName: "กานพลู",
-      role: "Thermal Depth",
-      origin: "Southern Plantations",
-      process: "Steam-distilled flower buds",
-      benefit: "Provides warming depth, eases physical fatigue, and acts as an organic air purifier.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <path d="M 50 85 L 50 45" stroke="currentColor" strokeWidth="0.8" />
@@ -140,12 +109,6 @@ const BOTANICALS_DATA = {
     },
     {
       id: "cinnamon",
-      name: "Cinnamomum verum (Cinnamon)",
-      thaiName: "อบเชย",
-      role: "Spiced Grounding",
-      origin: "Ancient Forest Wilds",
-      process: "Sun-cured bark infusion",
-      benefit: "Stimulates cognitive focus, delivers a comforting aroma, and targets mental lethargy.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <rect x="38" y="25" width="24" height="55" rx="3" stroke="currentColor" strokeWidth="0.8" fill="none" />
@@ -157,12 +120,6 @@ const BOTANICALS_DATA = {
   cool: [
     {
       id: "jasmine",
-      name: "Jasminum sambac (Jasmine)",
-      thaiName: "มะลิลา",
-      role: "Lunar Soothing",
-      origin: "Songkhla Smallholds",
-      process: "Night-harvest extraction",
-      benefit: "Soothes the central nervous system, relieves restlessness, and brings peace to the spirit.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="0.8" fill="none" />
@@ -173,12 +130,6 @@ const BOTANICALS_DATA = {
     },
     {
       id: "ylang-ylang",
-      name: "Cananga odorata (Ylang-Ylang)",
-      thaiName: "กระดังงา",
-      role: "Ethereal Release",
-      origin: "Coastal Ranong Groves",
-      process: "Fractional distillation",
-      benefit: "Reduces acute heart rate responses to stress, slows hyperventilation, and melts fatigue.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <circle cx="50" cy="50" r="3" fill="currentColor" />
@@ -191,12 +142,6 @@ const BOTANICALS_DATA = {
     },
     {
       id: "patchouli",
-      name: "Pogostemon cablin (Patchouli)",
-      thaiName: "พิมเสนใบ",
-      role: "Earthy Anchor",
-      origin: "Evergreen Foothills",
-      process: "Shade-cured leaf steam",
-      benefit: "Provides a dark woody baseline, grounds overactive thoughts, and stabilizes vital energy.",
       sketch: (
         <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
           <path d="M 50 90 L 50 15 M 50 25 L 30 45 L 50 50 L 70 45 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
@@ -209,6 +154,7 @@ const BOTANICALS_DATA = {
 
 /* ---- Breathing Guide Component ----------------------------------- */
 function RespirationGuide() {
+  const { t } = useLanguage();
   const [phase, setPhase] = useState("idle"); // idle, inhale, holdIn, exhale, holdOut
   const [active, setActive] = useState(false);
   const [countdown, setCountdown] = useState(4);
@@ -244,21 +190,17 @@ function RespirationGuide() {
     return () => clearInterval(timer);
   }, [active]);
 
-  const getPhaseText = () => {
-    switch (phase) {
-      case "inhale": return "Inhale Slowly";
-      case "holdIn": return "Hold Breath";
-      case "exhale": return "Exhale Softly";
-      case "holdOut": return "Hold Empty";
-      default: return "Tap to Begin";
-    }
-  };
+  // Phase names double as locale keys: apothecary.breath.{inhale,holdIn,exhale,holdOut,idle}
+  const getPhaseText = () => t(`apothecary.breath.${phase || "idle"}`);
 
   return (
     <div className="respiration-tool paper-texture">
-      <div 
+      <button
+        type="button"
         className={`respiration-orb-container respiration-orb-container--${phase}`}
         onClick={() => setActive(!active)}
+        aria-label={t("apothecary.breath.toggle")}
+        aria-pressed={active}
       >
         <div className="respiration-orb-outer"></div>
         <div className="respiration-orb-middle"></div>
@@ -266,13 +208,13 @@ function RespirationGuide() {
           <Wind size={24} className="respiration-orb-icon" />
           <span className="respiration-orb-countdown">{active ? `${countdown}s` : ""}</span>
         </div>
-      </div>
+      </button>
       <div className="respiration-tool-label">
         <h4 className="respiration-tool-title">{getPhaseText()}</h4>
         <p className="respiration-tool-desc">
-          {active 
-            ? "Sync your breath with the expanding rhythm to open your sensory olfactory gates." 
-            : "Engage the pranayama breath trainer to elevate your apothecary ritual experience."
+          {active
+            ? t("apothecary.breath.desc_active")
+            : t("apothecary.breath.desc_idle")
           }
         </p>
       </div>
@@ -283,11 +225,14 @@ function RespirationGuide() {
 /* ---- Sensory Showcase --------------------------------------------- */
 function SensoryShowcase({ activeTab, setActiveTab }) {
   const { t } = useLanguage();
-  const [selectedBotanical, setSelectedBotanical] = useState(null);
+  // Seeded rather than null: the effect below only runs after hydration, so a
+  // null initial state made the "select a swatch" empty state the SSR output.
+  const [selectedBotanical, setSelectedBotanical] = useState(BOTANICALS_DATA.warm[0]);
 
   const activeNotes = activeTab === "warm" 
     ? t("apothecary.thep.notes") 
     : t("apothecary.phet.notes");
+  const specs = t("apothecary.specs");
 
   // Automatically reset selected botanical when tab changes
   useEffect(() => {
@@ -298,10 +243,10 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
     <section className="sensory-section reveal">
       <div className="sensory-title-block">
         <span className="apb-eyebrow" style={{ color: 'var(--basil-green-700)', display: 'block', marginBottom: '12px' }}>
-          Sensory Exploration
+          {t("apothecary.sensory.eyebrow")}
         </span>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '38px', margin: 0 }}>
-          {activeTab === "warm" ? "The Solar Awakening" : "The Lunar Restorative"}
+          {activeTab === "warm" ? t("apothecary.sensory.title_warm") : t("apothecary.sensory.title_cool")}
         </h2>
       </div>
 
@@ -310,13 +255,13 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
           className={`sensory-tab-btn ${activeTab === 'warm' ? 'sensory-tab-btn--active-warm' : ''}`}
           onClick={() => setActiveTab("warm")}
         >
-          {t("home.apothecary.title_thep")} (Warm)
+          {t("home.apothecary.title_thep")} {t("apothecary.tabs.warm")}
         </button>
         <button
           className={`sensory-tab-btn ${activeTab === 'cool' ? 'sensory-tab-btn--active-cool' : ''}`}
           onClick={() => setActiveTab("cool")}
         >
-          {t("home.apothecary.title_phet")} (Cool)
+          {t("home.apothecary.title_phet")} {t("apothecary.tabs.cool")}
         </button>
       </div>
 
@@ -327,7 +272,7 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
               id={activeTab === 'warm' ? 'apo-thep-inhaler' : 'apo-phet-inhaler'}
               shape="rect"
               fit="cover"
-              placeholder={activeTab === 'warm' ? 'Thepprasit Inhaler' : 'Phetmongkol Inhaler'}
+              placeholder={activeTab === 'warm' ? t("apothecary.alt.inhaler_warm") : t("apothecary.alt.inhaler_cool")}
             />
           </div>
           <div className="sensory-gallery__img">
@@ -335,7 +280,7 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
               id={activeTab === 'warm' ? 'apo-thep-oil' : 'apo-phet-oil'}
               shape="rect"
               fit="cover"
-              placeholder={activeTab === 'warm' ? 'Thepprasit Oil' : 'Phetmongkol Oil'}
+              placeholder={activeTab === 'warm' ? t("apothecary.alt.oil_warm") : t("apothecary.alt.oil_cool")}
             />
           </div>
         </div>
@@ -347,10 +292,6 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
           <h3 className="sensory-profile__title">
             {activeTab === 'warm' ? t("home.apothecary.title_thep") : t("home.apothecary.title_phet")}
           </h3>
-          <p className="sensory-profile__vibe">
-            {activeTab === 'warm' ? t("apothecary.thep.vibe") : t("apothecary.phet.vibe")}
-          </p>
-
           <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', flexWrap: 'wrap' }}>
             {Array.isArray(activeNotes) && activeNotes.map(n => (
               <Tag key={n} tone={activeTab === "warm" ? "gold" : "green"}>
@@ -359,39 +300,25 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
             ))}
           </div>
 
+          <p className="sensory-profile__vibe">
+            {activeTab === 'warm' ? t("apothecary.thep.vibe") : t("apothecary.phet.vibe")}
+          </p>
+
           <div className="sensory-specs">
-            <div className="sensory-spec-row">
-              <span className="sensory-spec-label">Aromatic Profile</span>
-              <span className="sensory-spec-val">
-                {activeTab === 'warm' ? 'Citrus, Camphoraceous, Warm Spice' : 'Sweet White Floral, Herbaceous, Cool Breeze'}
-              </span>
-            </div>
-            <div className="sensory-spec-row">
-              <span className="sensory-spec-label">Key Botanicals</span>
-              <span className="sensory-spec-val">
-                {activeTab === 'warm' ? 'Citrus bergamia, Syzygium aromaticum, Cinnamon' : 'Jasminum sambac, Cananga odorata, Patchouli'}
-              </span>
-            </div>
-            <div className="sensory-spec-row">
-              <span className="sensory-spec-label">Optimal Hour</span>
-              <span className="sensory-spec-val">
-                {activeTab === 'warm' ? '09:00 AM – 02:00 PM (Focus & Focus Peaks)' : '06:00 PM – 11:00 PM (Sunset Wind-down)'}
-              </span>
-            </div>
-            <div className="sensory-spec-row">
-              <span className="sensory-spec-label">Energetic Effect</span>
-              <span className="sensory-spec-val">
-                {activeTab === 'warm' ? 'Cognitive awakening, focus booster' : 'Nervous system soothing, calm inducer'}
-              </span>
-            </div>
+            {(Array.isArray(specs) ? specs : []).map((spec) => (
+              <div className="sensory-spec-row" key={spec.label}>
+                <span className="sensory-spec-label">{spec.label}</span>
+                <span className="sensory-spec-val">{spec[activeTab]}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Sensory Botanical Matrix Interactivity */}
       <div className="botanical-matrix-wrapper">
-        <h3 className="botanical-matrix-title">Active Botanical Matrix</h3>
-        <p className="botanical-matrix-desc">Select an ingredient to reveal its ancestral origin and therapeutic extraction process.</p>
+        <h3 className="botanical-matrix-title">{t("apothecary.matrix.title")}</h3>
+        <p className="botanical-matrix-desc">{t("apothecary.matrix.desc")}</p>
         
         <div className="botanical-matrix-grid">
           <div className="botanical-swatches">
@@ -405,8 +332,8 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
                   {botanical.sketch}
                 </div>
                 <div className="botanical-swatch-text">
-                  <span className="botanical-swatch-role">{botanical.role}</span>
-                  <span className="botanical-swatch-name">{botanical.name}</span>
+                  <span className="botanical-swatch-role">{t(`apothecary.botanicals.${botanical.id}.role`)}</span>
+                  <span className="botanical-swatch-name">{t(`apothecary.botanicals.${botanical.id}.name`)}</span>
                 </div>
               </button>
             ))}
@@ -417,31 +344,29 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
               <div className="botanical-detail-content">
                 <div className="botanical-detail-header">
                   <div>
-                    <span className="botanical-detail-thai">{selectedBotanical.thaiName}</span>
-                    <h4 className="botanical-detail-name">{selectedBotanical.name}</h4>
+                    <span className="botanical-detail-thai">{t(`apothecary.botanicals.${selectedBotanical.id}.thaiName`)}</span>
+                    <h4 className="botanical-detail-name">{t(`apothecary.botanicals.${selectedBotanical.id}.name`)}</h4>
                   </div>
-                  <span className="botanical-detail-tag">{selectedBotanical.role}</span>
+                  <span className="botanical-detail-tag">{t(`apothecary.botanicals.${selectedBotanical.id}.role`)}</span>
                 </div>
                 <div className="botanical-detail-divider"></div>
                 <div className="botanical-detail-rows">
                   <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">Origin:</span>
-                    <span className="botanical-detail-val">{selectedBotanical.origin}</span>
+                    <span className="botanical-detail-lbl">{t("apothecary.matrix.origin")}</span>
+                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.origin`)}</span>
                   </div>
                   <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">Extraction:</span>
-                    <span className="botanical-detail-val">{selectedBotanical.process}</span>
+                    <span className="botanical-detail-lbl">{t("apothecary.matrix.extraction")}</span>
+                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.process`)}</span>
                   </div>
                   <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">Wellness Benefit:</span>
-                    <span className="botanical-detail-val">{selectedBotanical.benefit}</span>
+                    <span className="botanical-detail-lbl">{t("apothecary.matrix.benefit")}</span>
+                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.benefit`)}</span>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="botanical-detail-empty">
-                Select a botanical swatch on the left to read details
-              </div>
+              <div className="botanical-detail-empty">{t("apothecary.matrix.empty")}</div>
             )}
           </div>
         </div>
@@ -450,53 +375,67 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
   );
 }
 
-/* ---- Ritual Section --------------------------------------------- */
+/* ---- Ritual Section ---------------------------------------------
+   Three-step ritual beside the breathing guide, then the Inhale/Apply
+   pair from the Grand Apothecary reference — that copy lives in
+   `apothecary.app.*` and had never been rendered. -- */
+const APPLICATION_CARDS = [
+  { key: "inhale", slot: "apo-app-inhale" },
+  { key: "apply",  slot: "apo-app-apply" },
+];
+
 function RitualSection() {
   const { t } = useLanguage();
+  const steps = t("apothecary.ritual.steps");
+
   return (
     <section className="ritual-section reveal">
       <div className="ritual-header-block">
         <span className="apb-eyebrow" style={{ color: 'var(--basil-green-700)', display: 'block', marginBottom: '12px' }}>
-          Daily Application
+          {t("apothecary.ritual.eyebrow")}
         </span>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '38px', margin: '0 0 16px' }}>
-          The Art of the Ritual
+          {t("apothecary.ritual.title")}
         </h2>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '15px', color: 'var(--text-body)', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto' }}>
-          Transform simple application into an intentional moment of self-restoration. Blend our formulas with three conscious steps.
+          {t("apothecary.ritual.desc")}
         </p>
       </div>
 
       <div className="ritual-main-grid">
         <div className="ritual-steps">
-          <div className="ritual-card">
-            <span className="ritual-card__num">I</span>
-            <h3 className="ritual-card__title">Prepare & Centering</h3>
-            <p className="ritual-card__desc">
-              Cleanse your sensory field. Sit upright, drop your shoulders, and close your eyes. Take one deep breath to reset your system.
-            </p>
-          </div>
-
-          <div className="ritual-card">
-            <span className="ritual-card__num">II</span>
-            <h3 className="ritual-card__title">Deep Inhalation</h3>
-            <p className="ritual-card__desc">
-              Hold the pocket herbal inhaler one inch below the nose. Inhale slowly through the diaphragm for 4 seconds, hold for 4, and release.
-            </p>
-          </div>
-
-          <div className="ritual-card">
-            <span className="ritual-card__num">III</span>
-            <h3 className="ritual-card__title">Dermal Application</h3>
-            <p className="ritual-card__desc">
-              Glide the cooling herb oil onto your temples and pulse points. Massage in small circles, letting your body heat release the botanicals.
-            </p>
-          </div>
+          {(Array.isArray(steps) ? steps : []).map((step) => (
+            <div className="ritual-card" key={step.numeral}>
+              <span className="ritual-card__num">{step.numeral}</span>
+              <h3 className="ritual-card__title">{step.title}</h3>
+              <p className="ritual-card__desc">{step.desc}</p>
+            </div>
+          ))}
         </div>
-        
+
         <div className="ritual-interactive">
           <RespirationGuide />
         </div>
+      </div>
+
+      <div className="application-grid">
+        {APPLICATION_CARDS.map(({ key, slot }) => (
+          <div className="application-card" key={key}>
+            <div className="application-card__media">
+              <ImageSlot
+                id={slot}
+                shape="rect"
+                fit="cover"
+                placeholder={t(`apothecary.app.${key}.alt`)}
+                style={{ aspectRatio: "4 / 3", minHeight: 0 }}
+              />
+            </div>
+            <div className="application-card__cap">
+              <div className="apb-eyebrow">{t(`apothecary.app.${key}.title`)}</div>
+              <p>{t(`apothecary.app.${key}.desc`)}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -584,6 +523,12 @@ export default function ApothecaryPage() {
       router.push("/#collection");
       return;
     }
+    // The hero section is id="top-apothecary"; without this the nav's own
+    // "The Apothecary" item fell through to a getElementById("apothecary") no-op.
+    if (id === "apothecary") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
@@ -596,11 +541,11 @@ export default function ApothecaryPage() {
       
       <SensoryShowcase activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <RitualSection />
+      {/* <RitualSection /> */}
       
       <EditorialCrossroads go={go} />
       
-      <PortalFooter />
+      <PortalFooter go={go} />
     </div>
   );
 }

@@ -199,7 +199,7 @@
 }
 
 .archive-inner {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -268,6 +268,248 @@
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-body);
+}
+
+/* ─ Red Book ledger: the archives accordion interior ──────────────────
+   The markup for this section shipped without any styles. Rules below follow
+   the Apothecary `.botanical-*` house pattern (see ~line 1090) so the two
+   pages read as one system: 10-11px uppercase letter-spaced labels in
+   --font-sans/--makara-600, serif values in --text-strong, --brand-gold as
+   the accent. */
+
+.accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.premium-summary__text {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.premium-summary__num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--brand-gold);
+  flex-shrink: 0;
+}
+
+.ledger-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: var(--space-6);
+  align-items: start;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--makara-300);
+}
+
+.ledger-info { min-width: 0; }
+
+.ledger-section-title {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--makara-600);
+  margin: 0 0 var(--space-4);
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.65;          /* Thai ascenders/descenders need the extra room */
+  margin: 0 0 var(--space-5);
+}
+
+.ledger-table td {
+  padding: var(--space-2) 0;
+  vertical-align: baseline;
+}
+
+.ledger-table tr + tr td { border-top: 1px solid rgba(134, 120, 90, 0.14); }
+
+/* nowrap so the table's auto layout gives each label its full natural width;
+   without it every label collapses to its longest word and the dot leader
+   drifts off the baseline. Released back to wrapping on narrow screens. */
+.ledger-lbl {
+  color: var(--text-body);
+  white-space: nowrap;
+}
+
+/* Dot leader. The middle cell absorbs the slack so label and value hug the
+   outer edges regardless of string length — EN and TH run to different widths. */
+.ledger-dots {
+  width: 99%;
+  padding: 0 var(--space-2);
+  background-image: radial-gradient(circle at center, var(--makara-500) 1px, transparent 1.2px);
+  background-size: 6px 6px;
+  background-repeat: repeat-x;
+  background-position: left bottom 8px;
+}
+
+.ledger-val {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--text-strong);
+  text-align: right;
+  min-width: 96px;
+  padding-left: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-desc {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-body);
+  margin: 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(134, 120, 90, 0.14);
+}
+
+/* Right column reads evidence -> annotation -> voice:
+   archive plate, then the drawn sketch, then the Guardian's Note. */
+.ledger-visual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.ledger-plate {
+  position: relative;
+  margin: 0;
+}
+
+.ledger-plate::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(240, 235, 226, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.botanical-sketch {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) 0;
+  opacity: 0.85;
+}
+
+.sketch-svg {
+  width: 96px;
+  height: 96px;
+  display: block;
+}
+
+.ledger-notes {
+  border-left: 2px solid var(--brand-gold);
+  padding: var(--space-1) 0 var(--space-1) var(--space-4);
+}
+
+.ledger-notes__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--makara-600);
+  margin-bottom: 6px;
+}
+
+.ledger-notes__script {
+  font-family: var(--font-serif-thai);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--spring-wood-800);
+  margin: 0;
+}
+
+/* ─ Museum framing: corner brackets and card rules ────────────────────
+   The markup positions four corner divs and a divider that were never drawn. */
+
+.museum-media-wrapper { position: relative; }
+
+.museum-frame-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 0 solid var(--brand-gold);
+  opacity: 0.9;
+  z-index: 2;
+  pointer-events: none;
+}
+.museum-frame-corner--tl { top: -8px;    left: -8px;  border-top-width: 1px;    border-left-width: 1px; }
+.museum-frame-corner--tr { top: -8px;    right: -8px; border-top-width: 1px;    border-right-width: 1px; }
+.museum-frame-corner--bl { bottom: -8px; left: -8px;  border-bottom-width: 1px; border-left-width: 1px; }
+.museum-frame-corner--br { bottom: -8px; right: -8px; border-bottom-width: 1px; border-right-width: 1px; }
+
+.museum-card__frame { position: relative; }
+
+.museum-card__divider {
+  width: 48px;
+  height: 1px;
+  background: var(--brand-gold);
+  margin: 0 0 18px;
+}
+
+/* ─ Heritage hero decorations ─────────────────────────────────────── */
+
+.heritage-hero__glow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  z-index: 0;
+  width: 720px;
+  height: 720px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(203, 181, 147, 0.22) 0%, rgba(203, 181, 147, 0) 65%);
+  pointer-events: none;
+}
+
+.heritage-hero > .apb-eyebrow,
+.heritage-hero__crest,
+.heritage-hero__title,
+.heritage-hero__sub,
+.heritage-hero__botanical-accent { position: relative; z-index: 1; }
+
+.heritage-hero__botanical-accent {
+  width: 120px;
+  height: 1px;
+  margin: var(--space-7) auto 0;
+  background: linear-gradient(to right, transparent, var(--brand-gold), transparent);
+}
+
+/* ─ Parchment ─────────────────────────────────────────────────────────
+   background-image only, never the shorthand: .archive-section, .museum-card
+   and .heritage-hero above all set `background:` and would reset this layer.
+   Declared after them so the image wins while they keep supplying the color. */
+.paper-texture {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(134, 120, 90, 0.035) 0 1px, transparent 1px 3px),
+    radial-gradient(circle at 18% 12%, rgba(203, 181, 147, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 84% 80%, rgba(134, 120, 90, 0.09) 0%, transparent 50%);
+  background-blend-mode: multiply;
+}
+
+@media (max-width: 900px) {
+  .archive-section { padding: 64px 20px; }
+  .premium-summary { padding: 18px 20px; font-size: 16px; }
+  .premium-details__content { padding: 0 20px 20px; }
+  .ledger-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .ledger-visual { order: -1; }   /* the archive plate leads on mobile */
+  .ledger-val { min-width: 0; }
+  .ledger-lbl { white-space: normal; }
 }
 
 /* ─ Apothecary Sensory Showcase ──────────────────────────────────────── */
@@ -466,15 +708,6 @@
   background: var(--makara-200);
   padding: 96px 40px;
   border-top: 1px solid var(--border-hairline);
-}
-
-.ritual-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 1200px;
-  margin: 48px auto 0;
-  position: relative;
 }
 
 .ritual-card {
@@ -1041,10 +1274,6 @@
   .sensory-content-box--rev {
     direction: ltr;
   }
-  .ritual-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
   .editorial-crossroads {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -1126,7 +1355,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  background: var(--surface-card);
+  background: var(--surface-raised);
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-md);
   padding: 16px 20px;
@@ -1157,11 +1386,6 @@
   flex-shrink: 0;
   border: 1px solid var(--makara-200);
 }
-.botanical-swatch-sketch svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5;
-}
 .botanical-swatch-text {
   display: flex;
   flex-direction: column;
@@ -1181,6 +1405,7 @@
 }
 
 .botanical-detail-card {
+  background-color: var(--surface-raised);   /* see .respiration-tool — colour only */
   border: 1px solid var(--makara-300);
   border-radius: var(--radius-lg);
   padding: 40px;
@@ -1245,12 +1470,22 @@
   color: var(--text-body);
 }
 
-/* ─ Respiration Guide Breathing Trainer ───────────────────────────────── */
-.respiration-guide-box {
-  background: #faf8f5;
+/* ─ Respiration Guide Breathing Trainer ─────────────────────────────────
+   Rewritten for the three-ring markup the JSX actually renders. The old
+   rules here described a single `.respiration-orb` with three phase states;
+   the component has used `.respiration-orb-outer/middle/inner` and five
+   phases (idle, inhale, holdIn, exhale, holdOut) for some time, so nothing
+   but `.respiration-orb-container` was matching and the widget rendered as
+   three invisible divs. Scale transitions run at 4s to match one box-breath
+   beat, so the rings visibly breathe with the countdown. */
+.respiration-tool {
+  /* background-COLOR, not the shorthand: this element also carries
+     .paper-texture (declared above), which supplies only background-image —
+     the shorthand would reset it and kill the parchment. */
+  background-color: var(--surface-raised);
   border: 1px solid var(--makara-300);
   border-radius: var(--radius-lg);
-  padding: 40px;
+  padding: var(--space-7) var(--space-6);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1258,65 +1493,243 @@
   text-align: center;
   box-shadow: var(--shadow-sm);
   min-height: 380px;
+  height: 100%;
 }
-.respiration-guide-title {
-  font-family: var(--font-serif);
-  font-size: 20px;
-  color: var(--text-strong);
-  margin-bottom: 24px;
-}
+
 .respiration-orb-container {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: var(--space-6);
   position: relative;
-}
-.respiration-orb {
-  width: 80px;
-  height: 80px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(83, 97, 88, 0.4) 0%, rgba(83, 97, 88, 0.15) 60%, rgba(83, 97, 88, 0.02) 100%);
-  transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.respiration-orb-container:focus-visible {
+  outline: 1px solid var(--brand-gold);
+  outline-offset: 6px;
+}
+
+.respiration-orb-outer,
+.respiration-orb-middle,
+.respiration-orb-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(var(--orb-scale, 0.55));
+  transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.respiration-orb-outer {
+  width: 180px;
+  height: 180px;
+  border: 1px solid rgba(83, 97, 88, 0.22);
+  opacity: var(--orb-fade, 0.5);
+}
+
+.respiration-orb-middle {
+  width: 132px;
+  height: 132px;
   border: 1px solid rgba(83, 97, 88, 0.3);
+  background: radial-gradient(circle, rgba(83, 97, 88, 0.10) 0%, rgba(83, 97, 88, 0) 70%);
+  opacity: var(--orb-fade, 0.7);
+}
+
+/* The inner disc holds the icon and countdown, so it breathes far less than
+   the rings — otherwise the numerals would scale and blur. */
+.respiration-orb-inner {
+  width: 84px;
+  height: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  color: var(--basil-green-800);
+  border: 1px solid rgba(83, 97, 88, 0.3);
+  background: radial-gradient(circle, rgba(83, 97, 88, 0.22) 0%, rgba(83, 97, 88, 0.06) 70%);
   box-shadow: 0 0 30px rgba(83, 97, 88, 0.1);
+  transform: translate(-50%, -50%) scale(var(--orb-inner-scale, 0.9));
 }
-.respiration-orb--inhale {
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(200, 158, 104, 0.5) 0%, rgba(200, 158, 104, 0.2) 60%, rgba(200, 158, 104, 0.05) 100%);
-  border-color: rgba(200, 158, 104, 0.4);
-  box-shadow: 0 0 50px rgba(200, 158, 104, 0.2);
+
+.respiration-orb-icon { opacity: 0.75; }
+
+.respiration-orb-countdown:empty { display: none; }
+
+.respiration-orb-countdown {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--makara-600);
+  font-variant-numeric: tabular-nums;
 }
-.respiration-orb--hold {
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(143, 103, 52, 0.6) 0%, rgba(143, 103, 52, 0.25) 60%, rgba(143, 103, 52, 0.05) 100%);
-  border-color: rgba(143, 103, 52, 0.5);
-  box-shadow: 0 0 60px rgba(143, 103, 52, 0.3);
+
+/* Phase states. Inhale expands and holdIn sustains that expansion; exhale
+   contracts and holdOut sustains the contraction — that pause-at-size is what
+   makes 4-4-4-4 box breathing legible rather than a continuous pulse. */
+.respiration-orb-container--idle    { --orb-scale: 0.6;  --orb-fade: 0.45; --orb-inner-scale: 0.9; }
+.respiration-orb-container--inhale  { --orb-scale: 1;    --orb-fade: 1;    --orb-inner-scale: 1.05; }
+.respiration-orb-container--holdIn  { --orb-scale: 1;    --orb-fade: 1;    --orb-inner-scale: 1.05; }
+.respiration-orb-container--exhale  { --orb-scale: 0.6;  --orb-fade: 0.5;  --orb-inner-scale: 0.9; }
+.respiration-orb-container--holdOut { --orb-scale: 0.6;  --orb-fade: 0.5;  --orb-inner-scale: 0.9; }
+
+/* Warm tab keeps the gold register of the rest of the page. */
+.apothecary-page--warm .respiration-orb-inner {
+  color: var(--brand-gold);
+  border-color: rgba(200, 158, 104, 0.45);
+  background: radial-gradient(circle, rgba(200, 158, 104, 0.26) 0%, rgba(200, 158, 104, 0.06) 70%);
+  box-shadow: 0 0 36px rgba(200, 158, 104, 0.18);
 }
-.respiration-orb--exhale {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, rgba(83, 97, 88, 0.4) 0%, rgba(83, 97, 88, 0.15) 60%, rgba(83, 97, 88, 0.02) 100%);
-  border-color: rgba(83, 97, 88, 0.3);
+.apothecary-page--warm .respiration-orb-outer  { border-color: rgba(200, 158, 104, 0.24); }
+.apothecary-page--warm .respiration-orb-middle {
+  border-color: rgba(200, 158, 104, 0.32);
+  background: radial-gradient(circle, rgba(200, 158, 104, 0.12) 0%, rgba(200, 158, 104, 0) 70%);
 }
-.respiration-instruction {
+
+.respiration-tool-label { max-width: 320px; }
+
+.respiration-tool-title {
   font-family: var(--font-serif);
   font-size: 22px;
   color: var(--basil-green-900);
-  height: 30px;
-  margin-bottom: 8px;
+  min-height: 30px;
+  margin: 0 0 var(--space-2);
   transition: color 0.5s ease;
 }
-.respiration-timer {
+
+.respiration-tool-desc {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-body);
+  margin: 0;
+  min-height: 72px;   /* copy swaps on activate — reserve 3 lines so the card
+                         does not jump under the cursor */
+}
+
+/* A breathing trainer that ignores reduced-motion would be actively hostile:
+   pin the rings open and let the countdown text carry the rhythm instead. */
+@media (prefers-reduced-motion: reduce) {
+  .respiration-orb-outer,
+  .respiration-orb-middle,
+  .respiration-orb-inner {
+    transition: none;
+    --orb-scale: 0.85;
+    --orb-inner-scale: 1;
+    --orb-fade: 0.8;
+  }
+}
+
+/* ─ Ritual layout ───────────────────────────────────────────────────────
+   The old `.ritual-grid` was `repeat(3, 1fr)` — three cards side by side,
+   from before the breathing guide existed. The markup now wants the steps
+   stacked in one column beside the guide, so that rule was dead and is gone. */
+.ritual-header-block {
+  max-width: 1200px;
+  margin: 0 auto var(--space-7);
+  text-align: center;
+}
+
+.ritual-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--space-7);
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ritual-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.ritual-interactive {
+  position: sticky;
+  top: var(--space-8);
+}
+
+/* ─ Application pair (Inhale / Apply) ──────────────────────────────────── */
+.application-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-7);
+  max-width: 1200px;
+  margin: var(--space-8) auto 0;
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.application-card { min-width: 0; }
+
+.application-card__media {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.application-card__cap {
+  padding-top: var(--space-4);
+}
+
+.application-card__cap p {
   font-family: var(--font-sans);
   font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-body);
+  margin: var(--space-2) 0 0;
+}
+
+/* ─ Sensory profile column ────────────────────────────────────────────── */
+.sensory-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  padding: var(--space-2) 0;
+}
+
+/* ─ Botanical matrix leftovers ────────────────────────────────────────── */
+/* The class the JSX actually sets. stroke-width deliberately overrides the
+   strokeWidth="0.5"/"0.8" attributes on the paths: in a 100-unit viewBox drawn
+   at 24px those compute to well under half a device pixel and vanish. */
+.matrix-sketch-svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  stroke-width: 1.5;
+}
+
+.botanical-detail-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.botanical-detail-empty {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.6;
   color: var(--makara-600);
-  margin-bottom: 24px;
-  letter-spacing: 0.05em;
+  text-align: center;
+  padding: var(--space-8) var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .ritual-section { padding: 60px 20px; }
+  .ritual-main-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  .ritual-interactive { position: static; }
+  .application-grid { grid-template-columns: 1fr; gap: var(--space-6); margin-top: var(--space-7); padding-top: var(--space-7); }
+  .respiration-tool { min-height: 0; padding: var(--space-6) var(--space-5); }
 }
 
 /* ─ Shop Grid Hover Media Overlays ────────────────────────────────────── */

@@ -3,15 +3,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ScrollText, Sparkles, Users, ArrowRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { ScrollText, Sparkles, Users, ArrowRight, MoveRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
+import PortalFooter from '@/components/brand/PortalFooter';
 import Button from '@/components/core/Button';
-import Tag from '@/components/core/Tag';
-import Divisions from '@/components/brand/Divisions';
 import ImageSlot from '@/components/ImageSlot';
 import LanguageSelector from '@/components/LanguageSelector';
+import HeroVideo from '@/components/HeroVideo';
+import ParallaxLayer from '@/components/ParallaxLayer';
+import useScrollReveal from '@/hooks/useScrollReveal';
 
 const iconMap = {
   'scroll-text': ScrollText,
@@ -19,7 +21,11 @@ const iconMap = {
   'users': Users
 };
 
-/* ---- Replicated Sub-components from Home Page ---- */
+/* Swap these two for the hi-res replacements once they land in public/images. */
+const HERO_STILL = '/images/hero.jpg';
+const FOUNDER_PORTRAIT = '/images/store/founder-portrait.jpg';
+
+/* ---- Navigation ---- */
 
 function PortalNav({ go }) {
   const { t } = useLanguage();
@@ -66,21 +72,90 @@ function PortalNav({ go }) {
   );
 }
 
+/* ---- Botanical cutout layers ----------------------------------------
+   Uses transparent PNGs from public/images/cutouts when supplied; falls
+   back to line art in the same house style as the /apothecary sketches.
+   ------------------------------------------------------------------- */
+
+function SprigSketch() {
+  return (
+    <svg viewBox="0 0 100 140" className="hero-cutout__sketch" role="presentation">
+      <path d="M50 136 C50 100 50 60 50 8" />
+      <path d="M50 112 C34 108 24 96 22 82 C38 84 48 96 50 112 Z" />
+      <path d="M50 92 C66 88 76 76 78 62 C62 64 52 76 50 92 Z" />
+      <path d="M50 68 C34 64 24 52 22 38 C38 40 48 52 50 68 Z" />
+      <path d="M50 44 C66 40 76 28 78 14 C62 16 52 28 50 44 Z" />
+    </svg>
+  );
+}
+
+function StarAniseSketch() {
+  return (
+    <svg viewBox="0 0 100 100" className="hero-cutout__sketch" role="presentation">
+      <circle cx="50" cy="50" r="11" />
+      {[0, 45, 90, 135, 180, 225, 270, 315].map(a => (
+        <path key={a} d="M50 40 L58 16 L50 6 L42 16 Z" transform={`rotate(${a} 50 50)`} />
+      ))}
+    </svg>
+  );
+}
+
+function PodSketch() {
+  return (
+    <svg viewBox="0 0 100 120" className="hero-cutout__sketch" role="presentation">
+      <path d="M50 8 C74 32 78 76 50 112 C22 76 26 32 50 8 Z" />
+      <path d="M50 14 L50 106" />
+      <path d="M36 44 C44 50 56 50 64 44" />
+      <path d="M34 68 C44 76 56 76 66 68" />
+    </svg>
+  );
+}
+
+const CUTOUTS = [
+  { cls: 'hero-cutout--a', speed: 'mid',  src: '/images/cutouts/sprig.png',      Fallback: SprigSketch },
+  { cls: 'hero-cutout--b', speed: 'fast', src: '/images/cutouts/star-anise.png', Fallback: StarAniseSketch },
+  { cls: 'hero-cutout--c', speed: 'slow', src: '/images/cutouts/pod.png',        Fallback: PodSketch }
+];
+
+function HeroCutout({ item }) {
+  // The PNG set is user-supplied; if a file is missing we fall through to the
+  // line-art sketch rather than leaving a broken-image box in the hero.
+  const [failed, setFailed] = useState(false);
+  const { Fallback } = item;
+  return (
+    <ParallaxLayer speed={item.speed} className={`hero-cutout ${item.cls}`}>
+      {failed ? (
+        <Fallback />
+      ) : (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={item.src} alt="" onError={() => setFailed(true)} />
+      )}
+    </ParallaxLayer>
+  );
+}
+
+/* ---- Sections ---- */
+
 function Hero({ go }) {
   const { t } = useLanguage();
   return (
-    <section className="hero" id="top">
-      <div className="hero__bg">
+    <section className="hero hero-px" id="top">
+      <ParallaxLayer speed="slow" className="hero__bg">
         <Image
-          src="/images/hero.jpg"
-          alt="Apiban Bo Plup Apothecary Heritage Hero Background"
+          src={HERO_STILL}
+          alt=""
           fill
           priority
           sizes="100vw"
           quality={90}
           style={{ objectFit: 'cover' }}
         />
+      </ParallaxLayer>
+
+      <div className="hero-cutouts">
+        {CUTOUTS.map(item => <HeroCutout key={item.cls} item={item} />)}
       </div>
+
       <div className="hero__scrim" />
       <div className="hero__inner">
         <div className="apb-eyebrow hero__eyebrow">{t("home.hero.eyebrow")}</div>
@@ -117,24 +192,76 @@ function Prestige() {
   );
 }
 
+/* Counts a number up the first time it scrolls into view. Reduced motion and
+   the no-IntersectionObserver path both land on the final value immediately —
+   the figure is content, not decoration, so it may never be withheld. */
+function CountUp({ value, suffix }) {
+  const target = Number(value);
+  const ref = useRef(null);
+  const [shown, setShown] = useState(target);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !Number.isFinite(target)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = null;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      const start = performance.now();
+      const from = target > 1000 ? target - 60 : 0;
+      const tick = (now) => {
+        const p = Math.min((now - start) / 1400, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setShown(Math.round(from + (target - from) * eased));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      setShown(from);
+      raf = requestAnimationFrame(tick);
+    }, { threshold: 0.5 });
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [target]);
+
+  return <span ref={ref}>{Number.isFinite(target) ? shown : value}{suffix}</span>;
+}
+
+function LegacyNumbers() {
+  const { t } = useLanguage();
+  const items = ["n1", "n2", "n3"];
+  return (
+    <section className="legacy" aria-labelledby="legacy-title">
+      <ParallaxLayer speed="down" as="img" className="legacy__mark" src="/images/motif.svg" alt="" />
+      <div className="legacy__grid">
+        {items.map((id, i) => (
+          <div className={`legacy__item reveal reveal-delay-${i}`} key={id}>
+            <p className="legacy__num">
+              <CountUp
+                value={t(`home.numbers.items.${id}.value`)}
+                suffix={t(`home.numbers.items.${id}.suffix`)}
+              />
+            </p>
+            <p className="legacy__label">{t(`home.numbers.items.${id}.label`)}</p>
+            <p className="legacy__note">{t(`home.numbers.items.${id}.note`)}</p>
+          </div>
+        ))}
+      </div>
+      <h2 id="legacy-title" className="apb-sr-only">{t("home.numbers.title")}</h2>
+    </section>
+  );
+}
+
 function Pillars() {
   const { t } = useLanguage();
   const data = [
-    {
-      icon: "scroll-text",
-      t: t("home.pillars.legacy.title"),
-      b: t("home.pillars.legacy.desc")
-    },
-    {
-      icon: "sparkles",
-      t: t("home.pillars.magic.title"),
-      b: t("home.pillars.magic.desc")
-    },
-    {
-      icon: "users",
-      t: t("home.pillars.craft.title"),
-      b: t("home.pillars.craft.desc")
-    }
+    { icon: "scroll-text", t: t("home.pillars.legacy.title"), b: t("home.pillars.legacy.desc") },
+    { icon: "sparkles",    t: t("home.pillars.magic.title"),  b: t("home.pillars.magic.desc") },
+    { icon: "users",       t: t("home.pillars.craft.title"),  b: t("home.pillars.craft.desc") }
   ];
   return (
     <section className="pillars">
@@ -143,7 +270,7 @@ function Pillars() {
           const Icon = iconMap[p.icon];
           return (
             <React.Fragment key={p.t}>
-              <div className="pillar">
+              <div className={`pillar reveal reveal-delay-${i}`}>
                 {Icon && <Icon className="pillar__icon" />}
                 <h3 className="pillar__t">{p.t}</h3>
                 <p className="pillar__b">{p.b}</p>
@@ -157,43 +284,138 @@ function Pillars() {
   );
 }
 
-function RedBook({ go }) {
+/* The page's only pinned section. The media column sticks while three text
+   chapters scroll past it, cross-fading a photograph per chapter. Pinning is
+   released below 900px in parallax.css — it fights native scroll on touch. */
+const RBOOK_CHAPTERS = [
+  { id: "c1", slot: "portal-rbook-1" },
+  { id: "c2", slot: "portal-rbook-2" },
+  { id: "c3", slot: "portal-rbook-3" }
+];
+
+function RedBookChapters({ go }) {
   const { t } = useLanguage();
+  const [active, setActive] = useState(0);
+  const stageRefs = useRef([]);
+
+  useEffect(() => {
+    const els = stageRefs.current.filter(Boolean);
+    if (!els.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(Number(entry.target.dataset.stage));
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="redbook" id="story">
-      <div className="redbook__media">
-        <ImageSlot
-          id="portal-redbook"
-          shape="rounded"
-          radius="14"
-          fit="cover"
-          placeholder="Drop 'The Red Book' — aged paper texture + herbs"
-        />
-        <div className="redbook__mark" />
-      </div>
-      <div className="redbook__text">
-        <div className="apb-eyebrow" style={{ marginBottom: 16 }}>{t("home.redbook.eyebrow")}</div>
-        <h2 className="redbook__h">
-          {t("home.redbook.title_1")}<br/>
-          {t("home.redbook.title_2")}
-        </h2>
-        <p className="redbook__b">{t("home.redbook.body")}</p>
-        <Button variant="secondary" onClick={() => go("story")}>{t("home.redbook.button")}</Button>
+    <section className="rbook" id="story">
+      <div className="rbook__inner">
+        <div className="rbook__sticky">
+          <div className="rbook__media">
+            {RBOOK_CHAPTERS.map((c, i) => (
+              <div
+                key={c.id}
+                className={`rbook__frame${i === active ? ' is-active' : ''}`}
+                aria-hidden={i !== active}
+              >
+                <ImageSlot
+                  id={c.slot}
+                  shape="rect"
+                  fit="cover"
+                  placeholder={t(`home.redbook.chapters.${c.id}.title`)}
+                />
+              </div>
+            ))}
+            <div className="rbook__mark" aria-hidden="true" />
+          </div>
+        </div>
+
+        <div className="rbook__stages">
+          <div className="apb-eyebrow rbook__eyebrow">{t("home.redbook.eyebrow")}</div>
+          {RBOOK_CHAPTERS.map((c, i) => (
+            <article
+              className="rbstage reveal"
+              key={c.id}
+              data-stage={i}
+              ref={(el) => { stageRefs.current[i] = el; }}
+            >
+              <div className="rbstage__idx">{t(`home.redbook.chapters.${c.id}.idx`)}</div>
+              <div className="rbstage__rule" aria-hidden="true" />
+              <h2 className="rbstage__h">{t(`home.redbook.chapters.${c.id}.title`)}</h2>
+              <p className="rbstage__b">{t(`home.redbook.chapters.${c.id}.body`)}</p>
+              {i === RBOOK_CHAPTERS.length - 1 && (
+                <div>
+                  <Button variant="secondary" onClick={() => go("story")}>
+                    {t("home.redbook.button")}
+                  </Button>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-function ApothecarySide({ id, tone, tagline, title, body, slotId, ph }) {
+const PROVENANCE = ["p1", "p2", "p3", "p4", "p5", "p6"];
+
+function Provenance() {
+  const { t } = useLanguage();
+  return (
+    <section className="prov" aria-labelledby="prov-title">
+      <div className="prov__head reveal">
+        <div>
+          <div className="apb-eyebrow">{t("home.provenance.eyebrow")}</div>
+          <h2 className="prov__title" id="prov-title">{t("home.provenance.title")}</h2>
+        </div>
+        <p className="prov__hint">
+          {t("home.provenance.hint")}
+          <MoveRight size={15} aria-hidden="true" />
+        </p>
+      </div>
+
+      {/* A plain scroll container: keyboard-reachable, snap-aligned, and no
+          JS carousel timer to fight the user's own scrolling. */}
+      <ul className="prov__track" tabIndex={0} aria-label={t("home.provenance.title")}>
+        {PROVENANCE.map((id, i) => (
+          <li className="prov__card" key={id}>
+            <div className="prov__media">
+              <ImageSlot
+                id={`portal-prov-${i + 1}`}
+                shape="rect"
+                fit="cover"
+                placeholder={t(`home.provenance.items.${id}.name`)}
+              />
+            </div>
+            <div className="prov__body">
+              <div className="prov__idx">{String(i + 1).padStart(2, "0")}</div>
+              <h3 className="prov__name">{t(`home.provenance.items.${id}.name`)}</h3>
+              <p className="prov__origin">{t(`home.provenance.items.${id}.origin`)}</p>
+              <p className="prov__desc">{t(`home.provenance.items.${id}.desc`)}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function ApothecarySide({ tone, tagline, title, body, slotId, ph }) {
   return (
     <div className={"apo__side apo__side--" + tone}>
       <div className="apo__media">
-        <ImageSlot
-          id={slotId}
-          shape="rect"
-          fit="cover"
-          placeholder={ph}
-        />
+        <ParallaxLayer speed="slow" style={{ position: 'absolute', inset: '-8% 0' }}>
+          <ImageSlot id={slotId} shape="rect" fit="cover" placeholder={ph} />
+        </ParallaxLayer>
       </div>
       <div className="apo__body">
         <div className="apo__tagline">{tagline}</div>
@@ -227,92 +449,100 @@ function Apothecary({ go }) {
         />
       </div>
       <div className="apo__cta">
-        <Button size="lg" onClick={() => go("collection")}>{t("home.apothecary.button")}</Button>
+        <Button size="lg" onClick={() => go("rituals")}>{t("home.apothecary.button")}</Button>
       </div>
     </section>
   );
 }
 
-function Gallery() {
+function FounderQuote() {
   const { t } = useLanguage();
-  const items = [
-    { id: "portal-gallery-1", cap: t("home.gallery.items.g1") },
-    { id: "portal-gallery-2", cap: t("home.gallery.items.g2") },
-    { id: "portal-gallery-3", cap: t("home.gallery.items.g3") },
-    { id: "portal-gallery-4", cap: t("home.gallery.items.g4") },
-    { id: "portal-gallery-5", cap: t("home.gallery.items.g5") },
-    { id: "portal-gallery-6", cap: t("home.gallery.items.g6") },
-    { id: "portal-gallery-7", cap: t("home.gallery.items.g7") },
-    { id: "portal-gallery-8", cap: t("home.gallery.items.g8") }
-  ];
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
+  return (
+    <section className="fquote grain">
+      <div className="fquote__bg px-zoom">
+        <Image
+          src={FOUNDER_PORTRAIT}
+          alt={t("home.quote.alt")}
+          fill
+          loading="lazy"
+          sizes="100vw"
+          quality={85}
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
+      <div className="fquote__scrim" aria-hidden="true" />
+      <blockquote className="fquote__inner reveal">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="fquote__mark" src="/images/motif.svg" alt="" />
+        <p className="fquote__text">{t("home.quote.text")}</p>
+        <footer>
+          <p className="fquote__attrib">{t("home.quote.attrib")}</p>
+          <p className="fquote__role">{t("home.quote.role")}</p>
+        </footer>
+      </blockquote>
+    </section>
+  );
+}
 
+const GALLERY_ITEMS = ["g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8"];
+
+function GalleryTrack() {
+  const { t } = useLanguage();
+  const railRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+
+  // Progress bar only — the scrolling itself is native CSS scroll-snap, so
+  // there is no timer competing with the user for control of the track.
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || paused) return;
-    const tTimer = setInterval(() => setI(v => (v + 1) % items.length), 4200);
-    return () => clearInterval(tTimer);
-  }, [paused, items.length]);
+    const rail = railRef.current;
+    if (!rail) return;
+    let raf = null;
+    const measure = () => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      setProgress(max > 0 ? rail.scrollLeft / max : 1);
+      raf = null;
+    };
+    const onScroll = () => { if (raf === null) raf = requestAnimationFrame(measure); };
+    measure();
+    rail.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      rail.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
-    <section
-      className="gallery"
-      id="gallery"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="gallery__head">
+    <section className="gtrack" id="gallery" aria-labelledby="gtrack-title">
+      <div className="gtrack__head reveal">
         <div className="apb-eyebrow">{t("home.gallery.eyebrow")}</div>
-        <h2 className="gallery__h">{t("home.gallery.title")}</h2>
-        <p className="gallery__b">{t("home.gallery.desc")}</p>
+        <h2 className="gtrack__h" id="gtrack-title">{t("home.gallery.title")}</h2>
+        <p className="gtrack__b">{t("home.gallery.desc")}</p>
       </div>
-      <div className="gallery__stage">
-        {items.map((it, idx) => (
-          <div className={"gallery__slide" + (idx === i ? " is-active" : "")} key={it.id}>
+
+      <ul className="gtrack__rail" ref={railRef} tabIndex={0} aria-label={t("home.gallery.title")}>
+        {GALLERY_ITEMS.map((id, i) => (
+          <li className="gtrack__item" key={id}>
             <ImageSlot
-              id={it.id}
+              id={`portal-gallery-${i + 1}`}
               shape="rect"
               fit="cover"
-              placeholder={it.cap}
+              placeholder={t(`home.gallery.items.${id}`)}
             />
-          </div>
+            <div className="gtrack__scrim" aria-hidden="true" />
+            <p className="gtrack__cap">{t(`home.gallery.items.${id}`)}</p>
+          </li>
         ))}
-        <div className="gallery__scrim" />
-        <div className="gallery__caption">{items[i].cap}</div>
-        <div className="gallery__nav">
-          <button
-            className="gallery__arrow"
-            aria-label="Previous"
-            onClick={() => setI(v => (v - 1 + items.length) % items.length)}
-          >
-            ‹
-          </button>
-          <button
-            className="gallery__arrow"
-            aria-label="Next"
-            onClick={() => setI(v => (v + 1) % items.length)}
-          >
-            ›
-          </button>
+      </ul>
+
+      <div className="gtrack__bar" aria-hidden="true">
+        <div>
+          <div
+            className="gtrack__progress"
+            style={{ transform: `scaleX(${Math.max(progress, 0.08)})` }}
+          />
         </div>
-      </div>
-      <div className="gallery__thumbs">
-        {items.map((it, idx) => (
-          <button
-            key={it.id}
-            className={"gallery__thumb" + (idx === i ? " is-active" : "")}
-            aria-label={it.cap}
-            onClick={() => setI(idx)}
-          >
-            <ImageSlot
-              id={it.id}
-              shape="rect"
-              fit="cover"
-              placeholder={String(idx + 1)}
-            />
-          </button>
-        ))}
       </div>
     </section>
   );
@@ -324,14 +554,17 @@ function Continuum() {
   return (
     <section className="cont" id="collection">
       <div className="cont__media">
-        <ImageSlot
-          id="portal-lifestyle"
-          shape="rect"
-          fit="cover"
-          placeholder="Lifestyle — a modern professional using the product in a premium setting"
-        />
+        <ParallaxLayer speed="slow" style={{ position: 'absolute', inset: '-8% 0' }}>
+          <ImageSlot
+            id="portal-lifestyle"
+            shape="rect"
+            fit="cover"
+            placeholder="Lifestyle — a modern professional using the product in a premium setting"
+          />
+        </ParallaxLayer>
       </div>
-      <div className="cont__panel">
+      <div className="cont__panel reveal">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="cont__mark" src="/images/motif.svg" alt="" />
         <h2 className="cont__h">{t("home.continuum.title")}</h2>
         <p className="cont__b">{t("home.continuum.desc")}</p>
@@ -344,419 +577,111 @@ function Continuum() {
   );
 }
 
-function PortalFooter() {
-  const { t } = useLanguage();
-  const col = (h, items) => (
-    <div key={h}>
-      <div className="pf__h">{h}</div>
-      {items.map(i => <div className="pf__i" key={i}>{i}</div>)}
-    </div>
-  );
-  return (
-    <footer className="pf">
-      <div className="pf__grid">
-        <div>
-          <Logo width={170} color="#f0ebe2" />
-          <p className="pf__blurb">{t("footer.blurb")}</p>
-        </div>
-        {col(t("footer.explore"), [t("nav.collection"), t("home.redbook.button"), t("nav.heritage"), "Journal"])}
-        {col(t("footer.company"), [t("shop.story.eyebrow"), "Stockists", "Corporate & gifting", "Contact"])}
-        {col(t("footer.connect"), [t("footer.connectItems.0"), t("footer.connectItems.1"), t("footer.connectItems.2")])}
-      </div>
-      <div className="pf__base">
-        <span>{t("footer.copy")}</span>
-        <span>{t("footer.privacy")}</span>
-      </div>
-    </footer>
-  );
-}
+/* ---- Page ---- */
 
-/* ---- Main Parallax Reveal Page Component ---- */
-
-export default function App() {
+export default function Home() {
   const router = useRouter();
-  const { t } = useLanguage();
-  const iframeRef = useRef(null);
-  
-  const [scrollY, setScrollY] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(800);
-  const [isMuted, setIsMuted] = useState(true);
-  const [showMuteOverlay, setShowMuteOverlay] = useState(false);
+  const { t, language } = useLanguage();
+  const rootRef = useRef(null);
 
-  // Setup scroll and height measurements on client side
+  // Coarse booleans only. `--p` carries the continuous value; these two flip
+  // at most a handful of times per session, so React never renders per frame.
+  const [pastColdOpen, setPastColdOpen] = useState(false);
+  const [showCta, setShowCta] = useState(false);
+
+  useScrollReveal([language]);
+
   useEffect(() => {
-    setWindowHeight(window.innerHeight);
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+    const root = rootRef.current;
+    if (!root) return;
+
+    let raf = null;
+    let lastPast = false;
+    let lastCta = false;
+
+    const tick = () => {
+      raf = null;
+      const h = window.innerHeight || 800;
+      const p = Math.min(Math.max(window.scrollY / h, 0), 1);
+      root.style.setProperty('--p', String(p));
+
+      const past = p >= 0.9;
+      if (past !== lastPast) { lastPast = past; setPastColdOpen(past); }
+
+      // Hide the floating CTA once the real Continuum CTA is on screen, so the
+      // user is never shown the same action twice.
+      const cont = document.getElementById('collection');
+      const contTop = cont ? cont.getBoundingClientRect().top : Infinity;
+      const cta = p >= 1 && contTop > h * 0.6;
+      if (cta !== lastCta) { lastCta = cta; setShowCta(cta); }
     };
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
+
+    const onScroll = () => { if (raf === null) raf = requestAnimationFrame(tick); };
+    tick();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
-  // YouTube Shorts ID: JKFGev-fdqw
-  const videoId = 'JKFGev-fdqw';
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&enablejsapi=1`;
-
-  // Programmatic API triggers
-  const postCommand = (func, args = []) => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      try {
-        iframeRef.current.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: func, args: args }),
-          '*'
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
-
-  const toggleMute = (e) => {
-    e.stopPropagation();
-    if (isMuted) {
-      postCommand('unMute');
-      setIsMuted(false);
-    } else {
-      postCommand('mute');
-      setIsMuted(true);
-    }
-    setShowMuteOverlay(true);
-  };
-
-
-  useEffect(() => {
-    if (showMuteOverlay) {
-      const timer = setTimeout(() => setShowMuteOverlay(false), 800);
-      return () => clearTimeout(timer);
-    }
-  }, [showMuteOverlay]);
-
-  // Page anchor scroll handler
+  // Heritage and the Apothecary live on their own routes; everything else is
+  // an in-page scroll so the teaser sections keep their anchors.
   const go = (id) => {
     if (id === "top") return window.scrollTo({ top: 0, behavior: "smooth" });
-    if (id === "story") {
-      const el = document.getElementById("story");
-      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
-      return;
-    }
-    if (id === "apothecary") {
-      const el = document.getElementById("apothecary");
-      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
-      return;
-    }
+    if (id === "story") return router.push("/heritage");
+    if (id === "rituals") return router.push("/apothecary");
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
 
-  // Parallax Scroll calculations: transition completes over 1 full viewport scroll
-  const scrollThreshold = windowHeight > 0 ? windowHeight : 800;
-  const progress = Math.min(Math.max(scrollY / scrollThreshold, 0), 1);
-
-  // Video transitions derived from progress:
-  // - Opacity: fades from 1.0 down to 0.0
-  // - Scaling/Expansion (Desktop only): expands outwards slightly as you scroll
-  const desktopWidth = `calc( (70vh * 9 / 16) + (100vw - (70vh * 9 / 16)) * ${progress} )`;
-  const desktopHeight = `calc( 70vh + (100vh - 70vh) * ${progress} )`;
-  const desktopRadius = `${16 * (1 - progress)}px`;
-  const desktopShadow = `0 ${24 * (1 - progress)}px ${70 * (1 - progress)}px rgba(0, 0, 0, ${0.8 * (1 - progress)})`;
-  
-  // Visibility threshold: hide fixed video layer completely once faded to save browser rendering resources
-  const isVideoHidden = progress >= 0.99;
-
   return (
-    <div className="portal parallax-reveal-page">
-      {/* Dynamic Navbar Wrapper: Fades in and slides down once the video section ends */}
-      <div className="video-page-nav-wrapper" style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        opacity: progress >= 0.9 ? 1 : 0,
-        transform: `translateY(${progress >= 0.9 ? '0' : '-100%'})`,
-        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-        pointerEvents: progress >= 0.9 ? 'auto' : 'none',
-      }}>
+    <div className="px-page" ref={rootRef}>
+      <div className={`px-nav${pastColdOpen ? ' is-on' : ''}`}>
         <PortalNav go={go} />
       </div>
 
-      {/* 
-        Sticky Video Layer (Fixed behind the scrolling homepage contents):
-        Fades out and expands on desktop, fades out on mobile.
-      */}
-      {!isVideoHidden && (
-        <div 
-          className="parallax-video-sticky" 
-          style={{ opacity: 1 - progress }}
-        >
-          {/* Main Expanding Video container */}
-          <div className="scroll-video-box" style={{
-            '--d-width': desktopWidth,
-            '--d-height': desktopHeight,
-            '--d-radius': desktopRadius,
-            '--d-shadow': desktopShadow
-          }}>
-            {/* Click-capture overlay to intercept pointer clicks */}
-            <div className="scroll-video-click-layer" />
+      {/* Fixed cold open. Lives outside `.portal` on purpose: that element sets
+          container-type, which makes it a containing block for fixed children. */}
+      <div className="cold-open" aria-hidden={pastColdOpen}>
+        <div className="cold-open__frame">
+          <HeroVideo />
+        </div>
+        <div className="hero__scroll cold-open__cue">{t("home.hero.scroll")}</div>
+      </div>
 
-            {/* Visual indicators */}
-            <div className={`feedback-indicator ${showMuteOverlay ? 'active' : ''}`}>
-              {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
-            </div>
+      <div className="px-scroll">
+        <div className="px-spacer" />
 
-            {/* Corner audio trigger (fades with scrolling) */}
-            <button 
-              className="sound-toggle-btn"
-              onClick={toggleMute}
-              style={{ opacity: 1 - progress, pointerEvents: progress > 0.8 ? 'none' : 'auto' }}
-              aria-label={isMuted ? "Unmute Video" : "Mute Video"}
-            >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-
-            {/* Cropped YouTube Embed Frame */}
-            <div className="scroll-iframe-cropper">
-              <iframe
-                ref={iframeRef}
-                className="scroll-video-iframe"
-                src={embedUrl}
-                title="Apiban Bo Plup YouTube Video"
-                allow="autoplay; encrypted-media; gyroscope"
-                tabIndex="-1"
-              />
-            </div>
+        <div className="portal px-portal">
+          <div className="px-hero-wrap">
+            <Hero go={go} />
           </div>
 
-          {/* Centered Scroll Prompt (fades as user scrolls) */}
-          <div className="hero__scroll scroll-hero-cue" style={{ opacity: 1 - progress }}>
-            {t("home.hero.scroll")}
+          <div className="px-sections">
+            <Prestige />
+            <LegacyNumbers />
+            <Pillars />
+            <RedBookChapters go={go} />
+            <Provenance />
+            <Apothecary go={go} />
+            <FounderQuote />
+            <GalleryTrack />
+            <Continuum />
+            <PortalFooter go={go} />
           </div>
-        </div>
-      )}
-
-      {/* 
-        Scrolling Content Layer (Slides UP on top of the fixed background video):
-      */}
-      <div className="parallax-scroll-content">
-        
-        {/* 
-          1st Section: Transparent spacer of 100vh.
-          Allows the fixed video layer to be fully seen initially.
-          Clicks at scroll=0 pass directly through this transparent container to the video.
-        */}
-        <div className="parallax-spacer-section" />
-
-        {/* 
-          2nd Section: The actual homepage Hero section.
-          Slides up over the video as the user scrolls, initiating the parallax transition.
-        */}
-        <div className="parallax-homepage-hero" style={{ opacity: progress }}>
-          <Hero go={go} />
-        </div>
-
-        {/* Remaining homepage sections scroll naturally */}
-        <div className="parallax-other-sections">
-          <Prestige />
-          <Pillars />
-          <RedBook go={go} />
-          <Apothecary go={go} />
-          <Gallery />
-          <Continuum />
-          <PortalFooter />
         </div>
       </div>
 
-      {/* Styled layouts for parallax mechanisms */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        .parallax-reveal-page {
-          overflow-x: hidden;
-          background-color: var(--surface-ink);
-        }
-
-        .parallax-reveal-page .pillars {
-          background: #0d0f0e; /* Deep charcoal background block */
-          border-top: 1px solid rgba(203, 181, 147, 0.12);
-          border-bottom: 1px solid rgba(203, 181, 147, 0.12);
-        }
-        .parallax-reveal-page .pillar__rule {
-          background: rgba(203, 181, 147, 0.12);
-        }
-        .parallax-reveal-page .pillar__t {
-          color: var(--text-on-dark-strong, #ffffff);
-        }
-        .parallax-reveal-page .pillar__b {
-          color: var(--text-on-dark, #f0ebe2);
-          opacity: 0.85;
-        }
-
-        /* Fixed Background Video view */
-        .parallax-video-sticky {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          height: 100dvh;
-          z-index: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          overflow: hidden;
-          background-color: var(--surface-ink);
-          pointer-events: auto; /* Allow interactions on the click overlays */
-          transition: opacity 0.1s linear;
-        }
-
-        /* Scrolling content overlay */
-        .parallax-scroll-content {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-          pointer-events: none; /* Let pointer pass through the transparent sections to the video */
-        }
-
-        /* Transparent initial spacer section (100vh viewport) */
-        .parallax-spacer-section {
-          height: 100vh;
-          height: 100dvh;
-          width: 100%;
-          pointer-events: none; /* Non-blocking */
-        }
-
-        /* The Hero section and subsequent parts block pointer actions for normal page buttons */
-        .parallax-homepage-hero,
-        .parallax-other-sections {
-          position: relative;
-          pointer-events: auto; /* Normal interaction for text buttons and navigation links */
-          background-color: var(--surface-ink); /* Cover the background video */
-        }
-
-        /* Expanding Video element styles */
-        .scroll-video-box {
-          position: absolute;
-          background-color: #000;
-          overflow: hidden;
-        }
-
-        .scroll-video-click-layer {
-          position: absolute;
-          inset: 0;
-          z-index: 5;
-          cursor: default;
-        }
-
-        .scroll-iframe-cropper {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          transform: scale(1.22);
-          transform-origin: center center;
-        }
-
-        .scroll-video-iframe {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          border: none;
-          pointer-events: none;
-        }
-
-        .scroll-hero-cue {
-          position: absolute;
-          bottom: 32px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 9;
-          transition: opacity 0.2s ease;
-        }
-
-        /* Desktop Layout specifications using variables */
-        @media (min-width: 901px) {
-          .scroll-video-box {
-            width: var(--d-width);
-            height: var(--d-height);
-            border-radius: var(--d-radius);
-            box-shadow: var(--d-shadow);
-          }
-        }
-
-        /* Mobile Layout specifications */
-        @media (max-width: 900px) {
-          .scroll-video-box {
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            border-radius: 0px;
-          }
-        }
-
-        /* Central interaction indicators */
-        .feedback-indicator {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(0.8);
-          background: rgba(11, 13, 12, 0.8);
-          border: 1px solid rgba(203, 181, 147, 0.3);
-          color: #f0ebe2;
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 6;
-          opacity: 0;
-          pointer-events: none;
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .feedback-indicator.active {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-
-        /* Corner audio button styling */
-        .sound-toggle-btn {
-          position: absolute;
-          bottom: 24px;
-          right: 24px;
-          z-index: 10;
-          background: rgba(11, 13, 12, 0.75);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(203, 181, 147, 0.3);
-          color: #f0ebe2;
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        .sound-toggle-btn:hover {
-          background: #3e5044;
-          border-color: #cbb593;
-          transform: scale(1.05);
-        }
-
-      ` }} />
+      <div className={`px-cta${showCta ? ' is-on' : ''}`}>
+        <span className="px-cta__label">{t("home.stickyCta.label")}</span>
+        <button type="button" className="px-cta__btn" onClick={() => router.push('/shop')}>
+          {t("home.stickyCta.button")}
+          <ArrowRight size={15} aria-hidden="true" />
+        </button>
+      </div>
     </div>
   );
 }

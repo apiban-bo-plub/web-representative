@@ -158,6 +158,9 @@
   .pf__blurb { font-family: var(--font-sans); font-size: 13px; color: var(--makara-200); max-width: 260px; margin-top: 16px; line-height: 1.6; }
   .pf__h { font: var(--type-caption); letter-spacing: .14em; text-transform: uppercase; color: var(--makara-300); margin-bottom: 16px; }
   .pf__i { font-family: var(--font-sans); font-size: 13px; color: var(--makara-100); margin-bottom: 8px; opacity: .9; }
+  .pf__i--link { cursor: pointer; transition: opacity .2s ease, color .2s ease; }
+  .pf__i--link:hover, .pf__i--link:focus-visible { opacity: 1; color: #f0ebe2; }
+  .pf__i--link:focus-visible { outline: 1px solid var(--brand-gold); outline-offset: 3px; }
   .pf__base { max-width: 1180px; margin: 0 auto; padding: 0 48px 40px; }
   .pf__base { border-top: 1px solid rgba(240,235,226,.16); }
   .pf__base { display: flex; justify-content: space-between; font-family: var(--font-sans); font-size: 12px; color: var(--makara-300); padding-top: 24px; }
