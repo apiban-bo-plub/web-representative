@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ScrollText, Sparkles, Users, ArrowRight, MoveRight } from 'lucide-react';
+import { ScrollText, Sparkles, Users, MoveRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 import Logo from '@/components/brand/Logo';
@@ -22,7 +22,7 @@ const iconMap = {
 };
 
 /* Swap these two for the hi-res replacements once they land in public/images. */
-const HERO_STILL = '/images/hero.jpg';
+const HERO_STILL = '/images/products/hands-holding-inhaler-and-oil.jpg';
 const FOUNDER_PORTRAIT = '/images/store/founder-portrait.jpg';
 
 /* ---- Navigation ---- */
@@ -48,6 +48,7 @@ function PortalNav({ go }) {
         {L("collection", "nav.collection")}
         {L("story", "nav.heritage")}
         {L("apothecary", "nav.apothecary")}
+        {L("contact", "nav.contact")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
@@ -63,6 +64,7 @@ function PortalNav({ go }) {
           {L("collection", "nav.collection", "pn__drawerLink")}
           {L("story", "nav.heritage", "pn__drawerLink")}
           {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          {L("contact", "nav.contact", "pn__drawerLink")}
           <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <LanguageSelector align="left" />
           </div>
@@ -569,8 +571,8 @@ function Continuum() {
         <h2 className="cont__h">{t("home.continuum.title")}</h2>
         <p className="cont__b">{t("home.continuum.desc")}</p>
         <div className="cont__cta">
-          <Button size="lg" onClick={() => router.push('/shop')}>{t("home.continuum.button_shop")}</Button>
-          <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }}>{t("home.continuum.button_gift")}</Button>
+          <Button size="lg" onClick={() => router.push('/contact')}>{t("home.continuum.button_contact")}</Button>
+          <Button size="lg" variant="secondary" style={{ color: "#f0ebe2", borderColor: "rgba(240,235,226,.6)" }} onClick={() => router.push('/contact?inquiry=corporate')}>{t("home.continuum.button_gift")}</Button>
         </div>
       </div>
     </section>
@@ -587,7 +589,6 @@ export default function Home() {
   // Coarse booleans only. `--p` carries the continuous value; these two flip
   // at most a handful of times per session, so React never renders per frame.
   const [pastColdOpen, setPastColdOpen] = useState(false);
-  const [showCta, setShowCta] = useState(false);
 
   useScrollReveal([language]);
 
@@ -597,7 +598,6 @@ export default function Home() {
 
     let raf = null;
     let lastPast = false;
-    let lastCta = false;
 
     const tick = () => {
       raf = null;
@@ -608,12 +608,6 @@ export default function Home() {
       const past = p >= 0.9;
       if (past !== lastPast) { lastPast = past; setPastColdOpen(past); }
 
-      // Hide the floating CTA once the real Continuum CTA is on screen, so the
-      // user is never shown the same action twice.
-      const cont = document.getElementById('collection');
-      const contTop = cont ? cont.getBoundingClientRect().top : Infinity;
-      const cta = p >= 1 && contTop > h * 0.6;
-      if (cta !== lastCta) { lastCta = cta; setShowCta(cta); }
     };
 
     const onScroll = () => { if (raf === null) raf = requestAnimationFrame(tick); };
@@ -633,6 +627,7 @@ export default function Home() {
     if (id === "top") return window.scrollTo({ top: 0, behavior: "smooth" });
     if (id === "story") return router.push("/heritage");
     if (id === "rituals") return router.push("/apothecary");
+    if (id.startsWith("contact")) return router.push(`/${id}`);
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
   };
@@ -675,13 +670,6 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={`px-cta${showCta ? ' is-on' : ''}`}>
-        <span className="px-cta__label">{t("home.stickyCta.label")}</span>
-        <button type="button" className="px-cta__btn" onClick={() => router.push('/shop')}>
-          {t("home.stickyCta.button")}
-          <ArrowRight size={15} aria-hidden="true" />
-        </button>
-      </div>
     </div>
   );
 }

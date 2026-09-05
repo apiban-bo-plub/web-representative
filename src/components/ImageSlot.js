@@ -9,8 +9,8 @@ export default function ImageSlot({ id, shape = 'rounded', radius = 12, fit = 'c
     'portal-phetmongkol': '/images/products/inhaler-and-oil-on-brick.jpg',
     'portal-lifestyle': '/images/products/hands-holding-inhaler-and-oil.jpg',
     // Fallbacks/defaults using the same images to ensure gallery/other slots look complete
-    'portal-gallery-1': '/images/red-book/red-book-open-in-case.jpg',
-    'portal-gallery-2': '/images/store/ceramic-bowls-on-counter.jpg',
+    'portal-gallery-1': '/images/products/thepprasit-inhaler-jar-white-bg.jpg',
+    'portal-gallery-2': '/images/products/gift-set.jpg',
     'portal-gallery-3': '/images/store/apothecary-workshop-session.jpg',
     'portal-gallery-4': '/images/store/balm-jars-ingredients-display.jpg',
     'portal-gallery-5': '/images/event/dried-herbs-in-ceramic-bowls.jpg',

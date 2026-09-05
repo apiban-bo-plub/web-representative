@@ -6,7 +6,8 @@
     "apothecary": "The Apothecary",
     "search": "Search",
     "cart": "Cart",
-    "menu": "Menu"
+    "menu": "Menu",
+    "contact": "Contact"
   },
   "footer": {
     "blurb": "Heritage Thai apothecary. Herbal self-care rituals, crafted in Songkhla.",
@@ -30,8 +31,7 @@
       "LINE @apibanapb",
       "apibanapb@gmail.com"
     ],
-    "copy": "© 2024 Apiban Bo Plup. Product of Songkhla, Thailand.",
-    "privacy": "Privacy · Terms"
+    "copy": "© 2024 Apiban Bo Plup. Product of Songkhla, Thailand."
   },
   "home": {
     "hero": {
@@ -184,7 +184,8 @@
       "title": "Begin Your Ritual.",
       "desc": "Bring the Songkhla legacy into your daily life, or share the authentic Thai wellness experience with the world.",
       "button_shop": "Shop the Collection",
-      "button_gift": "Corporate & Gifting Inquiries"
+      "button_gift": "Corporate & Gifting Inquiries",
+      "button_contact": "Contact Us"
     },
     "stickyCta": {
       "label": "150 years, in your pocket.",
@@ -580,5 +581,37 @@
         ]
       }
     }
+  },
+  "contact": {
+    "eyebrow": "Enquiries",
+    "title": "Speak With the Apothecary",
+    "desc": "Questions about a formulation, stockist enquiries, or corporate gifting — write to us and a member of the family will reply personally.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone / LINE",
+      "company": "Company or organisation",
+      "inquiry": "Nature of enquiry",
+      "message": "Message"
+    },
+    "inquiry": {
+      "general": "General enquiry",
+      "wholesale": "Stockists & wholesale",
+      "corporate": "Corporate gifting",
+      "press": "Press & collaboration"
+    },
+    "submit": "Send enquiry",
+    "sending": "Sending…",
+    "note": "We reply within two business days.",
+    "success": {
+      "title": "Thank you — your message is on its way.",
+      "desc": "We have received your enquiry and will reply to the email address you gave us.",
+      "again": "Send another message"
+    },
+    "error": {
+      "generic": "Something went wrong and the message was not sent. Please try again, or email us directly at apibanapb@gmail.com.",
+      "rateLimited": "Too many messages sent from this connection. Please try again later."
+    },
+    "signature": "Written by hand, in Songkhla — as every reply from this house has been since 1870."
   }
 }

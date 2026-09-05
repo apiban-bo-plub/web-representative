@@ -15,6 +15,9 @@ import Logo from '@/components/brand/Logo';
 // Index-aligned with footer.exploreItems: Collection, The Red Book, Heritage, Journal
 const EXPLORE_TARGETS = ["collection", "story", "story", null];
 
+// Index-aligned with footer.companyItems: Our story, Stockists, Corporate & gifting, Contact
+const COMPANY_TARGETS = ["story", "contact?inquiry=wholesale", "contact?inquiry=corporate", "contact"];
+
 export default function PortalFooter({ go }) {
   const { t } = useLanguage();
 
@@ -59,12 +62,11 @@ export default function PortalFooter({ go }) {
           <p className="pf__blurb">{t("footer.blurb")}</p>
         </div>
         {col(t("footer.explore"), asItems("footer.exploreItems", EXPLORE_TARGETS))}
-        {col(t("footer.company"), asItems("footer.companyItems"))}
+        {col(t("footer.company"), asItems("footer.companyItems", COMPANY_TARGETS))}
         {col(t("footer.connect"), asItems("footer.connectItems"))}
       </div>
       <div className="pf__base">
         <span>{t("footer.copy")}</span>
-        <span>{t("footer.privacy")}</span>
       </div>
     </footer>
   );

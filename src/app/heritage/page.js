@@ -34,6 +34,7 @@ function PortalNav({ go }) {
         {L("collection", "nav.collection")}
         {L("story", "nav.heritage")}
         {L("apothecary", "nav.apothecary")}
+        {L("contact", "nav.contact")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
@@ -49,6 +50,7 @@ function PortalNav({ go }) {
           {L("collection", "nav.collection", "pn__drawerLink")}
           {L("story", "nav.heritage", "pn__drawerLink")}
           {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          {L("contact", "nav.contact", "pn__drawerLink")}
           <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <LanguageSelector align="left" />
           </div>
@@ -287,6 +289,10 @@ export default function HeritagePage() {
     }
     if (id === "collection") {
       router.push("/#collection");
+      return;
+    }
+    if (id.startsWith("contact")) {
+      router.push(`/${id}`);
       return;
     }
     const el = document.getElementById(id);

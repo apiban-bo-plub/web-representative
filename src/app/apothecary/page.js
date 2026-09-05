@@ -34,6 +34,7 @@ function PortalNav({ go }) {
         {L("collection", "nav.collection")}
         {L("story", "nav.heritage")}
         {L("apothecary", "nav.apothecary")}
+        {L("contact", "nav.contact")}
       </nav>
       <a onClick={() => go("top")} className="pn__logo" style={{ cursor: 'pointer' }}>
         <Logo width={150} />
@@ -49,6 +50,7 @@ function PortalNav({ go }) {
           {L("collection", "nav.collection", "pn__drawerLink")}
           {L("story", "nav.heritage", "pn__drawerLink")}
           {L("apothecary", "nav.apothecary", "pn__drawerLink")}
+          {L("contact", "nav.contact", "pn__drawerLink")}
           <div className="pn__drawerLink" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <LanguageSelector align="left" />
           </div>
@@ -65,7 +67,7 @@ function ApothecaryHero() {
   const { t } = useLanguage();
   return (
     <section className="apothecary-hero reveal" id="top-apothecary">
-      <div className="apothecary-hero__bg" style={{ backgroundImage: "url('/images/hero.jpg')" }} />
+      <div className="apothecary-hero__bg" style={{ backgroundImage: "url('/images/products/hands-holding-inhaler-and-oil.jpg')" }} />
       <div className="apothecary-hero__scrim" />
       <div className="apothecary-hero__inner">
         <div className="apb-eyebrow apothecary-hero__eyebrow">{t("apothecary.eyebrow")}</div>
@@ -78,79 +80,6 @@ function ApothecaryHero() {
     </section>
   );
 }
-
-/* ---- Botanical Matrix Data ---------------------------------------
-   Copy for these lives in the locale files under
-   `apothecary.botanicals.<id>` — only the id and its hand-drawn sketch
-   stay here, because the sketch is JSX and cannot live in JSON. -- */
-const BOTANICALS_DATA = {
-  warm: [
-    {
-      id: "kaffir-lime",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <circle cx="50" cy="50" r="24" stroke="currentColor" strokeWidth="0.5" fill="none" strokeDasharray="2,2" />
-          <path d="M 50 20 Q 40 35 50 50 Q 60 35 50 20 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <circle cx="50" cy="42" r="1.5" fill="currentColor" />
-        </svg>
-      )
-    },
-    {
-      id: "clove",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <path d="M 50 85 L 50 45" stroke="currentColor" strokeWidth="0.8" />
-          <path d="M 45 45 C 45 35, 55 35, 55 45 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <circle cx="50" cy="35" r="7" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 45 35 L 55 35 M 50 30 L 50 40" stroke="currentColor" strokeWidth="0.5" />
-        </svg>
-      )
-    },
-    {
-      id: "cinnamon",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <rect x="38" y="25" width="24" height="55" rx="3" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 44 25 L 44 80 M 50 25 L 50 80 M 56 25 L 56 80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2,1" />
-        </svg>
-      )
-    }
-  ],
-  cool: [
-    {
-      id: "jasmine",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <circle cx="50" cy="50" r="10" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <circle cx="50" cy="50" r="2" fill="currentColor" />
-          <path d="M 50 40 C 45 25, 55 25, 50 40 Z M 50 60 C 45 75, 55 75, 50 60 Z M 40 50 C 25 45, 25 55, 40 50 Z M 60 50 C 75 45, 75 55, 60 50 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-        </svg>
-      )
-    },
-    {
-      id: "ylang-ylang",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <circle cx="50" cy="50" r="3" fill="currentColor" />
-          <path d="M 50 47 Q 35 30 50 15 Q 65 30 50 47 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 50 53 Q 35 70 50 85 Q 65 70 50 53 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 47 50 Q 30 35 15 50 Q 30 65 47 50 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 53 50 Q 70 35 85 50 Q 70 65 53 50 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-        </svg>
-      )
-    },
-    {
-      id: "patchouli",
-      sketch: (
-        <svg viewBox="0 0 100 100" className="matrix-sketch-svg">
-          <path d="M 50 90 L 50 15 M 50 25 L 30 45 L 50 50 L 70 45 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-          <path d="M 50 50 L 35 65 L 50 70 L 65 65 Z" stroke="currentColor" strokeWidth="0.8" fill="none" />
-        </svg>
-      )
-    }
-  ]
-};
 
 /* ---- Breathing Guide Component ----------------------------------- */
 function RespirationGuide() {
@@ -225,19 +154,10 @@ function RespirationGuide() {
 /* ---- Sensory Showcase --------------------------------------------- */
 function SensoryShowcase({ activeTab, setActiveTab }) {
   const { t } = useLanguage();
-  // Seeded rather than null: the effect below only runs after hydration, so a
-  // null initial state made the "select a swatch" empty state the SSR output.
-  const [selectedBotanical, setSelectedBotanical] = useState(BOTANICALS_DATA.warm[0]);
-
   const activeNotes = activeTab === "warm" 
     ? t("apothecary.thep.notes") 
     : t("apothecary.phet.notes");
   const specs = t("apothecary.specs");
-
-  // Automatically reset selected botanical when tab changes
-  useEffect(() => {
-    setSelectedBotanical(BOTANICALS_DATA[activeTab][0]);
-  }, [activeTab]);
 
   return (
     <section className="sensory-section reveal">
@@ -315,62 +235,6 @@ function SensoryShowcase({ activeTab, setActiveTab }) {
         </div>
       </div>
 
-      {/* Sensory Botanical Matrix Interactivity */}
-      <div className="botanical-matrix-wrapper">
-        <h3 className="botanical-matrix-title">{t("apothecary.matrix.title")}</h3>
-        <p className="botanical-matrix-desc">{t("apothecary.matrix.desc")}</p>
-        
-        <div className="botanical-matrix-grid">
-          <div className="botanical-swatches">
-            {BOTANICALS_DATA[activeTab].map((botanical) => (
-              <button
-                key={botanical.id}
-                className={`botanical-swatch-btn ${selectedBotanical?.id === botanical.id ? 'botanical-swatch-btn--active' : ''}`}
-                onClick={() => setSelectedBotanical(botanical)}
-              >
-                <div className="botanical-swatch-sketch">
-                  {botanical.sketch}
-                </div>
-                <div className="botanical-swatch-text">
-                  <span className="botanical-swatch-role">{t(`apothecary.botanicals.${botanical.id}.role`)}</span>
-                  <span className="botanical-swatch-name">{t(`apothecary.botanicals.${botanical.id}.name`)}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <div className="botanical-detail-card paper-texture">
-            {selectedBotanical ? (
-              <div className="botanical-detail-content">
-                <div className="botanical-detail-header">
-                  <div>
-                    <span className="botanical-detail-thai">{t(`apothecary.botanicals.${selectedBotanical.id}.thaiName`)}</span>
-                    <h4 className="botanical-detail-name">{t(`apothecary.botanicals.${selectedBotanical.id}.name`)}</h4>
-                  </div>
-                  <span className="botanical-detail-tag">{t(`apothecary.botanicals.${selectedBotanical.id}.role`)}</span>
-                </div>
-                <div className="botanical-detail-divider"></div>
-                <div className="botanical-detail-rows">
-                  <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">{t("apothecary.matrix.origin")}</span>
-                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.origin`)}</span>
-                  </div>
-                  <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">{t("apothecary.matrix.extraction")}</span>
-                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.process`)}</span>
-                  </div>
-                  <div className="botanical-detail-row">
-                    <span className="botanical-detail-lbl">{t("apothecary.matrix.benefit")}</span>
-                    <span className="botanical-detail-val">{t(`apothecary.botanicals.${selectedBotanical.id}.benefit`)}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="botanical-detail-empty">{t("apothecary.matrix.empty")}</div>
-            )}
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
@@ -455,10 +319,7 @@ function EditorialCrossroads({ go }) {
           <p className="crossroads-card__b">{t("apothecary.crossroads.personal.desc")}</p>
         </div>
         <div className="crossroads-card__cta">
-          <Button variant="gold" size="lg" onClick={() => router.push("/shop")}>
-            {t("apothecary.crossroads.personal.button1")}
-          </Button>
-          <Button variant="secondary" size="lg" onClick={() => router.push("/shop?inquiry=stores")}>
+          <Button variant="gold" size="lg" onClick={() => router.push("/contact?inquiry=wholesale")}>
             {t("apothecary.crossroads.personal.button2")}
           </Button>
         </div>
@@ -471,10 +332,10 @@ function EditorialCrossroads({ go }) {
           <p className="crossroads-card__b">{t("apothecary.crossroads.b2b.desc")}</p>
         </div>
         <div className="crossroads-card__cta">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             style={{ background: 'var(--spring-wood-300)', color: 'var(--basil-green-900)', border: 'none' }}
-            onClick={() => router.push("/shop?inquiry=corporate")}
+            onClick={() => router.push("/contact?inquiry=corporate")}
           >
             {t("apothecary.crossroads.b2b.button")} <ArrowRight size={16} style={{ marginLeft: '8px', display: 'inline-block', verticalAlign: 'middle' }} />
           </Button>
@@ -521,6 +382,10 @@ export default function ApothecaryPage() {
     }
     if (id === "collection") {
       router.push("/#collection");
+      return;
+    }
+    if (id.startsWith("contact")) {
+      router.push(`/${id}`);
       return;
     }
     // The hero section is id="top-apothecary"; without this the nav's own

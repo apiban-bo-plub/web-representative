@@ -64,7 +64,7 @@ export default function HeroVideo() {
           in entirely if YouTube is blocked on the viewer's network. */}
       <Image
         className="cold-open__still"
-        src="/images/hero.jpg"
+        src="/images/products/hands-holding-inhaler-and-oil.jpg"
         alt=""
         aria-hidden="true"
         fill

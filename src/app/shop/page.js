@@ -134,7 +134,7 @@ function StorefrontHero({ go }) {
       <div className="shop-hero__media">
         <ImageSlot
           id="shop-hero"
-          src="/images/hero.jpg"
+          src="/images/products/hands-holding-inhaler-and-oil.jpg"
           shape="rect"
           fit="cover"
           placeholder="Apothecary collection showcase"
@@ -465,7 +465,6 @@ function SiteFooter() {
       <div className="shop-footer__bottom">
         <div className="shop-footer__border">
           <span>{t("footer.copy")}</span>
-          <span>{t("footer.privacy")}</span>
         </div>
       </div>
     </footer>
