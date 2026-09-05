@@ -146,8 +146,31 @@ New keys written by Claude, not a native speaker: `home.numbers.*`, `home.proven
 - Mobile `@container (max-width: 900px)` sets `--co-w/--co-h` **in `vh`, not `dvh`**, alongside the real `height: 100vh; height: 100dvh` pair. A custom property cannot carry a `vh`→`dvh` fallback pair (both are valid tokens, so the second always wins and an unsupported unit poisons the consumer at computed-value time). `vh` ≥ `dvh`, so the embed over-covers — the safe direction.
 - Verified live at localhost:3000: embed loads cross-origin and **plays**, cover math exact at three frame sizes, sound toggle flips `aria-pressed`/label and posts the command. Screenshot capture shows a ~4px sliver of YouTube's channel bar above the frame's top edge — that is an out-of-process-iframe compositing artifact of extension screenshots, not a paint bug: with `overflow: visible` the video extends a full 56px above, with `hidden` only the sliver appears.
 
+## Global Error Handling & React Client Manifest Fix (2026-09-04)
+- **Bug**: User hit `Could not find the module "[project]/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest`.
+- **Root Cause**: Next dev server was running in the background while `npm run build` ran, causing `.next/` client manifests to desynchronize between in-memory dev state and disk. When layout failed, Next.js tried to render internal fallback `global-error.js` which was unbundled.
+- **Fix**:
+  - Implemented custom Client Component [global-error.jsx](file:///Users/sorawitsakarin/Documents/apiban/src/app/global-error.jsx) and [error.jsx](file:///Users/sorawitsakarin/Documents/apiban/src/app/error.jsx).
+  - Added configured `images.qualities: [75, 85, 90]` to [next.config.mjs](file:///Users/sorawitsakarin/Documents/apiban/next.config.mjs) to eliminate image quality warnings.
+  - Recommended user stop their dev server (`Ctrl+C` or `kill 90219`) and re-run `npm run dev`.
+- Imported Google Fonts `Noto Sans Thai` (weights 300, 400, 500, 600, 700) in [style_0.css](file:///Users/sorawitsakarin/Documents/apiban/src/styles/style_0.css).
+- Updated typography tokens: `--font-serif-thai: "Noto Sans Thai", "Charm", var(--font-serif);` and `--font-sans-thai: "Noto Sans Thai", var(--font-sans);`.
+- Configured global `:root[lang="th"]` and `[lang="th"]` CSS rules to map headings (`h1` - `h6`), body, `.hero__h1`, `.hero__sub`, `.legacy__num`, `.prov__name`, `.fquote__text`, `.gtrack__cap`, buttons, inputs, and paragraphs to **Noto Sans Thai**.
+- Added `"Noto Sans Thai"` to global font stacks so that all Thai characters render consistently and crisply without falling back to system Thonburi.
+- Pinned `next build --webpack` in `package.json` for ~3-second static builds without sandbox filesystem permission hangs.
+
+## Home Landing Page UX Writing & Copy Elevation Pass (2026-09-04)
+- Completed Option A: Full review and rewrite of all copy in `home.*` and `footer.*` inside [th.json](file:///Users/sorawitsakarin/Documents/apiban/src/locales/th.json).
+- Replaced awkward machine-translated phrases with high-end Thai apothecary prose (Aesop/Le Labo meets Royal Court Songkhla apothecary):
+  - Fixed `home.redbook.body`: "การเจรจาระหว่างธรรมชาติและประสาทสัมผัส" → "บทสนทนาอันประณีตระหว่างธรรมชาติและผัสสะที่ตกผลึกมากว่า ๑๕๐ ปี...".
+  - Fixed `home.redbook.button`: "เปิดเผยสมุดปกแดง" → "เปิดบันทึกสมุดข่อยแดง".
+  - Fixed `home.hero.eyebrow`: "ร้านยาสมุนไพรไทยมรดกตกทอด · ตั้งแต่ทศวรรษ 1870" → "โอสถศาลาแห่งมรดกภูมิปัญญาไทย · สืบสานแต่ต้น พ.ศ. ๒๔๑๓".
+  - Fixed `home.hero.sub`: Removed awkward "ศิลปะการแสดงออกในยุคปัจจุบัน" and "ของใช้จำเป็นที่สร้างสรรค์จากเอกสารประวัติศาสตร์", elevated to "เครื่องหอมและโอสถประจำกายที่ปรุงขึ้นอย่างประณีตจากตำรับประวัติศาสตร์ เพื่อสุขภาวะและสติอันสงบในทุกวันของคุณ".
+  - Refined numbers, chapters, provenance botanicals, apothecary sensory profiles, and continuum CTAs.
+  - Verified 100% key parity (300/300 keys) across `en.json` and `th.json`. Clean build validated.
+
 ## Active Tasks
+- Next UX Writing Pass: Option B (**Heritage / Red Book Archive**) or Option C (**Apothecary & Daily Rituals**).
 - Visual sign-off in a foregrounded browser: `/heritage` scroll reveals, and the `/apothecary` breathing orb animation (phase logic confirmed, the 4s scale could not be observed in a backgrounded tab).
-- Superseded: visual sign-off on `/heritage` in a foregrounded browser (scroll reveals, EN/TH toggle across the ledger tables, ≤900px collapse) — not verifiable through the backgrounded automation tab.
 - Optional: install `ui-ux-pro-max` for this project (`/plugin install ui-ux-pro-max@ui-ux-pro-max-skill`) and run a design pass over the new archives CSS; it was written against the project's own tokens because the plugin is currently scoped to `mooz-next-web` only.
 - All earlier user requests (i18n dropdown, mobile drawer tweaks, shop page cart removal, photo renaming/mapping, video embed crop overlays, scroll-driven parallax cross-fades, scroll-responsive navbar animations, Pillars background, text legibility refinements, LCP Next.js Image load optimizations, 8px spacing grid alignment, mobile footer base bottom padding, non-pausable video autoplay loop, merging the parallax entrance flow, video section background color matching, default sound settings for mobile autoplay, and mobile hero font size reduction) are fully complete and validated.
